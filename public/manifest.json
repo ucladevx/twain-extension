@@ -1,0 +1,20 @@
+{
+  "name": "Twain",
+  "manifest_version": 2,
+  "description": "Google Calendar smart-scheduler for tasks.",
+  "version": "1.0",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "page_action": {},
+  "content_scripts": [
+    {
+      "js": ["content.js"],
+      "matches": ["*://calendar.google.com/*"]
+    }
+  ],
+  "permissions": ["tabs", "storage"],
+  "web_accessible_resources": ["index.html"],
+  "content_security_policy": "script-src 'self' 'sha256-MxBgaIq2twiuKyHyCqC+P1KPqx1H1ZRnx1dlYN8AUKE='; object-src 'self'"
+}
