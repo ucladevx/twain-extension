@@ -16,5 +16,5 @@
   ],
   "permissions": ["tabs", "storage"],
   "web_accessible_resources": ["index.html"],
-  "content_security_policy": "script-src 'self' 'sha256-MxBgaIq2twiuKyHyCqC+P1KPqx1H1ZRnx1dlYN8AUKE='; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://apis.google.com 'sha256-MxBgaIq2twiuKyHyCqC+P1KPqx1H1ZRnx1dlYN8AUKE='; object-src 'self'"
 }

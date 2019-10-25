@@ -18,6 +18,12 @@ const toggleSidebar = () => {
     const elem = document.getElementsByClassName('tEhMVd')[0];
     const sidebar = document.createElement('iframe');
     sidebar.id = 'mySidebar';
+    sidebar.style.cssText = `
+      width: 500px;
+      height: 100%;
+      border: none;
+      border-left: 1px solid #ddd;
+    `;
     elem.appendChild(sidebar);
     sidebar.src = chrome.extension.getURL('index.html');
     sidebarOpen = true;
