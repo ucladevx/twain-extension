@@ -12,7 +12,7 @@ const TaskList = () => {
   return (
     <div>
       {taskData.map((task) => (
-        <Task key={task.id} />
+        <Task key={task.id} title="TITLE" description="Description"/>
       ))}
       {creating ? (
         <div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 
 import Input from './Input';
@@ -17,14 +17,22 @@ const Card = styled.div`
   }
 `;
 
-const Task = () => {
-  return (
-    <Card>
-      <h3>Title.</h3>
-      <p>Empty.</p>
-    </Card>
-  );
-};
+export default class Task extends Component{
+  constructor(props){
+    super(props);
+    this.state={
+
+    }
+  }
+  render(props){
+    return(
+      <Card>
+        <h3>{this.props.title}</h3>
+        <p>{this.props.description}</p>
+      </Card>
+    );
+  }
+}
 
 export const NewTask = () => {
   return (
@@ -38,5 +46,3 @@ export const NewTask = () => {
     </Card>
   );
 };
-
-export default Task;
