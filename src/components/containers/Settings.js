@@ -12,12 +12,14 @@ const Wrapper = styled.div`
 const Settings = () => {
   return (
     <Wrapper>
-      <h3>PANEL</h3>
-      <Input placeholder="Setting" />
-      <Input placeholder="Setting" />
-      <Input placeholder="Setting" />
-      <Input placeholder="Setting" />
-      <Input placeholder="Setting" />
+      <h3>PANEL FOR SETTINGS</h3>
+      <h1>This is Arun's react test</h1>
+      <Input placeholder="Profile" />
+      <Input placeholder="Dark Mode" />
+      <Input placeholder="Achievement" />
+      <Input placeholder="About" />
+      <Input placeholder="Log Out" />
+      
     </Wrapper>
   );
 };
