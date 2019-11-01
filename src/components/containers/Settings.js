@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Input from '../Input';
+import Input from '../presentational/styled/Input';
 
 const Wrapper = styled.div`
   text-align: left;
@@ -19,7 +19,6 @@ const Settings = () => {
       <Input placeholder="Achievement" />
       <Input placeholder="About" />
       <Input placeholder="Log Out" />
-      
     </Wrapper>
   );
 };

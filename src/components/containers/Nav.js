@@ -27,7 +27,7 @@ const Header = styled.h1`
 const Navbar = () => {
   return (
     <Nav>
-      <Header>TWAIN</Header>
+      <Header>Twain</Header>
 
       <Link to="/login">
         <Icon src="home.svg" alt="Home" />
