@@ -7,7 +7,7 @@ const Shared = css`
 
   margin: 8px;
   padding: 10px;
-  background-color: #f0f0f0;
+  background-color: #e5e5e5;
   border: 2px solid transparent;
   border-radius: 5px;
   transition: border 0.5s;
