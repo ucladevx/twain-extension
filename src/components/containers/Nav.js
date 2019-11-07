@@ -2,41 +2,36 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Icon from '../presentational/styled/Icon';
+
 const Nav = styled.nav`
+  height: 63px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: -12px;
-`;
-
-const Icon = styled.img`
-  width: 25px;
-  padding: 8px;
-
-  &:hover {
-    background-color: #eee;
-    border-radius: 25px;
-  }
+  margin-top: -6px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
 `;
 
 const Header = styled.h1`
-  margin-left: 8px;
+  margin-left: 15px;
   margin-right: auto;
 `;
 
 const Navbar = () => {
   return (
     <Nav>
-      <Header>TWAIN</Header>
+      <Header>Twain</Header>
 
-      <Link to="/login">
-        <Icon src="home.svg" alt="Home" />
+      <Link to="/tasklist">
+        <Icon src="add.svg" alt="Add" />
       </Link>
       <Link to="/tasklist">
-        <Icon src="checkmark.svg" alt="Tasklist" />
+        <Icon src="search.svg" alt="Search" />
       </Link>
-      <Link to="/settings">
-        <Icon src="settings.svg" alt="Settings" />
+      <Link to="/login">
+        <Icon src="menu.svg" alt="Menu" />
       </Link>
     </Nav>
   );

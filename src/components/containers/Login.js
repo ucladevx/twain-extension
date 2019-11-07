@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import Button from '../Button';
+import Button from '../presentational/styled/Button';
 
 const Login = () => {
   return (
     <div>
       <Link to="/tasklist">
-        <Button id="login">LOG IN</Button>
+        <Button primary>Sign In</Button>
       </Link>
     </div>
   );
