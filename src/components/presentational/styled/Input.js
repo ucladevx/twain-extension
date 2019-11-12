@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-import DatePicker from 'react-datepicker';
-
-import 'react-datepicker/dist/react-datepicker.css';
 
 import { Font } from './Global';
 import { Row } from './Layout';
@@ -238,12 +235,12 @@ const DateInput = styled.input`
   }
 `;
 
-const DateStyled = styled(DatePicker)`
-  .react_datepicker__input-container input {
-    border: none;
-    color: red;
-  }
-`;
+// const DateStyled = styled(DatePicker)`
+//   .react_datepicker__input-container input {
+//     border: none;
+//     color: red;
+//   }
+// `;
 
 const DateWrapper = styled.div`
   & .content {
