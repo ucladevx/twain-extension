@@ -19,14 +19,12 @@ const Header = styled.h1`
   margin-right: auto;
 `;
 
-const Navbar = () => {
+const Navbar = ({ onAdd }) => {
   return (
     <Nav>
       <Header>Twain</Header>
 
-      <Link to="/tasklist">
-        <Icon src="add.svg" alt="Add" />
-      </Link>
+      <Icon src="add.svg" alt="Add" onClick={onAdd} />
       <Link to="/tasklist">
         <Icon src="search.svg" alt="Search" />
       </Link>

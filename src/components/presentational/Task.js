@@ -5,7 +5,7 @@ import SpinButton from './Spin';
 import { Text } from './styled/Global';
 import { Row } from './styled/Layout';
 import Button, { TextButton } from './styled/Button';
-import Input, { TextArea } from './styled/Input';
+import Input, { Dropdown, DatePick, TextArea, Mini } from './styled/Input';
 import Icon, { Select } from './styled/Icon';
 
 const Card = styled.div`
@@ -13,7 +13,6 @@ const Card = styled.div`
   width: 85%;
   margin: 10px auto;
   padding: 8px;
-  text-align: left;
   background-color: #fff;
   border: 2px solid #ccc;
   border-radius: 10px;
@@ -31,16 +30,8 @@ const DurationRow = styled(Row)`
   margin: 0px 8px;
 `;
 
-const Task = ({ task }) => {
-  const {
-    title,
-    scheduledDate,
-    duration,
-    dueDate,
-    category,
-    notes,
-    created
-  } = task;
+const Task = ({ task, deleteTask, creating = false }) => {
+  const { id, scheduledDate, duration, dueDate, created } = task;
 
   const initDuration = (duration) => {
     const hours = parseInt(duration / 60);
@@ -48,9 +39,13 @@ const Task = ({ task }) => {
     return { hours, minutes };
   };
 
-  const [expanded, setExpanded] = useState(false);
-  const [editing, setEditing] = useState(false);
+  const [expanded, setExpanded] = useState(creating);
+  const [editing, setEditing] = useState(creating);
   const [time, setTime] = useState(initDuration(duration));
+  const [title, setTitle] = useState(task.title);
+  const [due, setDue] = useState(task.dueDate);
+  const [category, setCategory] = useState(task.category);
+  const [notes, setNotes] = useState(task.notes);
 
   const setHours = (val) => setTime({ hours: val, minutes: time.minutes });
   const setMinutes = (val) => setTime({ hours: time.hours, minutes: val });
@@ -59,18 +54,33 @@ const Task = ({ task }) => {
     <Card expanded={expanded}>
       <Row>
         <Select />
-        <div>
-          <Text primary>{title}</Text>
+        <div style={{ width: '80%', textAlign: 'left' }}>
+          <Mini
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.value)}
+            disabled={!editing}
+          />
           <Text>{scheduledDate}</Text>
         </div>
         <Icon
-          src={expanded ? 'arrow-up.svg' : 'arrow-down.svg'}
-          alt={expanded ? 'Arrow-up' : 'Arrow-down'}
-          onClick={() => setExpanded(!expanded)}
+          src={
+            editing ? 'close.svg' : expanded ? 'arrow-up.svg' : 'arrow-down.svg'
+          }
+          alt={editing ? 'Close' : expanded ? 'Up' : 'Down'}
+          onClick={() => {
+            if (editing) {
+              if (!creating) {
+                if (window.confirm('Delete task?')) deleteTask(id);
+              } else {
+                deleteTask(id);
+              }
+            } else setExpanded(!expanded);
+          }}
         />
       </Row>
       <DurationRow>
-        <Text primary>Duration:</Text>
+        <Text>Duration:</Text>
         <SpinButton
           units="hr"
           val={time.hours}
@@ -88,11 +98,26 @@ const Task = ({ task }) => {
           hidden={!editing}
         />
       </DurationRow>
-      <Input placeholder="Due Date" value={dueDate} />
-      <Input placeholder="Category" value={category} />
-      <TextArea placeholder="Add notes" value={notes} />
+      <DatePick
+        placeholder="Due Date"
+        value={due}
+        onChange={(e) => setDue(e.target.value)}
+        disabled={!editing}
+      />
+      <Dropdown
+        selected={category}
+        onSelect={(option) => setCategory(option)}
+        options={['School', 'Work', 'Personal']}
+        disabled={!editing}
+      />
+      <TextArea
+        placeholder="Add notes"
+        value={notes}
+        onChange={(e) => setNotes(e.value)}
+        disabled={!editing}
+      />
       <Row spaceBetween>
-        <Text>{created}</Text>
+        <Text>Created {created}</Text>
         <TextButton onClick={() => setEditing(!editing)}>
           {editing ? 'Save' : 'Edit'}
         </TextButton>

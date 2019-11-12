@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Row } from './styled/Layout';
-import { NumberInput } from './styled/Input';
+import { NumberInput, Dropdown } from './styled/Input';
 
 const Spinner = styled.div`
   width: 15px;

@@ -12,8 +12,6 @@ const App = () => {
   return (
     <Global>
       <Router>
-        <Navbar />
-
         <Switch>
           <Route path="/tasklist" component={TaskList} />
           <Route path="/login" component={Login} />

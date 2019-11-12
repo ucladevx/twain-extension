@@ -14,11 +14,11 @@ export const Select = styled.div`
 
 const Icon = styled.img`
   width: 25px;
-  margin-left: auto;
+  // margin-left: auto;
   padding: 8px;
 
   &:hover {
-    background-color: #eee;
+    background-color: #ddd;
     border-radius: 25px;
   }
 `;
