@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import Navbar from '../containers/Nav';
 import Button from '../presentational/styled/Button';
 
 function chromeSignOn() {
@@ -13,9 +14,10 @@ function chromeSignOn() {
 const Login = () => {
   return (
     <div>
-      <button onClick={chromeSignOn}>
+     <Navbar />
+     <button onClick={chromeSignOn}>
         Sign in
-    </button>
+     </button>
     </div>
   );
 };

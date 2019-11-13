@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { Row } from './styled/Layout';
-import { NumberInput } from './styled/Input';
+import { NumpadInput } from './Dropdown';
 
 const Spinner = styled.div`
   width: 15px;
@@ -47,7 +47,7 @@ const SpinButton = ({ units, val, setVal, min, max, hidden }) => {
           onClick={() => setVal(constrain(val - 1))}
         />
       </Spinner>
-      <NumberInput
+      <NumpadInput
         type="number"
         value={format(val)}
         onChange={(e) => setVal(constrain(parseInt(e.target.value)))}
