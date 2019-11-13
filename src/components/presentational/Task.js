@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import SpinButton from './Spin';
 import { Text } from './styled/Global';
 import { Row } from './styled/Layout';
-import Button, { TextButton } from './styled/Button';
-import Input, { Dropdown, DatePick, TextArea, Mini } from './styled/Input';
+import { TextButton } from './styled/Button';
+import { TextArea, Mini } from './styled/Input';
 import Icon, { Select } from './styled/Icon';
+import SpinButton from './Spin';
+import Dropdown, { DatePicker } from './Dropdown';
 
 const Card = styled.div`
   max-height: ${(props) => (props.expanded ? '500px' : '45px')};
@@ -30,8 +31,8 @@ const DurationRow = styled(Row)`
   margin: 0px 8px;
 `;
 
-const Task = ({ task, deleteTask, creating = false }) => {
-  const { id, scheduledDate, duration, dueDate, created } = task;
+const Task = ({ task, deleteTask, categories, creating = false }) => {
+  const { id, scheduledDate, created } = task;
 
   const initDuration = (duration) => {
     const hours = parseInt(duration / 60);
@@ -39,10 +40,12 @@ const Task = ({ task, deleteTask, creating = false }) => {
     return { hours, minutes };
   };
 
+  /* default to a collapsed, uneditable task */
   const [expanded, setExpanded] = useState(creating);
   const [editing, setEditing] = useState(creating);
-  const [time, setTime] = useState(initDuration(duration));
+
   const [title, setTitle] = useState(task.title);
+  const [time, setTime] = useState(initDuration(task.duration));
   const [due, setDue] = useState(task.dueDate);
   const [category, setCategory] = useState(task.category);
   const [notes, setNotes] = useState(task.notes);
@@ -98,7 +101,7 @@ const Task = ({ task, deleteTask, creating = false }) => {
           hidden={!editing}
         />
       </DurationRow>
-      <DatePick
+      <DatePicker
         placeholder="Due Date"
         value={due}
         onChange={(e) => setDue(e.target.value)}
@@ -107,7 +110,7 @@ const Task = ({ task, deleteTask, creating = false }) => {
       <Dropdown
         selected={category}
         onSelect={(option) => setCategory(option)}
-        options={['School', 'Work', 'Personal']}
+        options={categories}
         disabled={!editing}
       />
       <TextArea

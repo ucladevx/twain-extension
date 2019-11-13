@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
+import Navbar from './Nav';
 import Task from '../presentational/Task';
 import Button from '../presentational/styled/Button';
-import Navbar from './Nav';
 
 const initTasks = [...Array(5).keys()].map((num) => ({
   id: num,
   title: 'Placeholder Title',
-  scheduledDate: 'Tues 3:10 pm - 4:00 pm',
+  scheduledDate: 'Tues 3:00 pm - 4:00 pm',
   duration: 90,
-  dueDate: '11/3/19',
+  dueDate: 'Tue Dec 10 2019',
   category: 'Testing',
   notes: 'Lorem ipsum',
   created: '10/10/19'
@@ -20,31 +20,41 @@ const emptyTask = {
   title: '',
   scheduledDate: '',
   duration: 90,
-  dueDate: '',
+  dueDate: new Date().toDateString(),
   category: '',
   notes: '',
   created: ''
 };
 
-const categories = [];
+const categories = ['School', 'Work', 'Personal', 'Holidays'];
 
 const TaskList = () => {
   const [tasks, setTasks] = useState(initTasks);
   const [creating, setCreating] = useState(false);
 
   const deleteTask = (id) =>
-    setTasks(initTasks.filter((task) => task.id != id));
+    setTasks(initTasks.filter((task) => task.id !== id));
 
   return (
     <div>
       <Navbar onAdd={() => setCreating(true)} />
       {creating ? (
-        <Task task={emptyTask} deleteTask={() => setCreating(false)} creating />
+        <Task
+          task={emptyTask}
+          deleteTask={() => setCreating(false)}
+          categories={categories}
+          creating
+        />
       ) : (
         ''
       )}
       {tasks.map((task) => (
-        <Task key={task.id} task={task} deleteTask={deleteTask} />
+        <Task
+          key={task.id}
+          task={task}
+          deleteTask={deleteTask}
+          categories={categories}
+        />
       ))}
       <Button primary onClick={() => setCreating(true)}>
         Create Task

@@ -29,6 +29,7 @@ export const TextButton = styled.button`
 
 const Button = styled.button`
   ${Shared}
+
   margin: 10px;
   padding: 8px 13px;
   color: ${(props) => (props.disabled ? '#999' : '#fff')};
