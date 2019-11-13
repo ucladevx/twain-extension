@@ -1,19 +1,14 @@
 import React from 'react';
 import axios from 'axios';
 
-async function getTask(id){
-  const res = await fetch('http://localhost:31337/api/tasks/4', {
-    mode: 'no-cors',
-    method: 'GET',
+function getTask(id){
+  return axios.get('http://localhost:31337/api/tasks/4', {
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'chrome-extension://',
       'Content-Type': 'application/json',
     },
     withCredentials: true,
-    credentials: 'same-origin'
-  });
-  const data = await res.json();
-  return data;
+  }).then(res => res.data);
 }
 
 const postTask = (object) => {
