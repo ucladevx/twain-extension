@@ -50,8 +50,6 @@ const Task = ({ task, deleteTask, categories, creating = false }) => {
   const [category, setCategory] = useState(task.category);
   const [notes, setNotes] = useState(task.notes);
 
-  console.log(due);
-
   const setHours = (val) => setTime({ hours: val, minutes: time.minutes });
   const setMinutes = (val) => setTime({ hours: time.hours, minutes: val });
 

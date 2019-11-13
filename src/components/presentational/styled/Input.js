@@ -7,7 +7,7 @@ export const Shared = css`
 
   margin: 5px;
   padding: 8px;
-  background-color: ${(props) => (props.disabled ? '#fff' : '#eee')};
+  background-color: ${(props) => (props.disabled ? '#fff' : '#ddd')};
   border: none
   border-bottom: 2px solid transparent;
   border-radius: 5px;
