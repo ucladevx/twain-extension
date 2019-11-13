@@ -323,6 +323,7 @@ export const DatePicker = (props) => {
     date.setMonth(viewDate.month);
     date.setFullYear(viewDate.year);
     date.setDate(day);
+    // return `${'November'} ${date.getDate()}, ${date.getFullYear()}`;
     return date.toDateString();
   };
 
@@ -382,9 +383,11 @@ export const DatePicker = (props) => {
             key={num}
             className={checkClasses(num + 1)}
             onClick={() => {
+              const newDate = generateDateString(num + 1);
               props.onChange({
-                target: { value: generateDateString(num + 1) }
+                target: { value: newDate }
               });
+              setDate(new Date(newDate));
               setClosed(true);
             }}
           >
