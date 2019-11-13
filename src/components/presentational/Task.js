@@ -61,7 +61,9 @@ const Task = ({ task, deleteTask, categories, creating = false }) => {
           <Mini
             placeholder="Title"
             value={title}
-            onChange={(e) => setTitle(e.value)}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
             disabled={!editing}
           />
           <Text>{scheduledDate}</Text>
@@ -116,7 +118,7 @@ const Task = ({ task, deleteTask, categories, creating = false }) => {
       <TextArea
         placeholder="Add notes"
         value={notes}
-        onChange={(e) => setNotes(e.value)}
+        onChange={(e) => setNotes(e.target.value)}
         disabled={!editing}
       />
       <Row spaceBetween>
