@@ -31,9 +31,8 @@ const DurationRow = styled(Row)`
   margin: 0px 8px;
 `;
 
-const Task = ({ task, deleteTask, categories, creating = false }) => {
+const Task = function({ task, deleteTask, categories, creating = false }){
   const { id, scheduledDate, created } = task;
-
   const initDuration = (duration) => {
     const hours = parseInt(duration / 60);
     const minutes = duration % 60;
