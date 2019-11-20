@@ -1,28 +1,22 @@
 import React from 'react';
-import styled from 'styled-components';
-
 import Navbar from '../containers/Nav';
-import Input from '../presentational/styled/Input';
+import { placeholder } from '@babel/types';
 
-const Wrapper = styled.div`
-  text-align: left;
-  width: 80%;
-  margin: auto;
-`;
+
 
 const Settings = () => {
   return (
     <div>
       <Navbar />
-      <Wrapper>
-        <h3>PANEL FOR SETTINGS</h3>
-        <h1>This is Arun's react test</h1>
-        <Input placeholder="Profile" />
-        <Input placeholder="Dark Mode" />
-        <Input placeholder="Achievement" />
-        <Input placeholder="About" />
-        <Input placeholder="Log Out" />
-      </Wrapper>
+      
+      <button>Hours of Operation</button>
+      <br></br>
+      <button>Calendar preferences</button>
+      <br></br>
+      <button>Categories</button>
+      <br></br>
+
+
     </div>
   );
 };
