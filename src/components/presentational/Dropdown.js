@@ -1,9 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
 
 import { Row } from './styled/Layout';
 import Input, { Shared } from './styled/Input';
-import { StaticIcon } from './styled/Icon';
+import Icon, { StaticIcon } from './styled/Icon';
+import { Text } from './styled/Global';
+
+const StyledTaskSection = styled.div`
+  & .content {
+    visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
+    height: ${(props) => (props.closed ? 0 : 'auto')};
+    opacity: ${(props) => (props.closed ? 0 : 1)};
+    transition: all 0.2s;
+  }
+`;
+
+export const TaskSection = ({ title, children, defaultClosed = false }) => {
+  const [closed, setClosed] = useState(defaultClosed);
+
+  return (
+    <StyledTaskSection closed={closed}>
+      <Row style={{ margin: '10px' }}>
+        <Text primary style={{ marginRight: 'auto' }}>
+          {title}
+        </Text>
+        <Icon
+          src={closed ? 'arrow-down.svg' : 'arrow-up.svg'}
+          onClick={() => setClosed(!closed)}
+        />
+      </Row>
+      <div className="content">{children}</div>
+    </StyledTaskSection>
+  );
+};
 
 const DropdownWrapper = styled.div`
   ${Shared}
@@ -11,13 +40,14 @@ const DropdownWrapper = styled.div`
   width: 90%;
   margin: 5px auto;
   text-align: left;
+  padding: 0 8px;
 
   & .content {
     position: absolute;
-    opacity: ${(props) => (!props.disabled && !props.closed ? '1' : '0')};
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
     width: 77%;
     max-height: ${(props) =>
-      !props.disabled && !props.closed ? '300px' : '0'};
+      !props.myDisabled && !props.closed ? '300px' : '0'};
     overflow: auto;
     margin-top: 6px;
     margin-left: -8px;
@@ -29,7 +59,7 @@ const DropdownWrapper = styled.div`
   }
 
   &:hover {
-    cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+    cursor: ${(props) => (props.myDisabled ? 'default' : 'pointer')};
   }
 
   & .content p {
@@ -54,16 +84,41 @@ const Dropdown = ({ selected, onSelect, options, disabled }) => {
   /* parent element controls disabled property,
      selecting an option changes the closed property */
   const [closed, setClosed] = useState(true);
+  const node = useRef();
+
+  const handleClick = (e) => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    setClosed(true);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
   return (
-    <DropdownWrapper
-      disabled={disabled}
-      closed={closed}
-      onMouseOver={() => setClosed(false)}
-      onMouseLeave={() => setClosed(true)}
-    >
-      <Row>
-        {selected}
+    <DropdownWrapper myDisabled={disabled} closed={closed} ref={node}>
+      <Row
+        onClick={() => {
+          if (!disabled) setClosed(!closed);
+        }}
+        style={{ padding: '8px 0' }}
+      >
+        {disabled ? (
+          <div
+            style={{
+              padding: '2px 12px',
+              borderRadius: '10px',
+              backgroundColor: '#f2bd3f'
+            }}
+          >
+            {selected}
+          </div>
+        ) : (
+          <div>{selected}</div>
+        )}
         {disabled ? (
           ''
         ) : (
@@ -108,24 +163,23 @@ const NumberInput = styled.input`
     appearance: none;
     margin: 0;
   }
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const DropdownGrid = css`
   & .content {
     position: absolute;
-    visibility: hidden;
-    opacity: 0;
+    visibility: ${(props) =>
+      !props.myDisabled && !props.closed ? 'visible' : 'hidden'};
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
     display: grid;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
     transition: opacity 0.25s;
-  }
-
-  &:hover .content {
-    visibility: ${(props) =>
-      !props.disabled && !props.closed ? 'visible' : 'hidden'};
-    opacity: 1;
   }
 
   & .content div {
@@ -145,7 +199,7 @@ const DropdownNumpadGrid = styled.div`
   & .content {
     grid-template-columns: 50px 50px 50px;
     margin-top: -3px;
-    margin-left: -50px;
+    margin-left: -53px;
   }
 
   /* round corners */
@@ -180,13 +234,8 @@ export const NumpadInput = (props) => {
   };
 
   return (
-    <DropdownNumpadGrid
-      disabled={props.disabled}
-      closed={closed}
-      onMouseOver={() => setClosed(false)}
-      onMouseLeave={() => setClosed(true)}
-    >
-      <NumberInput {...props} />
+    <DropdownNumpadGrid myDisabled={props.disabled} closed={closed}>
+      <NumberInput {...props} onClick={() => setClosed(!closed)} />
       <div className="content">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
           <div key={num} onClick={() => updateNumber(num)}>
@@ -215,9 +264,9 @@ const DropdownDateGrid = styled.div`
   ${DropdownGrid}
 
   & .content {
-    width: 76.5%;
+    width: 77%;
     grid-template-columns: repeat(7, auto);
-    margin-left: 15px;
+    margin-left: 10px;
     margin-top: -8px;
   }
 
@@ -323,18 +372,20 @@ export const DatePicker = (props) => {
     date.setMonth(viewDate.month);
     date.setFullYear(viewDate.year);
     date.setDate(day);
-    // return `${'November'} ${date.getDate()}, ${date.getFullYear()}`;
     return date.toDateString();
   };
 
   return (
-    <DropdownDateGrid
-      disabled={props.disabled}
-      closed={closed}
-      onMouseOver={() => setClosed(false)}
-      onMouseLeave={() => setClosed(true)}
-    >
-      <Input {...props} />
+    <DropdownDateGrid myDisabled={props.disabled} closed={closed}>
+      <Input
+        {...props}
+        myDisabled={props.disabled}
+        onClick={(e) => {
+          e.target.blur();
+          if (!props.disabled) setClosed(!closed);
+        }}
+        no-hover
+      />
       <div className="content">
         <div
           style={{ gridColumn: '1/3' }}
@@ -369,14 +420,14 @@ export const DatePicker = (props) => {
         {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => (
           <div
             key={day}
-            style={{ backgroundColor: '#ddd' }}
+            style={{ backgroundColor: '#ddd', fontSize: '13px' }}
             className="no-hover"
           >
             {day}
           </div>
         ))}
         {[...Array(offset).keys()].map((num) => (
-          <div key={num} className="no-highlight"></div>
+          <div key={num} className="no-highlight" />
         ))}
         {[...Array(months[viewDate.month].days).keys()].map((num) => (
           <div

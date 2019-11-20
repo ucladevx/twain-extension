@@ -44,4 +44,10 @@ const Button = styled.button`
   }
 `;
 
+export const FullButton = styled(Button)`
+  width: 90%;
+  height: 60px;
+  border-radius: 10px;
+`;
+
 export default Button;

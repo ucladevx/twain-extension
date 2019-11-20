@@ -20,11 +20,14 @@ export const Select = styled.div`
   height: 25px;
   width: 25px;
   margin: 10px;
+  opacity: ${(props) => (props.hide ? 0 : 1)}
   border: 1px solid #ccc;
   border-radius: 30px;
+  transition: all 0.15s;
 
   &:hover {
-    background-color: #ccc;
+    border: 1px solid transparent;
+    background-color: #00e676;
   }
 `;
 

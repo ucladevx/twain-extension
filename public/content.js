@@ -19,7 +19,7 @@ const toggleSidebar = () => {
     const sidebar = document.createElement('iframe');
     sidebar.id = 'mySidebar';
     sidebar.style.cssText = `
-      width: 500px;
+      width: 400px;
       height: 100%;
       border: none;
       border-left: 1px solid #ddd;

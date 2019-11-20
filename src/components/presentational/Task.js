@@ -10,29 +10,47 @@ import SpinButton from './Spin';
 import Dropdown, { DatePicker } from './Dropdown';
 
 const Card = styled.div`
-  max-height: ${(props) => (props.expanded ? '500px' : '45px')};
+  max-height: ${(props) => (props.expanded ? '500px' : '44px')};
   width: 85%;
   margin: 10px auto;
   padding: 8px;
   background-color: #fff;
-  border: 2px solid #ccc;
+  border: ${(props) =>
+    props.selected ? '2px solid #5187ed' : '2px solid #ccc'};
   border-radius: 10px;
   overflow: hidden;
   transition: all 0.3s;
 
   &:hover {
-    border-color: #5187ed;
+    box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.25);
+    cursor: pointer;
   }
 `;
 
 const DurationRow = styled(Row)`
   justify-content: space-between;
   width: 90%;
-  margin: 0px 8px;
+  margin: 0 0;
 `;
 
-const Task = ({ task, deleteTask, categories, creating = false }) => {
-  const { id, scheduledDate, created } = task;
+const Label = styled(Text)`
+  visibility: ${(props) => (props.editing ? 'visible' : 'hidden')};
+  height: ${(props) => (props.editing ? 'auto' : '0')};
+  margin: 0;
+  margin-left: 3px;
+  text-align: left;
+`;
+
+const Task = ({
+  task,
+  completeTask,
+  deleteTask,
+  toggleSelect,
+  selected,
+  categories,
+  creating = false
+}) => {
+  const { id, created } = task;
 
   const initDuration = (duration) => {
     const hours = parseInt(duration / 60);
@@ -40,11 +58,13 @@ const Task = ({ task, deleteTask, categories, creating = false }) => {
     return { hours, minutes };
   };
 
+  const selectMultiple = !task.scheduled;
+
   /* default to a collapsed, uneditable task */
   const [expanded, setExpanded] = useState(creating);
   const [editing, setEditing] = useState(creating);
 
-  const [title, setTitle] = useState(task.title);
+  const [name, setName] = useState(task.name);
   const [time, setTime] = useState(initDuration(task.duration));
   const [due, setDue] = useState(task.dueDate);
   const [category, setCategory] = useState(task.category);
@@ -54,73 +74,109 @@ const Task = ({ task, deleteTask, categories, creating = false }) => {
   const setMinutes = (val) => setTime({ hours: time.hours, minutes: val });
 
   return (
-    <Card expanded={expanded}>
+    <Card
+      expanded={expanded}
+      select={selectMultiple}
+      onClick={
+        selectMultiple && !expanded
+          ? (e) => {
+              toggleSelect(id);
+            }
+          : () => {}
+      }
+      selected={selected}
+    >
       <Row>
-        <Select />
+        <Select
+          hide={selectMultiple}
+          onClick={() => {
+            if (!selectMultiple) completeTask(id);
+          }}
+        />
         <div style={{ width: '80%', textAlign: 'left' }}>
           <Mini
             placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.value)}
+            value={name}
+            onChange={(e) => setName(e.value)}
+            myDisabled={!editing}
             disabled={!editing}
           />
-          <Text>{scheduledDate}</Text>
+          {!editing ? (
+            <Text>
+              {!selectMultiple
+                ? time.hours + ' hr ' + time.minutes + ' min'
+                : task.scheduledDate}
+            </Text>
+          ) : (
+            ''
+          )}
         </div>
         <Icon
           src={
             editing ? 'close.svg' : expanded ? 'arrow-up.svg' : 'arrow-down.svg'
           }
           alt={editing ? 'Close' : expanded ? 'Up' : 'Down'}
-          onClick={() => {
+          onClick={(e) => {
             if (editing) {
               if (!creating) {
                 if (window.confirm('Delete task?')) deleteTask(id);
               } else {
                 deleteTask(id);
               }
-            } else setExpanded(!expanded);
+            } else {
+              setExpanded(!expanded);
+              e.stopPropagation();
+            }
           }}
         />
       </Row>
-      <DurationRow>
-        <Text>Duration:</Text>
-        <SpinButton
-          units="hr"
-          val={time.hours}
-          setVal={setHours}
-          min={0}
-          max={23}
-          hidden={!editing}
-        />
-        <SpinButton
-          units="min"
-          val={time.minutes}
-          setVal={setMinutes}
-          min={0}
-          max={59}
-          hidden={!editing}
-        />
-      </DurationRow>
+      {editing ? (
+        <DurationRow>
+          <Text style={{ marginRight: '30px' }}>Duration:</Text>
+          <SpinButton
+            units="hr"
+            val={time.hours}
+            setVal={setHours}
+            min={0}
+            max={23}
+            hidden={!editing}
+          />
+          <SpinButton
+            units="min"
+            val={time.minutes}
+            setVal={setMinutes}
+            min={0}
+            max={59}
+            hidden={!editing}
+          />
+        </DurationRow>
+      ) : (
+        ''
+      )}
+      <Label editing={editing}>Due:</Label>
       <DatePicker
         placeholder="Due Date"
-        value={due}
+        value={!editing ? 'Due on ' + due : due}
         onChange={(e) => setDue(e.target.value)}
         disabled={!editing}
       />
+      <Label editing={editing}>Category:</Label>
       <Dropdown
         selected={category}
         onSelect={(option) => setCategory(option)}
         options={categories}
         disabled={!editing}
       />
+      <Label editing={editing}>Notes:</Label>
       <TextArea
         placeholder="Add notes"
         value={notes}
         onChange={(e) => setNotes(e.value)}
+        myDisabled={!editing}
         disabled={!editing}
       />
       <Row spaceBetween>
-        <Text>Created {created}</Text>
+        <Text>{editing ? 'Updated ' + created : ''}</Text>
         <TextButton onClick={() => setEditing(!editing)}>
           {editing ? 'Save' : 'Edit'}
         </TextButton>
