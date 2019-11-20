@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 
+import Task from '../models/TaskModel'
+
 function getTask(id){
   return axios.get('http://localhost:31337/api/tasks/4', {
     headers: {
@@ -8,7 +10,13 @@ function getTask(id){
       'Content-Type': 'application/json',
     },
     withCredentials: true,
-  }).then(res => res.data);
+  }).then(function(res){
+    let task = new Task(id, res.data.data.name, res.data.data.duration, res.data.data.description);
+    return task;
+  }).catch(err => {
+    let task = new Task(id, '', 0, '');
+    return task;
+  });
 }
 
 const postTask = (object) => {
@@ -16,3 +24,4 @@ const postTask = (object) => {
 }
 
 export default { getTask, postTask };
+

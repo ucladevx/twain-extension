@@ -4,6 +4,8 @@ import Navbar from './Nav';
 import Task from '../presentational/Task';
 import Button from '../presentational/styled/Button';
 
+import TaskService from '../../services/TaskService';
+
 const initTasks = [...Array(5).keys()].map((num) => ({
   id: num,
   title: 'Placeholder Title',
@@ -29,6 +31,10 @@ const emptyTask = {
 const categories = ['School', 'Work', 'Personal', 'Holidays'];
 
 const TaskList = () => {
+  // FOR ALVIN try testing this and see if it prints correctly
+
+  const testTasks = await [...Array(5).keys()].map((num) => (TaskService.getTask(4)));
+  console.log(testTasks)
   const [tasks, setTasks] = useState(initTasks);
   const [creating, setCreating] = useState(false);
 
