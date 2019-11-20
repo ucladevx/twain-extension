@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import Task from '../models/TaskModel'
 
-function getTask(id){
+async function getTask(id){
   return axios.get('http://localhost:31337/api/tasks/4', {
     headers: {
       'Access-Control-Allow-Origin': 'chrome-extension://',
@@ -11,7 +11,13 @@ function getTask(id){
     },
     withCredentials: true,
   }).then(function(res){
-    let task = new Task(id, res.data.data.name, res.data.data.duration, res.data.data.description);
+    console.log(res)
+    console.log(res.data)
+    let name = res.data.data.name
+    let duration = res.data.data.duration
+    let desc = res.data.data.description
+    let task = new Task(id, name, duration, desc);
+    console.log(task)
     return task;
   }).catch(err => {
     let task = new Task(id, '', 0, '');
@@ -24,4 +30,3 @@ const postTask = (object) => {
 }
 
 export default { getTask, postTask };
-
