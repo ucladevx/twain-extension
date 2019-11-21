@@ -31,11 +31,6 @@ const emptyTask = {
 const categories = ['School', 'Work', 'Personal', 'Holidays'];
 
 const TaskList = () => {
-// async function TaskList(){
-  // FOR ALVIN try testing this and see if it prints correctly
-
-  const testTasks = [...Array(5).keys()].map((num) => (TaskService.getTask(4)));
-  console.log(testTasks)
   const [tasks, setTasks] = useState(initTasks);
   const [creating, setCreating] = useState(false);
 

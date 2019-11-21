@@ -1,17 +1,11 @@
 export default class Task{
-  constructor(id, title, duration, description){
+  constructor(id, name, description, duration, scheduled, completed, userID){
     this.id = id;
-    this.title = title;
-    this.scheduledDate= '';
-    this.duration= duration;
-    this.dueDate = new Date().toDateString();
-    this.startTime = '';
-    this.endTime = '';
-    this.category = '';
-    this.notes= description;
-    this.created = '';
-    this.scheduled = false;
-    this.completed = false;
-    this.calendarId = 0;
+    this.name = name;
+    this.description = description;
+    this.duration = duration;
+    this.scheduled = scheduled;
+    this.completed = completed;
+    this.userID = userID;
   }
 }
