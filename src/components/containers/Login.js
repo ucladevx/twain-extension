@@ -8,8 +8,10 @@ import Button from '../presentational/styled/Button';
 import AuthService from '../../services/AuthService';
 
 async function getUser() {
-  let user = await AuthService.signIn()
-  console.log(user)
+  AuthService.signIn(function(user) {
+    console.log(user)
+    console.log("HandleLogin")
+  });
 }
 
 const Login = () => {

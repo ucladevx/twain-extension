@@ -1,24 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 
-import Task from '../models/TaskModel'
 import AuthService from './AuthService'
 
-function createTaskFromResponse(data) {
-  let task = new Task(
-      data.id, 
-      data.name, 
-      data.description, 
-      data.duration,
-      data.scheduled,
-      data.completed,
-      data.userID
-    );
-    return task;
-}
-
-async function getTask(id) {
-  return AuthService.getGoogleAuthToken(async function(token) {
+async function getTask(id, taskHandler) {
+  let getTaskCallback = async function(token) {
     let url = 'http://localhost:31337/api/tasks/' + id.toString()
     
     let res = await axios.get(url, {
@@ -28,19 +14,21 @@ async function getTask(id) {
         'Authorization': 'Bearer ' + token,
       },
       withCredentials: true,
-    }).then(res => createTaskFromResponse(res.data.data))
+    }).then(res => res.data.data)
       .catch(err => {
         console.log(err.response)
         return err
     });
 
-    console.log(res)
-  });
+    taskHandler(res)
+  }
+
+  AuthService.runWithAuthToken(getTaskCallback)
 }
 
-const postTask = async (name, description, duration) => {
+const postTask = async (name, description, duration, postTaskHandler) => {
 
-  return AuthService.getGoogleAuthToken(async function(token) {
+ let postTaskCallback = async function(token) {
     let body = {
       name: name,
       description: description,
@@ -55,12 +43,15 @@ const postTask = async (name, description, duration) => {
       {
         headers: header,
       })
-      .then(res => createTaskFromResponse(res.data.data))
+      .then(res => res.data.data)
       .catch(err => {
         console.log(err.response)
+        return err
       });
-    console.log(res);
-  });
+    postTaskHandler(res)
+  }
+
+  AuthService.runWithAuthToken(postTaskCallback)
 }
 
 export default { getTask, postTask };

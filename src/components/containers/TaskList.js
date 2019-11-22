@@ -31,6 +31,23 @@ const emptyTask = {
 const categories = ['School', 'Work', 'Personal', 'Holidays'];
 
 const TaskList = () => {
+  // EXAMPLE CREATE AND RETRIEVE TASK
+  
+  TaskService.postTask("Homework", "Alex", 1300, function (task) {
+    console.log("Task Posted")
+    console.log(task)
+
+    TaskService.getTask(1, function (task) {
+      console.log("Task Retrieved")
+      console.log(task)
+    })
+  })
+
+  // TaskService.getTask(1, function (task) {
+  //   console.log("Task Retrieved")
+  //   console.log(task)
+  // })
+
   const [tasks, setTasks] = useState(initTasks);
   const [creating, setCreating] = useState(false);
 
