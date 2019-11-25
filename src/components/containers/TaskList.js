@@ -5,6 +5,8 @@ import Task from '../presentational/Task';
 import { FullButton } from '../presentational/styled/Button';
 import { TaskSection } from '../presentational/Dropdown';
 
+import TaskService from '../../services/TaskService';
+
 const initTasks = [...Array(5).keys()].map((num) => ({
   id: num,
   name: 'Placeholder Title',
@@ -33,6 +35,23 @@ const emptyTask = {
 const categories = ['School', 'Work', 'Personal', 'Holidays'];
 
 const TaskList = () => {
+  // EXAMPLE CREATE AND RETRIEVE TASK
+  
+  TaskService.postTask("Homework", "Alex", 1300, function (task) {
+    console.log("Task Posted")
+    console.log(task)
+
+    TaskService.getTask(1, function (task) {
+      console.log("Task Retrieved")
+      console.log(task)
+    })
+  })
+
+  // TaskService.getTask(1, function (task) {
+  //   console.log("Task Retrieved")
+  //   console.log(task)
+  // })
+
   const [tasks, setTasks] = useState(initTasks);
   const [schedTasks, setSchedTasks] = useState(scheduledTasks);
   const [creating, setCreating] = useState(false);
