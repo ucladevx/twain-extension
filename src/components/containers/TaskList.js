@@ -36,15 +36,20 @@ const categories = ['School', 'Work', 'Personal', 'Holidays'];
 
 const TaskList = () => {
   // EXAMPLE CREATE AND RETRIEVE TASK
-  
+
   TaskService.postTask("Homework", "Alex", 1300, function (task) {
     console.log("Task Posted")
     console.log(task)
 
-    TaskService.getTask(1, function (task) {
+    TaskService.getTask(4, function (task) {
       console.log("Task Retrieved")
       console.log(task)
     })
+    TaskService.taskComplete([4,5], function (task) {
+      console.log("Task Retrieved")
+      console.log(task)
+    })
+
   })
 
   // TaskService.getTask(1, function (task) {
