@@ -19,8 +19,9 @@ export const TextButton = styled.button`
   ${Shared}
 
   padding: 8px 13px;
+  margin-right: 7px;
   color: #5187ed;
-  background-color: #fff;
+  background-color: #ddd;
 
   &:hover {
     background-color: #e5e5e5;
@@ -34,13 +35,13 @@ const Button = styled.button`
   padding: 8px 13px;
   color: ${(props) => (props.disabled ? '#999' : '#fff')};
   box-shadow: ${(props) =>
-    props.disabled ? 'none' : '0 3px 6px 0 rgba(0,0,0,0.2)'};
+    props.disabled ? 'none' : '0 3px 6px 0 rgba(0, 0, 0, 0.2)'};
   background-color: ${(props) =>
     props.disabled ? '#ddd' : props.primary ? '#5187ed' : '#828282'};
 
   &:hover {
     background-color: ${(props) =>
-      props.disabled ? '#ddd' : props.primary ? '#739ff0' : '#828282'};
+      props.disabled ? '#ddd' : props.primary ? '#739ff0' : '#8f8f8f'};
   }
 `;
 

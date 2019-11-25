@@ -53,12 +53,18 @@ export const Mini = styled.input`
   ${Shared}
 
   width: 90%;
-  margin: 0px;
+  margin: 0;
+  margin-bottom: -5px;
   padding: 3px;
   background-color: #fff;
   border-bottom: ${(props) =>
     props.myDisabled ? '2px solid transparent' : '2px solid #ccc'};
   border-radius: 0px;
+
+  &:hover {
+    cursor: ${(props) =>
+      props['pointer'] ? 'pointer' : props['text'] ? 'text' : 'default'};
+  }
 
   &:focus {
     border-bottom: 2px solid #5187ed;
