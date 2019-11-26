@@ -9,7 +9,7 @@ export const Text = styled.p`
   margin: 3px;
   color: ${(props) => (props.primary ? '#000' : '#999')};
   font-size: ${(props) => (props.primary ? '16px' : '14px')};
-  cursor: default;
+  cursor: ${(props) => (props.pointer ? 'pointer' : 'default')};
 `;
 
 const Global = styled.div`

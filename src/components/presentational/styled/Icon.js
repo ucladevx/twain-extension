@@ -7,6 +7,7 @@ const Icon = styled.img`
   &:hover {
     background-color: #ddd;
     border-radius: 25px;
+    cursor: pointer;
   }
 `;
 
@@ -18,8 +19,8 @@ export const StaticIcon = styled.img`
 
 export const Select = styled.div`
   height: 25px;
-  width: 25px;
-  margin: 10px;
+  width: ${(props) => (props.hide ? 0 : '25px')}
+  margin: ${(props) => (props.hide ? 0 : '10px')}
   opacity: ${(props) => (props.hide ? 0 : 1)}
   border: 1px solid #ccc;
   border-radius: 30px;

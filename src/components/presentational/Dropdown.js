@@ -5,31 +5,48 @@ import { Row } from './styled/Layout';
 import Input, { Shared } from './styled/Input';
 import Icon, { StaticIcon } from './styled/Icon';
 import { Text } from './styled/Global';
+import { FullButton } from './styled/Button';
 
 const StyledTaskSection = styled.div`
   & .content {
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
-    height: ${(props) => (props.closed ? 0 : 'auto')};
+    max-height: ${(props) => (props.closed ? 0 : '100vh')};
+    overflow: ${(props) => (props.closed ? 'hidden' : 'auto')};
     opacity: ${(props) => (props.closed ? 0 : 1)};
-    transition: all 0.2s;
+    transition: all 0.5s ease-in-out;
   }
 `;
 
-export const TaskSection = ({ title, children, defaultClosed = false }) => {
+export const TaskSection = ({
+  title,
+  emptyPrompt,
+  children,
+  defaultClosed = false
+}) => {
   const [closed, setClosed] = useState(defaultClosed);
 
   return (
     <StyledTaskSection closed={closed}>
-      <Row style={{ margin: '10px' }}>
+      <Row style={{ margin: '0' }}>
         <Text primary style={{ marginRight: 'auto' }}>
           {title}
         </Text>
-        <Icon
-          src={closed ? 'arrow-down.svg' : 'arrow-up.svg'}
-          onClick={() => setClosed(!closed)}
-        />
+        {children.length ? (
+          <Icon
+            src={closed ? 'arrow-down.svg' : 'arrow-up.svg'}
+            onClick={() => setClosed(!closed)}
+          />
+        ) : (
+          ''
+        )}
       </Row>
-      <div className="content">{children}</div>
+      <div className="content">
+        {children.length ? (
+          children
+        ) : (
+          <FullButton info>{emptyPrompt}</FullButton>
+        )}
+      </div>
     </StyledTaskSection>
   );
 };
@@ -84,6 +101,7 @@ const Dropdown = ({ selected, onSelect, options, disabled }) => {
   /* parent element controls disabled property,
      selecting an option changes the closed property */
   const [closed, setClosed] = useState(true);
+
   const node = useRef();
 
   const handleClick = (e) => {
@@ -198,7 +216,7 @@ const DropdownNumpadGrid = styled.div`
 
   & .content {
     grid-template-columns: 50px 50px 50px;
-    margin-top: -3px;
+    margin-top: 1px;
     margin-left: -53px;
   }
 
@@ -226,6 +244,20 @@ export const NumpadInput = (props) => {
   const [firstDigit, setFirstDigit] = useState(true);
   const [closed, setClosed] = useState(true);
 
+  const node = useRef();
+
+  const handleClick = (e) => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    setClosed(true);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
   const updateNumber = (num) => {
     props.onChange({
       target: { value: firstDigit ? num : props.value * 10 + num }
@@ -234,7 +266,7 @@ export const NumpadInput = (props) => {
   };
 
   return (
-    <DropdownNumpadGrid myDisabled={props.disabled} closed={closed}>
+    <DropdownNumpadGrid myDisabled={props.disabled} closed={closed} ref={node}>
       <NumberInput {...props} onClick={() => setClosed(!closed)} />
       <div className="content">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
@@ -267,7 +299,7 @@ const DropdownDateGrid = styled.div`
     width: 77%;
     grid-template-columns: repeat(7, auto);
     margin-left: 10px;
-    margin-top: -8px;
+    margin-top: 1px;
   }
 
   & .content .highlight {
@@ -325,6 +357,20 @@ export const DatePicker = (props) => {
     year: date.getFullYear()
   });
 
+  const node = useRef();
+
+  const handleClick = (e) => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    setClosed(true);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
   /* find weekdays offset from Sunday before first of month */
   const getOffset = (month, year) => {
     const date = new Date();
@@ -376,7 +422,7 @@ export const DatePicker = (props) => {
   };
 
   return (
-    <DropdownDateGrid myDisabled={props.disabled} closed={closed}>
+    <DropdownDateGrid myDisabled={props.disabled} closed={closed} ref={node}>
       <Input
         {...props}
         myDisabled={props.disabled}

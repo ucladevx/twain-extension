@@ -10,7 +10,7 @@ import SpinButton from './Spin';
 import Dropdown, { DatePicker } from './Dropdown';
 
 const Card = styled.div`
-  max-height: ${(props) => (props.expanded ? '500px' : '44px')};
+  max-height: ${(props) => (props.expanded ? '500px' : '50px')};
   width: 85%;
   margin: 10px auto;
   padding: 8px;
@@ -22,8 +22,8 @@ const Card = styled.div`
   transition: all 0.3s;
 
   &:hover {
-    box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.25);
-    cursor: pointer;
+    box-shadow: 0px 3px 6px 0 rgba(0, 0, 0, 0.2);
+    cursor: ${(props) => (props.expanded ? 'default' : 'pointer')};
   }
 `;
 
@@ -86,23 +86,27 @@ const Task = ({
       }
       selected={selected}
     >
-      <Row>
+      <Row style={{ height: '50px', marginBottom: '8px' }}>
         <Select
           hide={selectMultiple}
           onClick={() => {
             if (!selectMultiple) completeTask(id);
           }}
         />
-        <div style={{ width: '80%', textAlign: 'left' }}>
+        <div
+          style={{ width: '70%', textAlign: 'left', margin: '0 auto 0 8px' }}
+        >
           <Mini
             placeholder="Title"
             value={name}
             onChange={(e) => setName(e.value)}
             myDisabled={!editing}
             disabled={!editing}
+            pointer={!editing && !expanded}
+            text={editing && expanded}
           />
           {!editing ? (
-            <Text>
+            <Text pointer={!editing && !expanded}>
               {!selectMultiple
                 ? time.hours + ' hr ' + time.minutes + ' min'
                 : task.scheduledDate}
