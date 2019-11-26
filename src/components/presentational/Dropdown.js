@@ -5,6 +5,7 @@ import { Row } from './styled/Layout';
 import Input, { Shared } from './styled/Input';
 import Icon, { StaticIcon } from './styled/Icon';
 import { Text } from './styled/Global';
+import { FullButton } from './styled/Button';
 
 const StyledTaskSection = styled.div`
   & .content {
@@ -16,7 +17,12 @@ const StyledTaskSection = styled.div`
   }
 `;
 
-export const TaskSection = ({ title, children, defaultClosed = false }) => {
+export const TaskSection = ({
+  title,
+  emptyPrompt,
+  children,
+  defaultClosed = false
+}) => {
   const [closed, setClosed] = useState(defaultClosed);
 
   return (
@@ -25,12 +31,22 @@ export const TaskSection = ({ title, children, defaultClosed = false }) => {
         <Text primary style={{ marginRight: 'auto' }}>
           {title}
         </Text>
-        <Icon
-          src={closed ? 'arrow-down.svg' : 'arrow-up.svg'}
-          onClick={() => setClosed(!closed)}
-        />
+        {children.length ? (
+          <Icon
+            src={closed ? 'arrow-down.svg' : 'arrow-up.svg'}
+            onClick={() => setClosed(!closed)}
+          />
+        ) : (
+          ''
+        )}
       </Row>
-      <div className="content">{children}</div>
+      <div className="content">
+        {children.length ? (
+          children
+        ) : (
+          <FullButton info>{emptyPrompt}</FullButton>
+        )}
+      </div>
     </StyledTaskSection>
   );
 };
