@@ -6,7 +6,7 @@ import AuthService from './AuthService'
 async function getTask(id, taskHandler) {
   let getTaskCallback = async function(token) {
     let url = 'http://localhost:31337/api/tasks/' + id.toString()
-    
+
     let res = await axios.get(url, {
       headers: {
         'Access-Control-Allow-Origin': 'chrome-extension://',
@@ -55,4 +55,25 @@ const postTask = async (name, description, duration, due_date, postTaskHandler) 
   AuthService.runWithAuthToken(postTaskCallback)
 }
 
-export default { getTask, postTask };
+const taskComplete = async (taskIds, taskCompleteHandler) => {
+  let taskCompleteCallback = async function(token){
+    let body = {
+      ids: taskIds
+    }
+    let header = {
+      "Authorization": "Bearer " + token
+    }
+    let res = await axios.post('http://localhost:31337/api/tasks/complete_task', body,
+      {
+        headers:header,
+      }).then(res => res.data.data)
+      .catch(err =>{
+        console.log(err.response);
+        return err;
+      });
+    taskCompleteHandler(res);
+  }
+  AuthService.runWithAuthToken(taskCompleteCallback);
+}
+
+export default { getTask, postTask, taskComplete };
