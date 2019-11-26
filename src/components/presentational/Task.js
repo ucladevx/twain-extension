@@ -45,6 +45,7 @@ const Task = ({
   task,
   completeTask,
   deleteTask,
+  createTask,
   toggleSelect,
   selected,
   categories,
@@ -68,10 +69,19 @@ const Task = ({
   const [time, setTime] = useState(initDuration(task.duration));
   const [due, setDue] = useState(task.dueDate);
   const [category, setCategory] = useState(task.category);
-  const [notes, setNotes] = useState(task.notes);
+  const [description, setDescription] = useState(task.description);
 
   const setHours = (val) => setTime({ hours: val, minutes: time.minutes });
   const setMinutes = (val) => setTime({ hours: time.hours, minutes: val });
+
+  const makeTaskObj = () => {
+    const obj = {
+      name,
+      description,
+      duration: parseInt(time.hours) * 60 + parseInt(time.minutes)
+    };
+    return obj;
+  };
 
   return (
     <Card
@@ -99,7 +109,7 @@ const Task = ({
           <Mini
             placeholder="Title"
             value={name}
-            onChange={(e) => setName(e.value)}
+            onChange={(e) => setName(e.target.value)}
             myDisabled={!editing}
             disabled={!editing}
             pointer={!editing && !expanded}
@@ -107,7 +117,7 @@ const Task = ({
           />
           {!editing ? (
             <Text pointer={!editing && !expanded}>
-              {!selectMultiple
+              {selectMultiple
                 ? time.hours + ' hr ' + time.minutes + ' min'
                 : task.scheduledDate}
             </Text>
@@ -171,18 +181,22 @@ const Task = ({
         options={categories}
         disabled={!editing}
       />
-      <Label editing={editing}>Notes:</Label>
+      <Label editing={editing}>Description:</Label>
       <TextArea
-        placeholder="Add notes"
-        value={notes}
-        onChange={(e) => setNotes(e.value)}
+        placeholder="Add Description."
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
         myDisabled={!editing}
         disabled={!editing}
       />
       <Row spaceBetween>
-        <Text>{editing ? 'Updated ' + created : ''}</Text>
-        <TextButton onClick={() => setEditing(!editing)}>
-          {editing ? 'Save' : 'Edit'}
+        <Text>{editing && created.length ? 'Created ' + created : ''}</Text>
+        <TextButton
+          onClick={() =>
+            creating ? createTask(makeTaskObj()) : setEditing(!editing)
+          }
+        >
+          {creating ? 'Create' : editing ? 'Save' : 'Edit'}
         </TextButton>
       </Row>
     </Card>
