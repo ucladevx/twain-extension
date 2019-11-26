@@ -37,7 +37,8 @@ const categories = ['School', 'Work', 'Personal', 'Holidays'];
 const TaskList = () => {
   // EXAMPLE CREATE AND RETRIEVE TASK
 
-  TaskService.postTask("Homework", "Alex", 1300, function (task) {
+  let time_now = new Date().toISOString()
+  TaskService.postTask("Homework", "Alex", 1300, time_now, function (task) {
     console.log("Task Posted")
     console.log(task)
 
