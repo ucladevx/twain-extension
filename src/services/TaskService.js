@@ -26,13 +26,14 @@ async function getTask(id, taskHandler) {
   AuthService.runWithAuthToken(getTaskCallback)
 }
 
-const postTask = async (name, description, duration, postTaskHandler) => {
+const postTask = async (name, description, duration, due_date, postTaskHandler) => {
 
  let postTaskCallback = async function(token) {
     let body = {
       name: name,
       description: description,
       duration: duration,
+      due_date: due_date,
     }
 
     let header = {
