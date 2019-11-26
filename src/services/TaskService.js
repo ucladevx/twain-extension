@@ -65,7 +65,7 @@ const taskComplete = async (taskIds, taskCompleteHandler) => {
     let res = await axios.post('http://localhost:31337/api/tasks/complete_task', body,
       {
         headers:header,
-      }).then(res => console.log(res))
+      }).then(res => res.data.data)
       .catch(err =>{
         console.log(err.response);
         return err;
