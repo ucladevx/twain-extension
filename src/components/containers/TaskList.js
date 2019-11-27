@@ -10,11 +10,13 @@ import TaskService from '../../services/TaskService';
 const emptyTask = {
   id: 0,
   name: '',
-  duration: 90,
+  duration: 60,
   description: '',
   category: '',
-  created: '',
-  scheduledDate: '',
+  created_date: '',
+  scheduled_date: '',
+  completed: false,
+  scheduled: false,
   due_date: new Date().toISOString()
 };
 
