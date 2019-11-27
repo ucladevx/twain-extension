@@ -91,8 +91,8 @@ const TaskList = () => {
   const deleteTask = (id) => setTasks(tasks.filter((task) => task.id !== id));
 
   const completeTask = (id) =>
-    TaskService.taskComplete([id], (tasks) =>
-      tasks.forEach((completedTask) => {
+    TaskService.taskComplete([id], (completedTasks) =>
+      completedTasks.forEach((completedTask) => {
         console.log('Task completed:', completedTask);
         setTasks(
           tasks.map((task) =>
