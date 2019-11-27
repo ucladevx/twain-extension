@@ -48,10 +48,12 @@ const TaskList = () => {
     let schedArr = [],
       unschedArr = [];
     tasks.forEach((task) => {
-      if (task.scheduled) {
-        schedArr.push(task);
-      } else {
-        unschedArr.push(task);
+      if (!task.completed) {
+        if (task.scheduled) {
+          schedArr.push(task);
+        } else {
+          unschedArr.push(task);
+        }
       }
     });
     setUnscheduled(unschedArr);
@@ -71,7 +73,7 @@ const TaskList = () => {
         tasks.concat({
           /* temporarily filling out extra fields */
           ...task,
-          category: 'School'
+          category: 'Twain'
         })
       );
       setCreating(false);
@@ -90,7 +92,16 @@ const TaskList = () => {
 
   const completeTask = (id) =>
     TaskService.taskComplete([id], (tasks) =>
-      tasks.forEach((task) => console.log('Task completed:', task))
+      tasks.forEach((completedTask) => {
+        console.log('Task completed:', completedTask);
+        setTasks(
+          tasks.map((task) =>
+            task.id === completedTask.id
+              ? { ...completedTask, category: 'Twain' }
+              : task
+          )
+        );
+      })
     );
 
   const scheduleTask = (id) =>
