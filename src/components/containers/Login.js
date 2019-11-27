@@ -6,11 +6,10 @@ import { FullButton } from '../presentational/styled/Button';
 
 import AuthService from '../../services/AuthService';
 
-const Login = ({ handleUser }) => {
+const Login = () => {
   const getUser = async () => {
     AuthService.signIn(function(user) {
-      console.log('Handling login:', user);
-      handleUser(user);
+      console.log('Signed-in user:', user);
     });
   };
 

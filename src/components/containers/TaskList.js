@@ -15,27 +15,27 @@ const emptyTask = {
   category: '',
   created: '',
   scheduledDate: '',
-  dueDate: new Date().toDateString()
+  due_date: new Date().toISOString()
 };
 
 const categories = ['School', 'Work', 'Personal', 'Holidays']; // temporary
 
 const TaskList = () => {
   /* Sample TaskService use: */
-  /* let time_now = new Date().toISOString()
-  TaskService.postTask("Homework", "Alex", 1300, time_now, function (task) {
-    console.log("Task Posted")
-    console.log(task)
+  // let time_now = new Date().toISOString();
+  // TaskService.postTask('Homework', 'Alex', 1300, time_now, function(task) {
+  //   console.log('Task Posted');
+  //   console.log(task);
 
-    TaskService.getTask(4, function (task) {
-      console.log("Task Retrieved")
-      console.log(task)
-    })
-    TaskService.taskComplete([4,5], function (task) {
-      console.log("Task Retrieved")
-      console.log(task)
-    })
-  }) */
+  //   TaskService.getTask(1, function(task) {
+  //     console.log('Task Retrieved');
+  //     console.log(task);
+  //   });
+  //   TaskService.taskComplete([1], function(task) {
+  //     console.log('Task Completed');
+  //     console.log(task);
+  //   });
+  // });
 
   const [tasks, setTasks] = useState([]);
   const [unscheduled, setUnscheduled] = useState([]);
@@ -64,17 +64,14 @@ const TaskList = () => {
   }, [tasks]);
 
   const createTask = (task) => {
-    const { name, description, duration, due } = task;
-    TaskService.postTask(name, description, duration, due, (task) => {
+    const { name, description, duration, due_date } = task;
+    TaskService.postTask(name, description, duration, due_date, (task) => {
       console.log('Creating:', task);
       setTasks(
         tasks.concat({
           /* temporarily filling out extra fields */
           ...task,
-          created: '10/10/10',
-          category: 'School',
-          dueDate: 'Tue Dec 10 2019',
-          scheduledDate: 'Tues 3-4'
+          category: 'School'
         })
       );
       setCreating(false);
@@ -91,12 +88,24 @@ const TaskList = () => {
 
   const deleteTask = (id) => setTasks(tasks.filter((task) => task.id !== id));
 
-  const completeTask = deleteTask; // temporary
+  const completeTask = (id) =>
+    TaskService.taskComplete([id], (tasks) =>
+      tasks.forEach((task) => console.log('Task completed:', task))
+    );
 
   const scheduleTask = (id) =>
-    setTasks(
+    setTasks((tasks) =>
       tasks.map((task) =>
-        task.id === id ? { ...task, scheduled: true } : task
+        task.id === id
+          ? {
+              ...task,
+              scheduled: true,
+              start_time: new Date(
+                Date.now() + 2 * 60 * 60 * 1000
+              ).toISOString(),
+              end_time: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString()
+            }
+          : task
       )
     );
 
@@ -106,7 +115,9 @@ const TaskList = () => {
       selected.forEach((id) => scheduleTask(id));
     } else {
       tasks.forEach((task) => {
-        if (!task.scheduled) scheduleTask(task.id);
+        if (!task.scheduled) {
+          scheduleTask(task.id);
+        }
       });
     }
     setSelected([]);
@@ -114,7 +125,7 @@ const TaskList = () => {
 
   return (
     <div>
-      <Navbar onAdd={() => setCreating(true)} signedIn={signedIn} />
+      <Navbar onAdd={() => setCreating(true)} />
       {creating ? (
         <Task
           task={emptyTask}

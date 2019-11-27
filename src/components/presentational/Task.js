@@ -51,7 +51,16 @@ const Task = ({
   categories,
   creating = false
 }) => {
-  const { id, created } = task;
+  const {
+    id,
+    created_time,
+    completed,
+    completed_time,
+    scheduled,
+    scheduled_time,
+    start_time,
+    end_time
+  } = task;
 
   const initDuration = (duration) => {
     const hours = parseInt(duration / 60);
@@ -59,15 +68,13 @@ const Task = ({
     return { hours, minutes };
   };
 
-  const selectMultiple = !task.scheduled;
-
   /* default to a collapsed, uneditable task */
   const [expanded, setExpanded] = useState(creating);
   const [editing, setEditing] = useState(creating);
 
   const [name, setName] = useState(task.name);
   const [time, setTime] = useState(initDuration(task.duration));
-  const [due, setDue] = useState(task.dueDate);
+  const [due, setDue] = useState(task.due_date);
   const [category, setCategory] = useState(task.category);
   const [description, setDescription] = useState(task.description);
 
@@ -78,18 +85,28 @@ const Task = ({
     const obj = {
       name,
       description,
-      duration: parseInt(time.hours) * 60 + parseInt(time.minutes)
+      duration: parseInt(time.hours) * 60 + parseInt(time.minutes),
+      due_date: new Date(due).toISOString()
     };
     return obj;
+  };
+
+  const formatScheduledDate = () => {
+    const start_time = new Date(task.start_time);
+    const time = start_time.toLocaleTimeString('en-US', {
+      timeStyle: 'short'
+    });
+    const date = start_time.toDateString();
+    return `${time} ${date}`;
   };
 
   return (
     <Card
       expanded={expanded}
-      select={selectMultiple}
+      select={!scheduled}
       onClick={
-        selectMultiple && !expanded
-          ? (e) => {
+        !scheduled && !expanded
+          ? () => {
               toggleSelect(id);
             }
           : () => {}
@@ -98,9 +115,11 @@ const Task = ({
     >
       <Row style={{ height: '50px', marginBottom: '8px' }}>
         <Select
-          hide={selectMultiple}
+          hide={!scheduled}
           onClick={() => {
-            if (!selectMultiple) completeTask(id);
+            if (scheduled) {
+              completeTask(id);
+            }
           }}
         />
         <div
@@ -117,9 +136,11 @@ const Task = ({
           />
           {!editing ? (
             <Text pointer={!editing && !expanded}>
-              {selectMultiple
+              {!scheduled
                 ? time.hours + ' hr ' + time.minutes + ' min'
-                : task.scheduledDate}
+                : `${new Date(task.start_time).toLocaleTimeString('en-US', {
+                    timeStyle: 'short'
+                  })} ${new Date(task.start_time).toDateString()}`}
             </Text>
           ) : (
             ''
@@ -170,7 +191,7 @@ const Task = ({
       <Label editing={editing}>Due:</Label>
       <DatePicker
         placeholder="Due Date"
-        value={!editing ? 'Due on ' + due : due}
+        value={new Date(due).toDateString()}
         onChange={(e) => setDue(e.target.value)}
         disabled={!editing}
       />
@@ -190,7 +211,11 @@ const Task = ({
         disabled={!editing}
       />
       <Row spaceBetween>
-        <Text>{editing && created.length ? 'Created ' + created : ''}</Text>
+        <Text>
+          {editing && created_time
+            ? 'Created ' + new Date(created_time).toDateString()
+            : ''}
+        </Text>
         <TextButton
           onClick={() =>
             creating ? createTask(makeTaskObj()) : setEditing(!editing)
