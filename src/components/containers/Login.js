@@ -1,26 +1,24 @@
 /*global chrome*/
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 
 import Navbar from '../containers/Nav';
-import Button from '../presentational/styled/Button';
+import { FullButton } from '../presentational/styled/Button';
 
 import AuthService from '../../services/AuthService';
 
-async function getUser() {
-  AuthService.signIn(function(user) {
-    console.log(user)
-    console.log("HandleLogin")
-  });
-}
-
 const Login = () => {
+  const getUser = async () => {
+    AuthService.signIn(function(user) {
+      console.log('Signed-in user:', user);
+    });
+  };
+
   return (
     <div>
-     <Navbar />
-     <button onClick={getUser}>
+      <Navbar />
+      <FullButton primary onClick={getUser}>
         Sign in
-     </button>
+      </FullButton>
     </div>
   );
 };

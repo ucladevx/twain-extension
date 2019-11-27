@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Navbar from './Nav';
 import Task from '../presentational/Task';
@@ -7,74 +7,134 @@ import { TaskSection } from '../presentational/Dropdown';
 
 import TaskService from '../../services/TaskService';
 
-const initTasks = [...Array(5).keys()].map((num) => ({
-  id: num,
-  name: 'Placeholder Title',
-  scheduledDate: 'Tues 3:00 pm - 4:00 pm',
-  duration: 90,
-  dueDate: 'Tue Dec 10 2019',
-  category: 'Testing',
-  notes: 'Lorem ipsum',
-  created: '10/10/19',
-  scheduled: false
-}));
-
-const scheduledTasks = initTasks.map((task) => ({ ...task, scheduled: true }));
-
 const emptyTask = {
   id: 0,
-  title: '',
-  scheduledDate: '',
-  duration: 90,
-  dueDate: new Date().toDateString(),
+  name: '',
+  duration: 60,
+  description: '',
   category: '',
-  notes: '',
-  created: ''
+  created_date: '',
+  scheduled_date: '',
+  completed: false,
+  scheduled: false,
+  due_date: new Date().toISOString()
 };
 
-const categories = ['School', 'Work', 'Personal', 'Holidays'];
+const categories = ['School', 'Work', 'Personal', 'Holidays']; // temporary
 
 const TaskList = () => {
-  // EXAMPLE CREATE AND RETRIEVE TASK
+  /* Sample TaskService use: */
+  // let time_now = new Date().toISOString();
+  // TaskService.postTask('Homework', 'Alex', 1300, time_now, function(task) {
+  //   console.log('Task Posted');
+  //   console.log(task);
 
-  let time_now = new Date().toISOString()
-  TaskService.postTask("Homework", "Alex", 1300, time_now, function (task) {
-    console.log("Task Posted")
-    console.log(task)
+  //   TaskService.getTask(1, function(task) {
+  //     console.log('Task Retrieved');
+  //     console.log(task);
+  //   });
+  //   TaskService.taskComplete([1], function(task) {
+  //     console.log('Task Completed');
+  //     console.log(task);
+  //   });
+  // });
 
-    TaskService.getTask(4, function (task) {
-      console.log("Task Retrieved")
-      console.log(task)
-    })
-    TaskService.taskComplete([4,5], function (task) {
-      console.log("Task Retrieved")
-      console.log(task)
-    })
+  const [tasks, setTasks] = useState([]);
+  const [unscheduled, setUnscheduled] = useState([]);
+  const [scheduled, setScheduled] = useState([]);
 
-  })
-
-  // TaskService.getTask(1, function (task) {
-  //   console.log("Task Retrieved")
-  //   console.log(task)
-  // })
-
-  const [tasks, setTasks] = useState(initTasks);
-  const [schedTasks, setSchedTasks] = useState(scheduledTasks);
   const [creating, setCreating] = useState(false);
   const [selected, setSelected] = useState([]);
 
+  const splitTasks = () => {
+    let schedArr = [],
+      unschedArr = [];
+    tasks.forEach((task) => {
+      if (!task.completed) {
+        if (task.scheduled) {
+          schedArr.push(task);
+        } else {
+          unschedArr.push(task);
+        }
+      }
+    });
+    setUnscheduled(unschedArr);
+    setScheduled(schedArr);
+  };
+
+  useEffect(() => {
+    /* split into scheduled and unscheduled every time tasks updates */
+    splitTasks();
+  }, [tasks]);
+
+  const createTask = (task) => {
+    const { name, description, duration, due_date } = task;
+    TaskService.postTask(name, description, duration, due_date, (task) => {
+      console.log('Creating:', task);
+      setTasks(
+        tasks.concat({
+          /* temporarily filling out extra fields */
+          ...task,
+          category: 'Twain'
+        })
+      );
+      setCreating(false);
+    });
+  };
+
   const selectTask = (id) => {
-    if (selected.indexOf(id) === -1) setSelected(selected.concat([id]));
-    else setSelected(selected.filter((num) => num !== id));
+    if (selected.indexOf(id) === -1) {
+      setSelected(selected.concat([id]));
+    } else {
+      setSelected(selected.filter((num) => num !== id));
+    }
   };
 
   const deleteTask = (id) => setTasks(tasks.filter((task) => task.id !== id));
 
   const completeTask = (id) =>
-    setSchedTasks(schedTasks.filter((task) => task.id !== id));
+    TaskService.taskComplete([id], (completedTasks) =>
+      completedTasks.forEach((completedTask) => {
+        console.log('Task completed:', completedTask);
+        setTasks(
+          tasks.map((task) =>
+            task.id === completedTask.id
+              ? { ...completedTask, category: 'Twain' }
+              : task
+          )
+        );
+      })
+    );
 
-  const deleteSchedTask = (id) =>
-    setSchedTasks(schedTasks.filter((task) => task.id !== id));
+  const scheduleTask = (id) =>
+    setTasks((tasks) =>
+      tasks.map((task) =>
+        task.id === id
+          ? {
+              ...task,
+              scheduled: true,
+              start_time: new Date(
+                Date.now() + 2 * 60 * 60 * 1000
+              ).toISOString(),
+              end_time: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString()
+            }
+          : task
+      )
+    );
+
+  const scheduleSelected = () => {
+    /* schedule selected tasks or all */
+    if (selected.length) {
+      selected.forEach((id) => scheduleTask(id));
+    } else {
+      tasks.forEach((task) => {
+        if (!task.scheduled) {
+          scheduleTask(task.id);
+        }
+      });
+    }
+    setSelected([]);
+  };
 
   return (
     <div>
@@ -83,18 +143,18 @@ const TaskList = () => {
         <Task
           task={emptyTask}
           deleteTask={() => setCreating(false)}
+          createTask={createTask}
           categories={categories}
           creating
         />
       ) : (
         ''
       )}
-      <TaskSection title="Not yet scheduled">
-        {tasks.map((task) => (
+      <TaskSection title="Not yet scheduled" emptyPrompt="No created tasks">
+        {unscheduled.map((task) => (
           <Task
             key={task.id}
             task={task}
-            completeTask={deleteTask}
             deleteTask={deleteTask}
             toggleSelect={selectTask}
             selected={selected.indexOf(task.id) !== -1}
@@ -102,16 +162,20 @@ const TaskList = () => {
           />
         ))}
       </TaskSection>
-      <FullButton primary>
+      <FullButton
+        primary={unscheduled.length}
+        disabled={!unscheduled.length}
+        onClick={() => scheduleSelected()}
+      >
         Schedule {selected.length ? selected.length : 'All'} Tasks
       </FullButton>
-      <TaskSection title="Scheduled" defaultClosed={true}>
-        {schedTasks.map((task) => (
+      <TaskSection title="Scheduled" emptyPrompt="No scheduled tasks">
+        {scheduled.map((task) => (
           <Task
             key={task.id}
             task={task}
             completeTask={completeTask}
-            deleteTask={deleteSchedTask}
+            deleteTask={deleteTask}
             categories={categories}
           />
         ))}

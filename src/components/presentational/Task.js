@@ -45,12 +45,22 @@ const Task = ({
   task,
   completeTask,
   deleteTask,
+  createTask,
   toggleSelect,
   selected,
   categories,
   creating = false
 }) => {
-  const { id, created } = task;
+  const {
+    id,
+    created_time,
+    completed,
+    completed_time,
+    scheduled,
+    scheduled_time,
+    start_time,
+    end_time
+  } = task;
 
   const initDuration = (duration) => {
     const hours = parseInt(duration / 60);
@@ -58,28 +68,45 @@ const Task = ({
     return { hours, minutes };
   };
 
-  const selectMultiple = !task.scheduled;
-
   /* default to a collapsed, uneditable task */
   const [expanded, setExpanded] = useState(creating);
   const [editing, setEditing] = useState(creating);
 
   const [name, setName] = useState(task.name);
   const [time, setTime] = useState(initDuration(task.duration));
-  const [due, setDue] = useState(task.dueDate);
+  const [due, setDue] = useState(task.due_date);
   const [category, setCategory] = useState(task.category);
-  const [notes, setNotes] = useState(task.notes);
+  const [description, setDescription] = useState(task.description);
 
   const setHours = (val) => setTime({ hours: val, minutes: time.minutes });
   const setMinutes = (val) => setTime({ hours: time.hours, minutes: val });
 
+  const makeTaskObj = () => {
+    const obj = {
+      name,
+      description,
+      duration: parseInt(time.hours) * 60 + parseInt(time.minutes),
+      due_date: new Date(due).toISOString()
+    };
+    return obj;
+  };
+
+  const formatScheduledDate = () => {
+    const start_time = new Date(task.start_time);
+    const time = start_time.toLocaleTimeString('en-US', {
+      timeStyle: 'short'
+    });
+    const date = start_time.toDateString();
+    return `${time} ${date}`;
+  };
+
   return (
     <Card
       expanded={expanded}
-      select={selectMultiple}
+      select={!scheduled}
       onClick={
-        selectMultiple && !expanded
-          ? (e) => {
+        !scheduled && !expanded
+          ? () => {
               toggleSelect(id);
             }
           : () => {}
@@ -88,9 +115,11 @@ const Task = ({
     >
       <Row style={{ height: '50px', marginBottom: '8px' }}>
         <Select
-          hide={selectMultiple}
+          hide={!scheduled}
           onClick={() => {
-            if (!selectMultiple) completeTask(id);
+            if (scheduled) {
+              completeTask(id);
+            }
           }}
         />
         <div
@@ -99,7 +128,7 @@ const Task = ({
           <Mini
             placeholder="Title"
             value={name}
-            onChange={(e) => setName(e.value)}
+            onChange={(e) => setName(e.target.value)}
             myDisabled={!editing}
             disabled={!editing}
             pointer={!editing && !expanded}
@@ -107,9 +136,11 @@ const Task = ({
           />
           {!editing ? (
             <Text pointer={!editing && !expanded}>
-              {!selectMultiple
+              {!scheduled
                 ? time.hours + ' hr ' + time.minutes + ' min'
-                : task.scheduledDate}
+                : `${new Date(task.start_time).toLocaleTimeString('en-US', {
+                    timeStyle: 'short'
+                  })} ${new Date(task.start_time).toDateString()}`}
             </Text>
           ) : (
             ''
@@ -160,7 +191,7 @@ const Task = ({
       <Label editing={editing}>Due:</Label>
       <DatePicker
         placeholder="Due Date"
-        value={!editing ? 'Due on ' + due : due}
+        value={new Date(due).toDateString()}
         onChange={(e) => setDue(e.target.value)}
         disabled={!editing}
       />
@@ -171,18 +202,26 @@ const Task = ({
         options={categories}
         disabled={!editing}
       />
-      <Label editing={editing}>Notes:</Label>
+      <Label editing={editing}>Description:</Label>
       <TextArea
-        placeholder="Add notes"
-        value={notes}
-        onChange={(e) => setNotes(e.value)}
+        placeholder="Add Description."
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
         myDisabled={!editing}
         disabled={!editing}
       />
       <Row spaceBetween>
-        <Text>{editing ? 'Updated ' + created : ''}</Text>
-        <TextButton onClick={() => setEditing(!editing)}>
-          {editing ? 'Save' : 'Edit'}
+        <Text>
+          {editing && created_time
+            ? 'Created ' + new Date(created_time).toDateString()
+            : ''}
+        </Text>
+        <TextButton
+          onClick={() =>
+            creating ? createTask(makeTaskObj()) : setEditing(!editing)
+          }
+        >
+          {creating ? 'Create' : editing ? 'Save' : 'Edit'}
         </TextButton>
       </Row>
     </Card>
