@@ -24,7 +24,7 @@ const HelpHeader = styled.h2`
 `;
 
 const StyledLink = styled(Link)`
-    display: flex;    //left to right
+    display: flex;
     align-items: center;
     justify-content: flex-start;
   text-decoration: none;
