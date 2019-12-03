@@ -76,4 +76,25 @@ const taskComplete = async (taskIds, taskCompleteHandler) => {
   AuthService.runWithAuthToken(taskCompleteCallback);
 }
 
-export default { getTask, postTask, taskComplete };
+const scheduleTask = async (id, taskScheduleHandler) => {
+  let taskScheduleCallback = async function(token){
+    let body = {
+      ids: [id]
+    }
+    let header = {
+      "Authorization": "Bearer " + token
+    }
+    let res = await axios.post('http://localhost:31337/api/schedule/', body,
+      {
+        headers:header,
+      }).then(res => res.data.data)
+      .catch(err =>{
+        console.log(err.response);
+        return err;
+      });
+    taskScheduleHandler(res);
+  }
+  AuthService.runWithAuthToken(taskScheduleCallback);
+}
+
+export default { getTask, postTask, taskComplete, scheduleTask };
