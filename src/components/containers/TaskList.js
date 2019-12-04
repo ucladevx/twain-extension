@@ -109,7 +109,7 @@ const TaskList = () => {
   const scheduleTask = (id) => {
     console.log('Scheduling task with id:', id);
     TaskService.scheduleTask(id, (updatedTask) => {
-      console.log('Updated scheduled task:', task);
+      console.log('Updated scheduled task:', updatedTask);
       setTasks((tasks) =>
         tasks.map((task) =>
           task.id === id
@@ -176,7 +176,8 @@ const TaskList = () => {
         disabled={!unscheduled.length}
         onClick={() => scheduleSelected()}
       >
-        Schedule {selected.length ? selected.length : 'All'} Tasks
+        Schedule {selected.length ? selected.length : 'All'}{' '}
+        {selected.length === 1 ? 'Task' : 'Tasks'}
       </FullButton>
       <TaskSection title="Scheduled" emptyPrompt="No scheduled tasks">
         {scheduled.map((task) => (
