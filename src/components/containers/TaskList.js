@@ -106,21 +106,30 @@ const TaskList = () => {
       })
     );
 
-  const scheduleTask = (id) =>
-    setTasks((tasks) =>
-      tasks.map((task) =>
-        task.id === id
-          ? {
-              ...task,
-              scheduled: true,
-              start_time: new Date(
-                Date.now() + 2 * 60 * 60 * 1000
-              ).toISOString(),
-              end_time: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString()
-            }
-          : task
-      )
-    );
+  const scheduleTask = (id) => {
+    console.log('Scheduling task with id:', id);
+    TaskService.scheduleTask(id, (updatedTask) => {
+      console.log('Updated scheduled task:', task);
+      setTasks((tasks) =>
+        tasks.map((task) =>
+          task.id === id
+            ? updatedTask
+            : // previous scheduling logic:
+              //    {
+              //       ...task,
+              //       scheduled: true,
+              //       start_time: new Date(
+              //         Date.now() + 2 * 60 * 60 * 1000
+              //       ).toISOString(),
+              //       end_time: new Date(
+              //         Date.now() + 3 * 60 * 60 * 1000
+              //       ).toISOString()
+              //     }
+              task
+        )
+      );
+    });
+  };
 
   const scheduleSelected = () => {
     /* schedule selected tasks or all */
