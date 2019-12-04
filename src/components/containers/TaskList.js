@@ -176,7 +176,8 @@ const TaskList = () => {
         disabled={!unscheduled.length}
         onClick={() => scheduleSelected()}
       >
-        Schedule {selected.length ? selected.length : 'All'} Tasks
+        Schedule {selected.length ? selected.length : 'All'}{' '}
+        {selected.length === 1 ? 'Task' : 'Tasks'}
       </FullButton>
       <TaskSection title="Scheduled" emptyPrompt="No scheduled tasks">
         {scheduled.map((task) => (

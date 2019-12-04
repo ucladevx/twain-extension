@@ -43,8 +43,9 @@ const Button = styled.button`
       : props.primary
       ? '#5187ed'
       : props.info
-      ? '#eee'
+      ? '#fff'
       : '#828282'};
+  border: ${(props) => (props.info ? '3px solid #ddd' : 'none')}
 
   &:hover {
     background-color: ${(props) =>
@@ -53,7 +54,7 @@ const Button = styled.button`
         : props.primary
         ? '#739ff0'
         : props.info
-        ? '#eee'
+        ? '#fff'
         : '#8f8f8f'};
   }
 `;
