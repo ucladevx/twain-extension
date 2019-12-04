@@ -109,7 +109,7 @@ const TaskList = () => {
   const scheduleTask = (id) => {
     console.log('Scheduling task with id:', id);
     TaskService.scheduleTask(id, (updatedTask) => {
-      console.log('Updated scheduled task:', task);
+      console.log('Updated scheduled task:', updatedTask);
       setTasks((tasks) =>
         tasks.map((task) =>
           task.id === id
