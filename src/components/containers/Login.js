@@ -13,12 +13,19 @@ const Login = () => {
     });
   };
 
+  // <FullButton primary onClick={getUser}>
+      //   Sign in
+      // </FullButton>
+
   return (
     <div>
       <Navbar />
-      <FullButton primary onClick={getUser}>
-        Sign in
-      </FullButton>
+      
+      <img 
+       style={{width:'350px'}}
+       resizeMode={'contain'}   /* <= changed  */
+       onClick={getUser}
+       src={ require('../../images/landing_page.jpg') } />
     </div>
   );
 };
