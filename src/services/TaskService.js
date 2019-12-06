@@ -89,8 +89,8 @@ const scheduleTask = async (id, taskScheduleHandler) => {
         headers:header,
       }).then(res => res.data.data)
       .catch(err =>{
-        console.log(err.response);
-        return err;
+        console.log(err.response.data.error);
+        return null;
       });
     taskScheduleHandler(res);
   }

@@ -109,6 +109,10 @@ const TaskList = () => {
   const scheduleTask = (id) => {
     console.log('Scheduling task with id:', id);
     TaskService.scheduleTask(id, (updatedTask) => {
+      if (updatedTask === null) {
+        console.log("Error in scheduling")
+        return
+      } else {
       console.log('Updated scheduled task:', updatedTask);
       setTasks((tasks) =>
         tasks.map((task) =>
@@ -128,6 +132,7 @@ const TaskList = () => {
               task
         )
       );
+    }
     });
   };
 

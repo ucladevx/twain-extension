@@ -66,7 +66,7 @@ const Navbar = ({ onAdd }) => {
 
       <Icon src="add.svg" alt="Add" onClick={onAdd} />
       <Link to="/tasklist">
-        <Icon src="search.svg" alt="Search" />
+        <Icon src="list2.svg" alt="Search" />
       </Link>
       
       <Dropdown closed={closed} onClick={()=>setClosed(!closed)}>
