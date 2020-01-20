@@ -13,7 +13,7 @@ const StyledTaskSection = styled.div`
     max-height: ${(props) => (props.closed ? 0 : '100vh')};
     overflow: ${(props) => (props.closed ? 'hidden' : 'auto')};
     opacity: ${(props) => (props.closed ? 0 : 1)};
-    transition: all 0.5s ease-in-out;
+    transition: all 0.4s ease-in-out, max-height 0.3s ease-in-out;
   }
 `;
 
@@ -21,9 +21,22 @@ export const TaskSection = ({
   title,
   emptyPrompt,
   children,
-  defaultClosed = false
+  actionButton = ''
 }) => {
+  const defaultClosed = !children.length;
   const [closed, setClosed] = useState(defaultClosed);
+
+  useEffect(() => {
+    setClosed(!children.length);
+  }, [children.length]);
+
+  const content = children.length ? (
+    <>
+      {children} {!actionButton.length ? actionButton : ''}
+    </>
+  ) : (
+    <FullButton info>{emptyPrompt}</FullButton>
+  );
 
   return (
     <StyledTaskSection closed={closed}>
@@ -31,22 +44,12 @@ export const TaskSection = ({
         <Text primary style={{ marginRight: 'auto' }}>
           {title}
         </Text>
-        {children.length ? (
-          <Icon
-            src={closed ? 'arrow-down.svg' : 'arrow-up.svg'}
-            onClick={() => setClosed(!closed)}
-          />
-        ) : (
-          ''
-        )}
+        <Icon
+          src={closed ? 'arrow-down.svg' : 'arrow-up.svg'}
+          onClick={() => setClosed(!closed)}
+        />
       </Row>
-      <div className="content">
-        {children.length ? (
-          children
-        ) : (
-          <FullButton info>{emptyPrompt}</FullButton>
-        )}
-      </div>
+      <div className="content">{content}</div>
     </StyledTaskSection>
   );
 };

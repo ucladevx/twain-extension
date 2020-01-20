@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const Icon = styled.img`
   width: 25px;
   padding: 8px;
+  transition: all 0.15s ease-in-out;
 
   &:hover {
     background-color: #ddd;

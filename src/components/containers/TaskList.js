@@ -145,6 +145,17 @@ const TaskList = () => {
     setSelected([]);
   };
 
+  const scheduleButton = (
+    <FullButton
+      primary={unscheduled.length}
+      disabled={!unscheduled.length}
+      onClick={() => scheduleSelected()}
+    >
+      Schedule {selected.length ? selected.length : 'All'}{' '}
+      {selected.length === 1 ? 'Task' : 'Tasks'}
+    </FullButton>
+  );
+
   return (
     <div>
       <Navbar onAdd={() => setCreating(true)} />
@@ -159,7 +170,11 @@ const TaskList = () => {
       ) : (
         ''
       )}
-      <TaskSection title="Not yet scheduled" emptyPrompt="No created tasks">
+      <TaskSection
+        title="Not yet scheduled"
+        emptyPrompt="No created tasks"
+        actionButton={scheduleButton}
+      >
         {unscheduled.map((task) => (
           <Task
             key={task.id}
@@ -171,14 +186,6 @@ const TaskList = () => {
           />
         ))}
       </TaskSection>
-      <FullButton
-        primary={unscheduled.length}
-        disabled={!unscheduled.length}
-        onClick={() => scheduleSelected()}
-      >
-        Schedule {selected.length ? selected.length : 'All'}{' '}
-        {selected.length === 1 ? 'Task' : 'Tasks'}
-      </FullButton>
       <TaskSection title="Scheduled" emptyPrompt="No scheduled tasks">
         {scheduled.map((task) => (
           <Task
