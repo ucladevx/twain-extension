@@ -1,7 +1,6 @@
 /*global chrome*/
 import React, { useState } from 'react';
 
-import Navbar from '../containers/Nav';
 import { FullButton } from '../presentational/styled/Button';
 
 import AuthService from '../../services/AuthService';
@@ -15,7 +14,6 @@ const Login = () => {
 
   return (
     <div>
-      <Navbar />
       <FullButton primary onClick={getUser}>
         Sign in
       </FullButton>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import Navbar from './Nav';
 import Task from '../presentational/Task';
 import { FullButton } from '../presentational/styled/Button';
 import { TaskSection } from '../presentational/Dropdown';
@@ -158,7 +157,6 @@ const TaskList = () => {
 
   return (
     <div>
-      <Navbar onAdd={() => setCreating(true)} />
       {creating ? (
         <Task
           task={emptyTask}
