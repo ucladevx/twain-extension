@@ -531,10 +531,12 @@ const TimePicker = ({ disabled, placeholder, value, onChange }) => {
   const [closed, setClosed] = useState(true);
   const [date, setDate] = useState(new Date(value));
   const [inputField, setInputField] = useState(0);
+  const [cursorPos, setCursorPos] = useState([0, 0]);
 
   const node = useRef();
   const hourRef = useRef();
   const minuteRef = useRef();
+  const inputRef = useRef();
 
   const scrollRef = (ref, offset) => {
     const elem = ref.current;
@@ -543,15 +545,46 @@ const TimePicker = ({ disabled, placeholder, value, onChange }) => {
   };
 
   useEffect(() => {
+    inputRef.current.setSelectionRange(cursorPos[0], cursorPos[1]);
+  }, [date]);
+
+  useEffect(() => {
+    setDate(new Date(value));
     scrollRef(hourRef, 80);
     scrollRef(minuteRef, 80);
+
     // hourRef.current.parentNode.scrollTop =
     //   hourRef.current.offsetTop - hourRef.current.parentNode.offsetTop - 100;
     // minuteRef.current.parentNode.scrollTop =
     //   minuteRef.current.offsetTop -
     //   minuteRef.current.parentNode.offsetTop -
     //   100;
-  }, [date]);
+  }, [value]);
+
+  const getHours = (dateParam = null) => {
+    const hours = dateParam ? dateParam.getHours() : date.getHours();
+    if (hours === 0 || hours === 12) {
+      return 12;
+    }
+    return hours > 12 ? hours - 12 : hours;
+  };
+  const getMinutes = (dateParam = null) =>
+    dateParam ? dateParam.getMinutes() : date.getMinutes();
+  const getAmpm = (dateParam = null) => {
+    const hrs = dateParam ? dateParam.getHours() : date.getHours();
+    return hrs >= 12 ? 'PM' : 'AM';
+  };
+
+  const formatTime = (date) => {
+    let hours = getHours(date);
+    hours = hours < 10 ? `0${hours}` : hours;
+    let minutes = getMinutes(date);
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    const ampm = getAmpm(date);
+
+    const str = `${hours}:${minutes} ${ampm}`;
+    return str;
+  };
 
   const handleClick = (e) => {
     if (node.current.contains(e.target)) {
@@ -565,34 +598,13 @@ const TimePicker = ({ disabled, placeholder, value, onChange }) => {
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  const getHours = () => {
-    const hours = date.getHours();
-    if (hours === 0 || hours === 12) {
-      return 12;
-    }
-    return hours > 12 ? hours - 12 : hours;
-  };
-  const getMinutes = () => date.getMinutes();
-  const getAmpm = () => (date.getHours() >= 12 ? 'PM' : 'AM');
-
-  const formatTime = () => {
-    let hours = getHours();
-    hours = hours < 10 ? `0${hours}` : hours;
-    let minutes = getMinutes();
-    minutes = minutes < 10 ? `0${minutes}` : minutes;
-    const ampm = getAmpm();
-
-    const str = `${hours}:${minutes} ${ampm}`;
-    return str;
-  };
-
   return (
     <DropdownTimeGrid myDisabled={disabled} closed={closed} ref={node}>
       <Input
+        ref={inputRef}
         placeholder={placeholder}
-        value={formatTime(date.toISOString())}
+        value={formatTime(date)}
         onChange={(e) => {
-          console.log(e.target.value);
           const k = e.target.value.indexOf(':');
           const l = e.target.value.indexOf(' ');
 
@@ -601,22 +613,40 @@ const TimePicker = ({ disabled, placeholder, value, onChange }) => {
 
           hours = hours < 0 ? 0 : hours > 12 ? 12 : hours;
           minutes = minutes < 0 ? 0 : minutes > 59 ? 59 : minutes;
-          console.log(hours, minutes);
 
           const newDate = new Date(date);
-          newDate.setHours(hours);
+          if (getAmpm() == 'AM') {
+            newDate.setHours(hours);
+          } else {
+            newDate.setHours(hours + 12);
+          }
           newDate.setMinutes(minutes);
-          console.log('inside', newDate);
 
-          // console.log(e.target.value.replace(/\D/gi, ''));
-          onChange({ target: { value: newDate } });
+          setDate(newDate);
+          if (e.target.selectionStart <= 3) {
+            if (hours != 1) {
+              setCursorPos([3, 5]);
+            } else {
+              setCursorPos([2, 2]);
+            }
+          } else {
+            if (minutes > 5) {
+              setCursorPos([0, 2]);
+            } else {
+              setCursorPos([5, 5]);
+            }
+          }
         }}
         disabled={disabled}
         myDisabled={disabled}
         onClick={(e) => {
-          if (!disabled) setClosed(!closed);
+          if (!disabled) setClosed(false);
 
-          // e.target.setSelectionRange(0, 2);
+          if (e.target.selectionStart < 2) {
+            e.target.setSelectionRange(0, 2);
+          } else {
+            e.target.setSelectionRange(3, 5);
+          }
         }}
         no-hover
       />
@@ -686,7 +716,6 @@ const TimePicker = ({ disabled, placeholder, value, onChange }) => {
 export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
   const [date, setDate] = useState(new Date(value));
   const [time, setTime] = useState(new Date(value));
-  console.log(value);
 
   const handleChange = (date, time) => {
     setDate(date);
@@ -694,7 +723,6 @@ export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
     const newDate = new Date(date);
     newDate.setHours(time.getHours());
     newDate.setMinutes(time.getMinutes());
-    console.log('datetime', newDate);
     onChange({
       target: { value: newDate }
     });
