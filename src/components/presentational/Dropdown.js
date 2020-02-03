@@ -623,6 +623,9 @@ const TimePicker = ({ disabled, placeholder, value, onChange }) => {
           newDate.setMinutes(minutes);
 
           setDate(newDate);
+          onChange({
+            target: { value: newDate }
+          });
           if (e.target.selectionStart <= 3) {
             if (hours != 1) {
               setCursorPos([3, 5]);
