@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -27,12 +27,12 @@ const Header = styled.h1`
 `;
 
 const StyledLink = styled(Link)`
-    display: flex;    //left to right
-    align-items: center;
-    justify-content: flex-start;
+  display: flex; //left to right
+  align-items: center;
+  justify-content: flex-start;
   text-decoration: none;
   font-size: 14px;
-  font:'Roboto';
+  font: 'Roboto';
   color: #000;
   border-bottom: 2px solid #ddd;
 
@@ -45,8 +45,8 @@ const StyledLink = styled(Link)`
 const Dropdown = styled.div`
   & .content {
     position: absolute;
-    visibility: ${props => props.closed ? 'hidden' : 'visible'};
-    opacity: ${props => props.closed ? 0 : 1}
+    visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
+    opacity: ${(props) => (props.closed ? 0 : 1)}
     margin-left: -34%;
     margin-top: 9px;
     background-color: #fff;
@@ -57,40 +57,58 @@ const Dropdown = styled.div`
   }
 `;
 
-const Navbar = ({ onAdd }) => {
+const Navbar = () => {
   const [closed, setClosed] = useState(true);
 
   return (
     <Nav>
       <Header>Twain</Header>
 
-      <Icon src="add.svg" alt="Add" onClick={onAdd} />
       <Link to="/tasklist">
-        <Icon src="search.svg" alt="Search" />
+        <Icon src="tasklist.svg" alt="Tasklist" />
       </Link>
-      
-      <Dropdown closed={closed} onClick={()=>setClosed(!closed)}>
+
+      <Dropdown closed={closed} onClick={() => setClosed(!closed)}>
         <Icon src="settings.svg" alt="Menu" />
-     
-      <div className="content">
-          
-        <StyledLink to="/settings" >
-        <img style={{width:'20px', padding: '10px'}} src="settings.svg"/>
-          <p>Settings</p>
-          <img style={{width:'20px', padding: '10px', marginLeft: '30px'}} src="arrow-right.svg"/>
+
+        <div className="content">
+          <StyledLink to="/settings">
+            <img
+              style={{ width: '20px', padding: '10px' }}
+              src="settings.svg"
+            />
+            <p>Settings</p>
+            <img
+              style={{ width: '20px', padding: '10px', marginLeft: '30px' }}
+              src="arrow-right.svg"
+            />
           </StyledLink>
 
-        <StyledLink to="/help" >
-        <img style={{width:'20px', padding: '10px'}} src="help.svg"/>
-          <p>Help</p>
-        <img style={{width:'20px', padding: '10px', marginLeft: '30px'}} src="arrow-right.svg"/>
-        </StyledLink>
+          <StyledLink to="/help">
+            <img style={{ width: '20px', padding: '10px' }} src="help.svg" />
+            <p>Help</p>
+            <img
+              style={{ width: '20px', padding: '10px', marginLeft: '30px' }}
+              src="arrow-right.svg"
+            />
+          </StyledLink>
 
-        <button style={{color: '#5187ED', border: 'none', font:'Roboto', fontSize:'17px', padding: '10px'}}>Log out</button>
-      </div>
+          <button
+            style={{
+              color: '#5187ED',
+              border: 'none',
+              font: 'Roboto',
+              fontSize: '17px',
+              padding: '10px'
+            }}
+          >
+            Log out
+          </button>
+        </div>
       </Dropdown>
     </Nav>
   );
 };
 
 export default Navbar;
+
