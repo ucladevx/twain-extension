@@ -147,9 +147,6 @@ const Dropdown = ({ selected, onSelect, options, disabled }) => {
         )}
       </Row>
       <div className="content">
-        <p style={{ textAlign: 'center' }}>
-          <StaticIcon src={'add.svg'} /> Add Category
-        </p>
         {options.map((option) => (
           <p
             key={option}
@@ -297,12 +294,15 @@ export const NumpadInput = (props) => {
 
 const DropdownDateGrid = styled.div`
   ${DropdownGrid}
+  text-align: left;
+  width: 50%;
 
   & .content {
     width: 77%;
     grid-template-columns: repeat(7, auto);
-    margin-left: 10px;
-    margin-top: 1px;
+    margin-left: 6px;
+    margin-top: -1px;
+    text-align: center;
   }
 
   & .content .highlight {
@@ -351,6 +351,389 @@ const months = [
   { name: 'NOV', days: 30 },
   { name: 'DEC', days: 31 }
 ];
+
+const TimeWrapper = styled.div`
+  ${Shared}
+  width: 40%;
+  text-align: left;
+
+  & .content {
+    position: absolute;
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    max-height: ${(props) =>
+      !props.myDisabled && !props.closed ? '200px' : '0'};
+    overflow: auto;
+    margin-top: 6px;
+    margin-left: -40px;
+    background-color: #fff;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+    transition: opacity 0.25s;
+  }
+
+  &:hover {
+    cursor: ${(props) => (props.myDisabled ? 'default' : 'pointer')};
+  }
+
+  & .content p {
+    margin: 0;
+    padding: 5px 10px;
+  }
+
+  & .content p:first-of-type {
+    border-radius: 10px 10px 0 0;
+  }
+
+  & .content p:last-of-type {
+    border-radius: 0 0 10px 10px;
+  }
+
+  & .content p:hover {
+    background-color: #e5e5e5;
+  }
+`;
+
+const DateTimeWrapper = styled.div``;
+
+const NumberScroller = ({ disabled, min, max, selected, onSelect }) => {
+  const [closed, setClosed] = useState(true);
+
+  const options = [...Array(max - min + 1).keys()].map((e) => e + min);
+
+  const node = useRef();
+
+  const handleClick = (e) => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    setClosed(true);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  return (
+    <TimeWrapper myDisabled={disabled} closed={closed} ref={node}>
+      <Row
+        onClick={() => {
+          if (!disabled) setClosed(!closed);
+        }}
+      >
+        {disabled ? (
+          <div
+            style={{
+              padding: '2px 12px',
+              borderRadius: '10px',
+              backgroundColor: '#f2bd3f'
+            }}
+          >
+            {selected}
+          </div>
+        ) : (
+          <div>{selected}</div>
+        )}
+      </Row>
+      <div className="content">
+        {options.map((option) => (
+          <p
+            key={option}
+            onClick={() => {
+              onSelect(option);
+              setClosed(true);
+            }}
+          >
+            {option}
+          </p>
+        ))}
+      </div>
+    </TimeWrapper>
+  );
+};
+
+const DropdownTimeGrid = styled.div`
+  ${DropdownGrid}
+  width: 40%;
+  text-align: left;
+
+  & .content {
+    width: 77%;
+    margin-left: -42.5%;
+    margin-top: -1px;
+    grid-template-columns: repeat(3, auto);
+  }
+
+  & .content div {
+    padding: 0;
+    max-height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+
+  & .content div::-webkit-scrollbar {
+    width: 0;
+    // background: transparent;
+  }
+
+  & .content .highlighted {
+    background-color: #5187ed;
+    color: #fff;
+  }
+
+  & .content div:hover {
+    cursor: default;
+    background-color: #fff;
+  }
+
+  & .content p {
+    width: 100%;
+    padding: 8px 5px;
+    margin: 0;
+    text-align: center;
+  }
+
+  & .content p:hover {
+    cursor: pointer;
+    color: #000;
+    background-color: #e5e5e5;
+  }
+
+  & .content div:first-of-type {
+    border-radius: 10px 0 0 10px;
+  }
+
+  & .content div:last-of-type {
+    border-radius: 0 10px 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+`;
+
+const TimePicker = ({ disabled, placeholder, value, onChange }) => {
+  const [closed, setClosed] = useState(true);
+  const [date, setDate] = useState(new Date(value));
+  const [inputField, setInputField] = useState(0);
+  const [cursorPos, setCursorPos] = useState([0, 0]);
+
+  const node = useRef();
+  const hourRef = useRef();
+  const minuteRef = useRef();
+  const inputRef = useRef();
+
+  const scrollRef = (ref, offset) => {
+    const elem = ref.current;
+    const parent = elem.parentNode;
+    parent.scrollTop = elem.offsetTop - parent.offsetTop - offset;
+  };
+
+  useEffect(() => {
+    inputRef.current.setSelectionRange(cursorPos[0], cursorPos[1]);
+  }, [date]);
+
+  useEffect(() => {
+    setDate(new Date(value));
+    scrollRef(hourRef, 80);
+    scrollRef(minuteRef, 80);
+  }, [value]);
+
+  const getHours = (dateParam = null) => {
+    const hours = dateParam ? dateParam.getHours() : date.getHours();
+    if (hours === 0 || hours === 12) {
+      return 12;
+    }
+    return hours > 12 ? hours - 12 : hours;
+  };
+  const getMinutes = (dateParam = null) =>
+    dateParam ? dateParam.getMinutes() : date.getMinutes();
+  const getAmpm = (dateParam = null) => {
+    const hrs = dateParam ? dateParam.getHours() : date.getHours();
+    return hrs >= 12 ? 'PM' : 'AM';
+  };
+
+  const formatTime = (date) => {
+    let hours = getHours(date);
+    hours = hours < 10 ? `0${hours}` : hours;
+    let minutes = getMinutes(date);
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    const ampm = getAmpm(date);
+
+    const str = `${hours}:${minutes} ${ampm}`;
+    return str;
+  };
+
+  const handleClick = (e) => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    setClosed(true);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  return (
+    <DropdownTimeGrid myDisabled={disabled} closed={closed} ref={node}>
+      <Input
+        ref={inputRef}
+        placeholder={placeholder}
+        value={formatTime(date)}
+        onChange={(e) => {
+          const k = e.target.value.indexOf(':');
+          const l = e.target.value.indexOf(' ');
+
+          let hours = parseInt(e.target.value.substring(0, k));
+          let minutes = parseInt(e.target.value.substring(k + 1, l));
+
+          hours = hours < 0 ? 0 : hours > 12 ? 12 : hours;
+          minutes = minutes < 0 ? 0 : minutes > 59 ? 59 : minutes;
+
+          const newDate = new Date(date);
+          if (getAmpm() == 'AM') {
+            newDate.setHours(hours);
+          } else {
+            newDate.setHours(hours + 12);
+          }
+          newDate.setMinutes(minutes);
+
+          setDate(newDate);
+          onChange({
+            target: { value: newDate }
+          });
+          if (e.target.selectionStart <= 3) {
+            if (hours != 1) {
+              setCursorPos([3, 5]);
+            } else {
+              setCursorPos([2, 2]);
+            }
+          } else {
+            if (minutes > 5) {
+              setCursorPos([0, 2]);
+            } else {
+              setCursorPos([5, 5]);
+            }
+          }
+        }}
+        disabled={disabled}
+        myDisabled={disabled}
+        onClick={(e) => {
+          if (!disabled) setClosed(false);
+
+          if (e.target.selectionStart < 2) {
+            e.target.setSelectionRange(0, 2);
+          } else {
+            e.target.setSelectionRange(3, 5);
+          }
+        }}
+        no-hover
+      />
+      <div className="content">
+        <div>
+          {[...Array(12).keys()].map((e) => (
+            <p
+              ref={getHours() === e + 1 ? hourRef : null}
+              className={getHours() === e + 1 ? 'highlighted' : ''}
+              onClick={() => {
+                const newDate = new Date(date);
+                if (getAmpm() === 'AM') newDate.setHours(e + 1);
+                else newDate.setHours(e + 13);
+                setDate(newDate);
+                onChange({
+                  target: { value: newDate }
+                });
+              }}
+            >
+              {e + 1 < 10 ? '0' + (e + 1) : e + 1}
+            </p>
+          ))}
+        </div>
+        <div>
+          {[...Array(59).keys()].map((e) => (
+            <p
+              ref={getMinutes() === e + 1 ? minuteRef : null}
+              className={getMinutes() === e + 1 ? 'highlighted' : ''}
+              onClick={() => {
+                const newDate = new Date(date);
+                newDate.setMinutes(e + 1);
+                setDate(newDate);
+                onChange({
+                  target: { value: newDate }
+                });
+              }}
+            >
+              {e + 1 < 10 ? '0' + (e + 1) : e + 1}
+            </p>
+          ))}
+        </div>
+        <div>
+          {['AM', 'PM'].map((e) => (
+            <p
+              className={getAmpm() === e ? 'highlighted' : ''}
+              onClick={() => {
+                const newDate = new Date(date);
+                const hours = newDate.getHours();
+                if (e === 'PM' && hours < 12) newDate.setHours(hours + 12);
+                else if (e === 'AM' && hours >= 12)
+                  newDate.setHours(hours - 12);
+                setDate(newDate);
+                onChange({
+                  target: { value: newDate }
+                });
+              }}
+            >
+              {e}
+            </p>
+          ))}
+        </div>
+      </div>
+    </DropdownTimeGrid>
+  );
+};
+
+export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
+  const [date, setDate] = useState(new Date(value));
+  const [time, setTime] = useState(new Date(value));
+
+  const handleChange = (date, time) => {
+    setDate(date);
+    setTime(time);
+    const newDate = new Date(date);
+    newDate.setHours(time.getHours());
+    newDate.setMinutes(time.getMinutes());
+
+    onChange({
+      target: { value: newDate }
+    });
+  };
+
+  return (
+    <DateTimeWrapper>
+      <Row spaceEvenly style={{ width: '100%', marginLeft: '-8px' }}>
+        <DatePicker
+          disabled={disabled}
+          placeholder={placeholder}
+          value={date.toDateString()}
+          onChange={(e) => {
+            handleChange(e.target.value, time);
+          }}
+        />
+        <TimePicker
+          disabled={disabled}
+          placeholder="Time"
+          value={time}
+          onChange={(e) => {
+            handleChange(date, e.target.value);
+          }}
+        />
+      </Row>
+    </DateTimeWrapper>
+  );
+};
 
 export const DatePicker = (props) => {
   const [closed, setClosed] = useState(true);
@@ -483,11 +866,12 @@ export const DatePicker = (props) => {
             key={num}
             className={checkClasses(num + 1)}
             onClick={() => {
-              const newDate = generateDateString(num + 1);
+              const newDateStr = generateDateString(num + 1);
+              const newDate = new Date(newDateStr);
               props.onChange({
                 target: { value: newDate }
               });
-              setDate(new Date(newDate));
+              setDate(newDate);
               setClosed(true);
             }}
           >

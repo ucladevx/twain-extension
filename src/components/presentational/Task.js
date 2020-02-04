@@ -7,7 +7,7 @@ import { TextButton } from './styled/Button';
 import { TextArea, Mini } from './styled/Input';
 import Icon, { Select } from './styled/Icon';
 import SpinButton from './Spin';
-import Dropdown, { DatePicker } from './Dropdown';
+import Dropdown, { DateTimePicker } from './Dropdown';
 
 const Card = styled.div`
   max-height: ${(props) => (props.expanded ? '500px' : '50px')};
@@ -75,11 +75,17 @@ const Task = ({
   const [name, setName] = useState(task.name);
   const [time, setTime] = useState(initDuration(task.duration));
   const [due, setDue] = useState(task.due_date);
+  const [dueTime, setDueTime] = useState({ hours: 15, minutes: 30 });
   const [category, setCategory] = useState(task.category);
   const [description, setDescription] = useState(task.description);
 
   const setHours = (val) => setTime({ hours: val, minutes: time.minutes });
   const setMinutes = (val) => setTime({ hours: time.hours, minutes: val });
+
+  const setDueHours = (val) =>
+    setDueTime({ hours: val, minutes: dueTime.minutes });
+  const setDueMinutes = (val) =>
+    setDueTime({ hours: dueTime.hours, minutes: val });
 
   const makeTaskObj = () => {
     const obj = {
@@ -90,6 +96,18 @@ const Task = ({
     };
     return obj;
   };
+
+  const categoriesDropdown = (
+    <>
+      <Label editing={editing}>Category:</Label>
+      <Dropdown
+        selected={category}
+        onSelect={(option) => setCategory(option)}
+        options={categories}
+        disabled={!editing}
+      />
+    </>
+  );
 
   const formatScheduledDate = () => {
     const start_time = new Date(task.start_time);
@@ -189,17 +207,12 @@ const Task = ({
         ''
       )}
       <Label editing={editing}>Due:</Label>
-      <DatePicker
+      <DateTimePicker
         placeholder="Due Date"
-        value={new Date(due).toDateString()}
-        onChange={(e) => setDue(e.target.value)}
-        disabled={!editing}
-      />
-      <Label editing={editing}>Category:</Label>
-      <Dropdown
-        selected={category}
-        onSelect={(option) => setCategory(option)}
-        options={categories}
+        value={new Date(due).toISOString()}
+        onChange={(e) => {
+          setDue(e.target.value);
+        }}
         disabled={!editing}
       />
       <Label editing={editing}>Description:</Label>
