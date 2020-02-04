@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Navbar from './components/containers/Nav';
 
 import Global from './components/presentational/styled/Global';
+import Onboarding from './components/containers/Onboarding';
 import Login from './components/containers/Login';
 import TaskList from './components/containers/TaskList';
 import Settings from './components/containers/Settings';
@@ -27,7 +28,10 @@ const App = () => {
         <Switch>
           <Route path="/settings" component={Settings} />
           <Route path="/help" component={Help} />
-          <Route component={DefaultContainer} />
+          <Route path="/tasklist" component={DefaultContainer} />
+          <Route path="/login" component={DefaultContainer} />
+
+          <Route component={Onboarding} />
         </Switch>
       </Router>
     </Global>
