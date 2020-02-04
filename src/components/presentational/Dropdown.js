@@ -239,20 +239,6 @@ const DropdownNumpadGrid = styled.div`
   }
 `;
 
-// export const TimePicker = (props) => {
-//   const maxTime = props.hours ? 23 : 59;
-//   const nums = [...Array(maxTime).keys()];
-
-//   return (
-//     <Dropdown
-//       selected={props.val}
-//       onSelect={props.setVal}
-//       options={nums}
-//       disabled={props.hidden}
-//     />
-//   );
-// };
-
 export const NumpadInput = (props) => {
   /* track which digit numpad is changing */
   const [firstDigit, setFirstDigit] = useState(true);
@@ -552,13 +538,6 @@ const TimePicker = ({ disabled, placeholder, value, onChange }) => {
     setDate(new Date(value));
     scrollRef(hourRef, 80);
     scrollRef(minuteRef, 80);
-
-    // hourRef.current.parentNode.scrollTop =
-    //   hourRef.current.offsetTop - hourRef.current.parentNode.offsetTop - 100;
-    // minuteRef.current.parentNode.scrollTop =
-    //   minuteRef.current.offsetTop -
-    //   minuteRef.current.parentNode.offsetTop -
-    //   100;
   }, [value]);
 
   const getHours = (dateParam = null) => {
@@ -740,7 +719,6 @@ export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
           placeholder={placeholder}
           value={date.toDateString()}
           onChange={(e) => {
-            // setDate(e.target.value);
             handleChange(e.target.value, time);
           }}
         />
@@ -749,7 +727,6 @@ export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
           placeholder="Time"
           value={time}
           onChange={(e) => {
-            // setTime(e.target.value);
             handleChange(date, e.target.value);
           }}
         />

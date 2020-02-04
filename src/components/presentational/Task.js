@@ -211,7 +211,6 @@ const Task = ({
         placeholder="Due Date"
         value={new Date(due).toISOString()}
         onChange={(e) => {
-          console.log('task', e.target.value);
           setDue(e.target.value);
         }}
         disabled={!editing}
