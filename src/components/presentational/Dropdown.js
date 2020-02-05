@@ -250,6 +250,7 @@ export const NumpadInput = (props) => {
     if (node.current.contains(e.target)) {
       return;
     }
+    setFirstDigit(true);
     setClosed(true);
   };
 
@@ -276,7 +277,6 @@ export const NumpadInput = (props) => {
         ))}
         <div
           onClick={() => {
-            setFirstDigit(true);
             updateNumber(0);
             setFirstDigit(true);
           }}
@@ -284,7 +284,12 @@ export const NumpadInput = (props) => {
           <StaticIcon src="close.svg" />
         </div>
         <div onClick={() => updateNumber(0)}>0</div>
-        <div onClick={() => setClosed(true)}>
+        <div
+          onClick={() => {
+            setClosed(true);
+            setFirstDigit(true);
+          }}
+        >
           <StaticIcon src="check.svg" />
         </div>
       </div>

@@ -230,6 +230,7 @@ const Task = ({
             : ''}
         </Text>
         <TextButton
+          tabIndex="-1"
           onClick={() =>
             creating ? createTask(makeTaskObj()) : setEditing(!editing)
           }
