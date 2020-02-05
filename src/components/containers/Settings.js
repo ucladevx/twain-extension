@@ -90,7 +90,7 @@ const Settings = () => {
   //   console.log('Primary calendar set');
   //   console.log(res);
   // });
-  // UserService.setRelevantCalendars("cal1//cal3//cal6//cal7", function(res) {
+  // UserService.setRelevantCalendars("cal1,cal3,cal6,cal7", function(res) {
   //   console.log('Relevant calendars set');
   //   console.log(res);
   // });
