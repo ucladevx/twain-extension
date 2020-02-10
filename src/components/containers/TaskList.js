@@ -195,9 +195,7 @@ const TaskList = () => {
           />
         ))}
       </TaskSection>
-      <FullButton secondary onClick={() => setCreating(true)}>
-        Create Task
-      </FullButton>
+      <FullButton onClick={() => setCreating(true)}>Create Task</FullButton>
     </div>
   );
 };

@@ -34,7 +34,8 @@ const Button = styled.button`
 
   margin: 10px;
   padding: 8px 13px;
-  color: ${(props) => (props.disabled || props.info ? '#999' : '#fff')};
+  color: ${(props) =>
+    props.disabled || props.info || props.secondary ? '#666' : '#fff'};
   box-shadow: ${(props) =>
     props.disabled || props.info ? 'none' : '0 3px 6px 0 rgba(0, 0, 0, 0.2)'};
   background-color: ${(props) =>
@@ -42,14 +43,14 @@ const Button = styled.button`
       ? '#ddd'
       : props.primary
       ? '#5187ed'
-      : props.info
+      : props.info || props.secondary
       ? '#fff'
       : '#828282'};
   border: ${(props) => (props.info ? '3px solid #ddd' : 'none')}
 
   &:hover {
     background-color: ${(props) =>
-      props.disabled
+      props.disabled || props.secondary
         ? '#ddd'
         : props.primary
         ? '#739ff0'
