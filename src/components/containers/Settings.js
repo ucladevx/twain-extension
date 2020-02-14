@@ -94,6 +94,10 @@ const Settings = () => {
   //   console.log('Relevant calendars set');
   //   console.log(res);
   // });
+  // UserService.getLoggedInUser(function(res) {
+  //   console.log('user info retrieved');
+  //   console.log(res);
+  // });
 
   return (
     <div>

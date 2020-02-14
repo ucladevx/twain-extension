@@ -78,4 +78,28 @@ async function setRelevantCalendars(relevant_calendars, setRelevantCalendarsHand
   AuthService.runWithAuthToken(setRelevantCalendarsCallback)
 }
 
-export default {setHours, setPrimaryCalendar, setRelevantCalendars}
+async function getLoggedInUser(getLoggedInUserHandler) {
+  let getLoggedInUserCallback = async function(token){
+
+    let url = 'http://localhost:31337/api/users/me'
+
+    let res = await axios.get(url, {
+      headers: {
+        'Access-Control-Allow-Origin': 'chrome-extension://',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token,
+      },
+      withCredentials: true,
+    }).then(res => res.data.data)
+      .catch(err => {
+        console.log(err.response)
+        return err
+    });
+
+    getLoggedInUserHandler(res)
+  }
+  AuthService.runWithAuthToken(getLoggedInUserCallback)
+}
+
+
+export default {setHours, setPrimaryCalendar, setRelevantCalendars, getLoggedInUser}
