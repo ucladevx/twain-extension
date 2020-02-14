@@ -4,20 +4,36 @@ import { Link, useHistory } from 'react-router-dom';
 import Button, { FullButton } from '../presentational/styled/Button';
 import Dropdown, { Selection, TimePicker } from '../presentational/Dropdown';
 import { Row } from '../presentational/styled/Layout';
-
 import { Background, Centered } from '../presentational/styled/Layout';
 
-const Intro = ({ handleContinue }) => (
-  <div>
-    <h2>Scheduling your day so you don't have to.</h2>
-    <p>
-      We optimize your free time, allowing you to be your most productive self.
-    </p>
-    <FullButton secondary onClick={handleContinue}>
-      Continue with Google
-    </FullButton>
-  </div>
-);
+import AuthService from '../../services/AuthService';
+
+const Intro = ({ handleContinue }) => {
+  const getUser = async () => {
+    AuthService.signIn(function(user) {
+      console.log('Signed-in user:', user);
+    });
+  };
+
+  return (
+    <div>
+      <h2>Scheduling your day so you don't have to.</h2>
+      <p>
+        We optimize your free time, allowing you to be your most productive
+        self.
+      </p>
+      <FullButton
+        secondary
+        onClick={() => {
+          getUser();
+          handleContinue();
+        }}
+      >
+        Continue with Google
+      </FullButton>
+    </div>
+  );
+};
 
 const Welcome = ({ handleContinue }) => (
   <div>
@@ -141,7 +157,7 @@ const Times = ({ handleContinue }) => {
 };
 
 const Content = [
-  { component: Intro, customButton: true },
+  { component: Intro, customButton: false },
   { component: Welcome, customButton: true },
   { component: OptionDropdown, customButton: true },
   { component: OptionSelection, customButton: true },
