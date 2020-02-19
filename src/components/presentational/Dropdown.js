@@ -57,25 +57,36 @@ export const TaskSection = ({
 const DropdownWrapper = styled.div`
   ${Shared}
 
+  position: relative;
   width: 90%;
   margin: 5px auto;
-  text-align: left;
+  // text-align: left;
   padding: 0 8px;
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: ${(props) => (props.closed ? '7px' : '7px 7px 0 0')};
 
   & .content {
     position: absolute;
     opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
-    width: 77%;
+    // width: 76%;
+    width: 100%;
     max-height: ${(props) =>
       !props.myDisabled && !props.closed ? '300px' : '0'};
     overflow: auto;
-    margin-top: 6px;
+    margin-top: 2px;
     margin-left: -8px;
-    background-color: #fff;
+    // background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.7);
     border: none;
-    border-radius: 10px;
+    border-radius: 0 0 7px 7px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
     transition: opacity 0.25s;
+  }
+
+  .content::webkit-scrollbar {
+    width: 0px;
+    background: transparent;
   }
 
   &:hover {
@@ -85,22 +96,80 @@ const DropdownWrapper = styled.div`
   & .content p {
     margin: 0;
     padding: 10px 15px;
+    border-top: 1px solid #909090;
   }
 
-  & .content p:first-of-type {
-    border-radius: 10px 10px 0 0;
-  }
+  // & .content p:first-of-type {
+  //   border-radius: 10px 10px 0 0;
+  // }
 
   & .content p:last-of-type {
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 7px 7px;
   }
 
   & .content p:hover {
-    background-color: #e5e5e5;
+    background-color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
   }
 `;
 
-const Dropdown = ({ selected, onSelect, options, disabled }) => {
+const SelectionWrapper = styled.div`
+  ${Shared}
+
+  margin: 0;
+  padding: 0;
+  color: #666;
+
+  .selected {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 7px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+  transition: opacity 0.25s;
+
+  p {
+    margin: 0;
+    padding: 10px 15px;
+    border-top: 1px solid #909090;
+  }
+
+  p:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+  }
+
+  p:first-of-type {
+    border-radius: 7px 7px 0 0;
+  }
+
+  p:last-of-type {
+    border-radius: 0 0 7px 7px;
+  }
+`;
+
+export const Selection = ({ selected, onSelect, options }) => {
+  return (
+    <SelectionWrapper>
+      {options.map((option) => (
+        <p
+          className={selected.includes(option) ? 'selected' : ''}
+          key={option}
+          onClick={() => {
+            onSelect(option);
+          }}
+        >
+          {option}
+        </p>
+      ))}
+    </SelectionWrapper>
+  );
+};
+
+const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini }) => {
   /* parent element controls disabled property,
      selecting an option changes the closed property */
   const [closed, setClosed] = useState(true);
@@ -112,6 +181,7 @@ const Dropdown = ({ selected, onSelect, options, disabled }) => {
       return;
     }
     setClosed(true);
+    onClose(true);
   };
 
   useEffect(() => {
@@ -123,24 +193,30 @@ const Dropdown = ({ selected, onSelect, options, disabled }) => {
     <DropdownWrapper myDisabled={disabled} closed={closed} ref={node}>
       <Row
         onClick={() => {
-          if (!disabled) setClosed(!closed);
+          if (!disabled) {
+            setClosed(!closed);
+            onClose(!closed);
+          }
         }}
-        style={{ padding: '8px 0' }}
+        style={{
+          padding: '8px 0',
+          height: '30px'
+        }}
       >
         {disabled ? (
           <div
             style={{
               padding: '2px 12px',
-              borderRadius: '10px',
+              height: '30px',
               backgroundColor: '#f2bd3f'
             }}
           >
             {selected}
           </div>
         ) : (
-          <div>{selected}</div>
+          <div style={{ borderRadius: '0px' }}>{selected}</div>
         )}
-        {disabled ? (
+        {disabled || mini ? (
           ''
         ) : (
           <StaticIcon src={closed ? 'arrow-down.svg' : 'arrow-up.svg'} />
@@ -153,6 +229,7 @@ const Dropdown = ({ selected, onSelect, options, disabled }) => {
             onClick={() => {
               onSelect(option);
               setClosed(true);
+              onClose(true);
             }}
           >
             {option}
@@ -518,7 +595,7 @@ const DropdownTimeGrid = styled.div`
   }
 `;
 
-const TimePicker = ({ disabled, placeholder, value, onChange }) => {
+export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
   const [closed, setClosed] = useState(true);
   const [date, setDate] = useState(new Date(value));
   const [inputField, setInputField] = useState(0);
