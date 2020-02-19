@@ -98,6 +98,10 @@ const Settings = () => {
   //   console.log('user info retrieved');
   //   console.log(res);
   // });
+  // UserService.getUserCalendars(function(res) {
+  //   console.log('user info retrieved');
+  //   console.log(res);
+  // });
 
   return (
     <div>
