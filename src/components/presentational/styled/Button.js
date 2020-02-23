@@ -32,6 +32,14 @@ export const TextButton = styled.button`
 const Button = styled.button`
   ${Shared}
 
+  background-image: ${(props) =>
+    props.image ? `url(${props.image})` : 'none'};
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 30px 90px;
+  min-height: 40px;
+  min-width: 80px;
+
   margin: 10px;
   padding: 8px 13px;
   color: ${(props) =>

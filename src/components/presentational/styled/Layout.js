@@ -17,7 +17,8 @@ export const Centered = styled.div`
 
   p,
   li,
-  h2 {
+  h2,
+  h1 {
     text-align: left;
   }
 `;
@@ -30,5 +31,7 @@ export const Row = styled.div`
       ? 'space-between'
       : props.spaceEvenly
       ? 'space-evenly'
+      : props.flexEnd
+      ? 'flex-end'
       : 'flex-start'};
 `;

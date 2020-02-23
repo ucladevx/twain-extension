@@ -17,7 +17,7 @@ const Intro = ({ handleContinue }) => {
 
   return (
     <div>
-      <h2>Scheduling your day so you don't have to.</h2>
+      <h1>Scheduling your day so you don't have to.</h1>
       <p>
         We optimize your free time, allowing you to be your most productive
         self.
@@ -28,6 +28,7 @@ const Intro = ({ handleContinue }) => {
           getUser();
           handleContinue();
         }}
+        style={{ color: '#5187ED' }}
       >
         Continue with Google
       </FullButton>
@@ -66,15 +67,15 @@ const OptionDropdown = ({ handleContinue }) => {
         onClose={(bool) => setClosed(bool)}
       />
       {closed ? (
-        <Button
-          disabled={!selected}
-          secondary={selected}
-          onClick={handleContinue}
-          style={{ padding: '10px 30px', marginLeft: '70%' }}
-        >
-          <img src="arrow-right.svg" />
-          Next
-        </Button>
+        <Row flexEnd>
+          <Button
+            disabled={!selected}
+            secondary={selected}
+            onClick={handleContinue}
+            style={{ padding: '10px 30px' }}
+            image="arrow-forward.svg"
+          />
+        </Row>
       ) : (
         ''
       )}
@@ -102,15 +103,15 @@ const OptionSelection = ({ handleContinue }) => {
         }}
       />
       <br />
-      <Button
-        disabled={!selected.length}
-        secondary={selected.length}
-        onClick={handleContinue}
-        style={{ padding: '10px 30px', marginLeft: '70%' }}
-      >
-        <img src="arrow-right.svg" />
-        Next
-      </Button>
+      <Row flexEnd>
+        <Button
+          disabled={!selected.length}
+          secondary={selected.length}
+          onClick={handleContinue}
+          style={{ padding: '10px 30px' }}
+          image="arrow-forward.svg"
+        />
+      </Row>
     </div>
   );
 };
@@ -124,6 +125,7 @@ const Times = ({ handleContinue }) => {
     return `${hour < 10 ? '0' + hour : hour}:${minute} ${ampm}`;
   });
 
+  const [closed, setClosed] = useState(true);
   const [start, setStart] = useState('08:00 am');
   const [end, setEnd] = useState('06:00 pm');
 
@@ -139,6 +141,7 @@ const Times = ({ handleContinue }) => {
             selected={start}
             onSelect={(opt) => setStart(opt)}
             onClose={() => {}}
+            style={{ fontSize: '9px' }}
           />
         </div>
         to
@@ -148,20 +151,33 @@ const Times = ({ handleContinue }) => {
             options={hours}
             selected={end}
             onSelect={(opt) => setEnd(opt)}
-            onClose={() => {}}
+            onClose={(bool) => setClosed(bool)}
+            style={{ fontSize: '9px' }}
           />
         </div>
       </Row>
+      {closed ? (
+        <Row flexEnd>
+          <Button
+            secondary
+            onClick={handleContinue}
+            style={{ padding: '10px 30px' }}
+            image="arrow-forward.svg"
+          />
+        </Row>
+      ) : (
+        ''
+      )}
     </div>
   );
 };
 
 const Content = [
-  { component: Intro, customButton: false },
+  { component: Intro, customButton: true },
   { component: Welcome, customButton: true },
   { component: OptionDropdown, customButton: true },
   { component: OptionSelection, customButton: true },
-  { component: Times, customButton: false }
+  { component: Times, customButton: true }
 ];
 
 const Onboarding = () => {
@@ -178,19 +194,19 @@ const Onboarding = () => {
 
   return (
     <Background>
-      <Centered>
+      <Centered style={{ fontFamily: 'roboto' }}>
         {getCurrent()}
         {Content[page].customButton ? (
           ''
         ) : (
-          <Button
-            secondary
-            onClick={handleContinue}
-            style={{ padding: '10px 30px', marginLeft: '70%' }}
-          >
-            <img src="arrow-right.svg" />
-            Next
-          </Button>
+          <Row flexEnd>
+            <Button
+              secondary
+              onClick={handleContinue}
+              style={{ padding: '10px 30px' }}
+              image="arrow-forward.svg"
+            />
+          </Row>
         )}
       </Centered>
     </Background>
