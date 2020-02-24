@@ -816,6 +816,17 @@ export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
     });
   };
 
+  const formatTime = (date) => {
+    let hours = date.getHours();
+    hours = hours < 10 ? `0${hours}` : hours;
+    let minutes = date.getMinutes();
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+
+    const str = `${hours}:${minutes} ${ampm}`;
+    return str;
+  };
+
   return (
     <DateTimeWrapper>
       <Row

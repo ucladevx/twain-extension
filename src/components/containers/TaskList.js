@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Task from '../presentational/Task';
 import { FullButton } from '../presentational/styled/Button';
@@ -44,6 +45,8 @@ const TaskList = () => {
 
   const [creating, setCreating] = useState(false);
   const [selected, setSelected] = useState([]);
+
+  const history = useHistory();
 
   const splitTasks = () => {
     let schedArr = [],
@@ -148,7 +151,10 @@ const TaskList = () => {
     <FullButton
       primary={unscheduled.length}
       disabled={!unscheduled.length}
-      onClick={() => scheduleSelected()}
+      onClick={() => {
+        // scheduleSelected();
+        history.push('/scheduling');
+      }}
     >
       Schedule {selected.length ? selected.length : 'All'}{' '}
       {selected.length === 1 ? 'Task' : 'Tasks'}

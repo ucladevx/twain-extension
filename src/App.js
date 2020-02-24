@@ -9,6 +9,7 @@ import Login from './components/containers/Login';
 import TaskList from './components/containers/TaskList';
 import Settings from './components/containers/Settings';
 import Help from './components/containers/Help';
+import SchedulingList from './components/containers/Scheduling';
 
 const App = () => {
   const DefaultContainer = () => (
@@ -16,6 +17,7 @@ const App = () => {
       <Navbar />
       <Switch>
         <Route path="/tasklist" component={TaskList} />
+        <Route path="/scheduling" component={SchedulingList} />
         <Route path="/login" component={Login} />
         <Route component={Login} />
       </Switch>
@@ -31,6 +33,7 @@ const App = () => {
           <Route path="/tasklist" component={DefaultContainer} />
           <Route path="/login" component={DefaultContainer} />
 
+          <Route component={SchedulingList} />
           <Route component={Onboarding} />
         </Switch>
       </Router>

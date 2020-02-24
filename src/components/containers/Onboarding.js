@@ -78,29 +78,29 @@ const OptionDropdown = ({ handleContinue }) => {
   const [closed, setClosed] = useState(true);
 
   const updateBackendAndContinue = () => {
-    UserService.setPrimaryCalendar(userCalendars[selected], handleContinue)
-  }
+    UserService.setPrimaryCalendar(userCalendars[selected], handleContinue);
+  };
 
-  const [userCalendars, setCalendars] = useState({})
-  const [calendarOptions, setCalendarOptions] = useState([])
+  const [userCalendars, setCalendars] = useState({});
+  const [calendarOptions, setCalendarOptions] = useState([]);
 
   useEffect(() => {
     UserService.getUserCalendars(function(res) {
-      let summaries = []
-      let summaryToId = {}
-      
-      for (let i = 0; i < res.length; i++) {
-        let cal = res[i]
-        summaries.push(cal['summary'])
-        summaryToId[cal['summary']] = cal['id']
-      }
-      console.log(summaries)
-      console.log(summaryToId)
+      let summaries = [];
+      let summaryToId = {};
 
-      setCalendars(summaryToId)
-      setCalendarOptions(summaries)
-    })
-  }, [])
+      for (let i = 0; i < res.length; i++) {
+        let cal = res[i];
+        summaries.push(cal['summary']);
+        summaryToId[cal['summary']] = cal['id'];
+      }
+      console.log(summaries);
+      console.log(summaryToId);
+
+      setCalendars(summaryToId);
+      setCalendarOptions(summaries);
+    });
+  }, []);
 
   return (
     <div>
@@ -159,38 +159,38 @@ const OptionSelection = ({ handleContinue }) => {
 
   const updateBackendAndContinue = () => {
     let selectedIDs = selected.map((summary) => {
-      return userCalendars[summary]
-    })
+      return userCalendars[summary];
+    });
 
-    let commaSeparated = selectedIDs.join()
-    UserService.setRelevantCalendars(commaSeparated, handleContinue)
-  }
+    let commaSeparated = selectedIDs.join();
+    UserService.setRelevantCalendars(commaSeparated, handleContinue);
+  };
 
-  const [userCalendars, setCalendars] = useState({})
-  const [calendarOptions, setCalendarOptions] = useState([])
+  const [userCalendars, setCalendars] = useState({});
+  const [calendarOptions, setCalendarOptions] = useState([]);
 
   useEffect(() => {
     UserService.getUserCalendars(function(res) {
-      let summaries = []
-      let summaryToId = {}
-      
+      let summaries = [];
+      let summaryToId = {};
+
       for (let i = 0; i < res.length; i++) {
-        let cal = res[i]
-        let currSummary = cal['summary']
-        summaries.push(currSummary)
+        let cal = res[i];
+        let currSummary = cal['summary'];
+        summaries.push(currSummary);
 
         // In case users have multiple calendars with the same summary
         if (currSummary in summaryToId) {
-          summaryToId[currSummary] = summaryToId[currSummary] + ',' + cal['id']
+          summaryToId[currSummary] = summaryToId[currSummary] + ',' + cal['id'];
         } else {
-          summaryToId[currSummary] = cal['id']
+          summaryToId[currSummary] = cal['id'];
         }
       }
 
-      setCalendars(summaryToId)
-      setCalendarOptions(summaries)
-    })
-  }, [])
+      setCalendars(summaryToId);
+      setCalendarOptions(summaries);
+    });
+  }, []);
 
   return (
     <div>
@@ -257,22 +257,22 @@ const Times = ({ handleContinue }) => {
   const [end, setEnd] = useState('06:00 pm');
 
   const updateBackendAndContinue = () => {
-    const startHourString = start.substring(0, 2)
-    const endHourString = end.substring(0, 2)
+    const startHourString = start.substring(0, 2);
+    const endHourString = end.substring(0, 2);
 
-    let startHour = parseInt(startHourString, 10)
-    let endHour = parseInt(endHourString, 10)
+    let startHour = parseInt(startHourString, 10);
+    let endHour = parseInt(endHourString, 10);
 
     if (start.substring(6, 8) == 'pm') {
-      startHour += 12
+      startHour += 12;
     }
 
     if (end.substring(6, 8) == 'pm') {
-      endHour += 12
+      endHour += 12;
     }
 
     UserService.setHours(startHour, endHour, handleContinue);
-  }
+  };
 
   return (
     <div>
