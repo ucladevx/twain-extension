@@ -97,7 +97,7 @@ const OptionDropdown = ({ handleContinue }) => {
       setCalendars(summaryToId)
       setCalendarOptions(summaries)
     })
-  })
+  }, [])
 
   return (
     <div>
@@ -172,7 +172,7 @@ const OptionSelection = ({ handleContinue }) => {
       setCalendars(summaryToId)
       setCalendarOptions(summaries)
     })
-  })
+  }, [])
 
   return (
     <div>
