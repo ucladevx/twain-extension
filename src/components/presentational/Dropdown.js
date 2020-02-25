@@ -84,7 +84,7 @@ const DropdownWrapper = styled.div`
     transition: opacity 0.25s;
   }
 
-  .content::webkit-scrollbar {
+  .content::-webkit-scrollbar {
     width: 0px;
     background: transparent;
   }
@@ -116,15 +116,15 @@ const DropdownWrapper = styled.div`
 const SelectionWrapper = styled.div`
   ${Shared}
 
-  margin: 0;
+  margin: 5px auto;
   padding: 0;
+  width: 94%;
   color: #666;
 
   .selected {
     background-color: rgba(255, 255, 255, 0.9);
   }
 
-  width: 100%;
   background-color: rgba(255, 255, 255, 0.7);
   border: none;
   border-radius: 7px;

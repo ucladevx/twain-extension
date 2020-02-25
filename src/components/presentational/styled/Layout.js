@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 
 export const Background = styled.div`
-  background-color: #0dbab1;
+  // background-color: #0dbab1;
+  //background-image: url('background.png');
+  background-image: ${(props) => (props.image ? `url(${props.image})` : '')};
+  background-size: 400px 100%;
+  background-repeat: no-repeat;
   position: absolute;
   margin-top: -8px;
   margin-left: -8px;
@@ -17,7 +21,7 @@ export const Centered = styled.div`
 
   p,
   li,
-  h2 {
+  h1 {
     text-align: left;
   }
 `;
@@ -30,5 +34,7 @@ export const Row = styled.div`
       ? 'space-between'
       : props.spaceEvenly
       ? 'space-evenly'
+      : props.flexEnd
+      ? 'flex-end'
       : 'flex-start'};
 `;

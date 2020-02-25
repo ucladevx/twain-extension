@@ -17,7 +17,18 @@ const Intro = ({ handleContinue }) => {
 
   return (
     <div>
-      <h2>Scheduling your day so you don't have to.</h2>
+      <img
+        src="logo.png"
+        style={{
+          width: '150px',
+          position: 'absolute',
+          top: '0',
+          left: '10px'
+        }}
+      />
+      <h1 style={{ marginTop: '20vh' }}>
+        Scheduling your day so you don't have to.
+      </h1>
       <p>
         We optimize your free time, allowing you to be your most productive
         self.
@@ -28,6 +39,7 @@ const Intro = ({ handleContinue }) => {
           getUser();
           handleContinue();
         }}
+        style={{ color: '#5187ED' }}
       >
         Continue with Google
       </FullButton>
@@ -37,7 +49,14 @@ const Intro = ({ handleContinue }) => {
 
 const Welcome = ({ handleContinue }) => (
   <div>
-    <h1>Welcome to Twain!</h1>
+    <img
+      src="welcome_to_twain.png"
+      style={{ position: 'absolute', top: '0px' }}
+    />
+    <h1>
+      Welcome to <br />
+      Twain!
+    </h1>
     <p>Your Twain to-do list:</p>
     <ul>
       <li>Tell us your scheduling preferences</li>
@@ -58,7 +77,23 @@ const OptionDropdown = ({ handleContinue }) => {
 
   return (
     <div>
-      <p>Which calendar do you want Twain to schedule your tasks in?</p>
+      <img
+        src="primary_calendar.png"
+        style={{
+          marginTop: '-200px',
+          marginLeft: '-80px',
+          marginBottom: '-80px'
+        }}
+      />
+      <h2>Your Primary Calendar</h2>
+      <p
+        style={{
+          color: 'rgba(255,255,255,0.7)',
+          padding: '0 5%'
+        }}
+      >
+        Which calendar do you want Twain to schedule your tasks in?
+      </p>
       <Dropdown
         options={options}
         selected={selected ? selected : 'Default Calendar Name'}
@@ -66,15 +101,15 @@ const OptionDropdown = ({ handleContinue }) => {
         onClose={(bool) => setClosed(bool)}
       />
       {closed ? (
-        <Button
-          disabled={!selected}
-          secondary={selected}
-          onClick={handleContinue}
-          style={{ padding: '10px 30px', marginLeft: '70%' }}
-        >
-          <img src="arrow-right.svg" />
-          Next
-        </Button>
+        <Row flexEnd>
+          <Button
+            disabled={!selected}
+            secondary={selected}
+            onClick={handleContinue}
+            style={{ padding: '10px 30px' }}
+            image="arrow-forward.svg"
+          />
+        </Row>
       ) : (
         ''
       )}
@@ -89,7 +124,23 @@ const OptionSelection = ({ handleContinue }) => {
 
   return (
     <div>
-      <p>Which other calendars do you want Twain to take into account?</p>
+      <img
+        src="secondary_calendar.png"
+        style={{
+          marginTop: '-200px',
+          marginLeft: '-113px',
+          marginBottom: '-70px'
+        }}
+      />
+      <h2>Secondary Calendar</h2>
+      <p
+        style={{
+          color: 'rgba(255,255,255,0.7)',
+          padding: '0 5%'
+        }}
+      >
+        Which other calendars do you want Twain to take into account?
+      </p>
       <Selection
         options={options}
         selected={selected}
@@ -102,15 +153,15 @@ const OptionSelection = ({ handleContinue }) => {
         }}
       />
       <br />
-      <Button
-        disabled={!selected.length}
-        secondary={selected.length}
-        onClick={handleContinue}
-        style={{ padding: '10px 30px', marginLeft: '70%' }}
-      >
-        <img src="arrow-right.svg" />
-        Next
-      </Button>
+      <Row flexEnd>
+        <Button
+          disabled={!selected.length}
+          secondary={selected.length}
+          onClick={handleContinue}
+          style={{ padding: '10px 30px' }}
+          image="arrow-forward.svg"
+        />
+      </Row>
     </div>
   );
 };
@@ -124,44 +175,75 @@ const Times = ({ handleContinue }) => {
     return `${hour < 10 ? '0' + hour : hour}:${minute} ${ampm}`;
   });
 
+  const [closed, setClosed] = useState(true);
   const [start, setStart] = useState('08:00 am');
   const [end, setEnd] = useState('06:00 pm');
 
   return (
     <div>
-      <p>From which times do you want to schedule your tasks?</p>
-      <Row spaceBetween>
-        From
-        <div style={{ width: '33%' }}>
+      <img
+        src="hours_of_op.png"
+        style={{
+          marginTop: '-200px',
+          marginLeft: '-60px',
+          marginBottom: '-70px'
+        }}
+      />
+      <h2>Hours of Operation</h2>
+      <p
+        style={{
+          color: 'rgba(255,255,255,0.7)',
+          padding: '0 5%'
+        }}
+      >
+        From which times do you want to schedule your tasks?
+      </p>
+      <Row spaceBetween style={{ width: '90%', margin: '0 auto' }}>
+        <p>From</p>
+        <div>
           <Dropdown
             mini
             options={hours}
             selected={start}
             onSelect={(opt) => setStart(opt)}
             onClose={() => {}}
+            style={{ fontSize: '9px' }}
           />
         </div>
-        to
-        <div style={{ width: '33%' }}>
+        <p>to</p>
+        <div>
           <Dropdown
             mini
             options={hours}
             selected={end}
             onSelect={(opt) => setEnd(opt)}
-            onClose={() => {}}
+            onClose={(bool) => setClosed(bool)}
+            style={{ fontSize: '9px' }}
           />
         </div>
       </Row>
+      {closed ? (
+        <Row flexEnd>
+          <Button
+            secondary
+            onClick={handleContinue}
+            style={{ padding: '10px 30px' }}
+            image="arrow-forward.svg"
+          />
+        </Row>
+      ) : (
+        ''
+      )}
     </div>
   );
 };
 
 const Content = [
-  { component: Intro, customButton: false },
+  { component: Intro, customButton: true },
   { component: Welcome, customButton: true },
   { component: OptionDropdown, customButton: true },
   { component: OptionSelection, customButton: true },
-  { component: Times, customButton: false }
+  { component: Times, customButton: true }
 ];
 
 const Onboarding = () => {
@@ -177,20 +259,20 @@ const Onboarding = () => {
   };
 
   return (
-    <Background>
-      <Centered>
+    <Background image={page === 0 ? 'login_background.png' : 'background.png'}>
+      <Centered style={{ fontFamily: 'roboto' }}>
         {getCurrent()}
         {Content[page].customButton ? (
           ''
         ) : (
-          <Button
-            secondary
-            onClick={handleContinue}
-            style={{ padding: '10px 30px', marginLeft: '70%' }}
-          >
-            <img src="arrow-right.svg" />
-            Next
-          </Button>
+          <Row flexEnd>
+            <Button
+              secondary
+              onClick={handleContinue}
+              style={{ padding: '10px 30px' }}
+              image="arrow-forward.svg"
+            />
+          </Row>
         )}
       </Centered>
     </Background>
