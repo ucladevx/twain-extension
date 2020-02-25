@@ -5,6 +5,8 @@ import { Row } from '../presentational/styled/Layout';
 import Input, { Shared } from '../presentational/styled/Input';
 import { Link } from 'react-router-dom';
 import { StaticIcon } from '../presentational/styled/Icon';
+import Dropdown, { Selection } from '../presentational/Dropdown';
+
 
 import UserService from '../../services/UserService';
 
@@ -58,9 +60,79 @@ const DropdownWrapper = styled.div`
   }
 `;
 
-const Dropdown = ({title, imageIcon}) => {
-  const [hidden, setHidden] = useState(true);
+const Content = (data) => {
+  const hours = [...Array(48).keys()].map((e) => {
+    const i = parseInt(e / 2);
+    const ampm = i > 12 ? 'pm' : 'am';
+    const hour = ampm === 'am' ? i : i - 12;
+    const minute = e % 2 === 0 ? '00' : '30';
+    return `${hour < 10 ? '0' + hour : hour}:${minute} ${ampm}`;
+  });
 
+  const [selected, setSelected] = useState(null);
+  const [closed, setClosed] = useState(true);
+
+  const [selectedMult, setSelectedMult] = useState([]);
+
+  const optionsMult = ['more', 'lorem', 'ipsum', 'here'];
+
+
+  const options = ['lorem', 'ipsum', 'here'];
+
+  const [start, setStart] = useState('08:00 am');
+  const [end, setEnd] = useState('06:00 pm');
+  if(data.data=="ContentHO"){
+    return(<div style={{ display: 'flex' }}>
+      <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>From</p>
+      <div style={{ width: '33%' }}>
+          <Dropdown
+            mini
+            options={hours}
+            selected={start}
+            onSelect={(opt) => setStart(opt)}
+            onClose={() => {}}
+          />
+        </div>
+        <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>to</p>
+        <div style={{ width: '33%' }}>
+          <Dropdown
+            mini
+            options={hours}
+            selected={end}
+            onSelect={(opt) => setEnd(opt)}
+            onClose={() => {}}
+          />
+        </div>
+      </div>
+    );
+  } else if(data.data=="ContentCP") {
+    return (<Dropdown
+        options={options}
+        selected={selected ? selected : 'Default Calendar Name'}
+        onSelect={(option) => setSelected(option)}
+        onClose={(bool) => setClosed(bool)}
+      />);
+  } else if(data.data=="ContentCat"){
+      return(<Selection
+        options={optionsMult}
+        selected={selectedMult}
+        onSelect={(newOpt) => {
+          if (selectedMult.includes(newOpt)) {
+            setSelectedMult(selectedMult.filter((o) => o !== newOpt));
+          } else {
+            setSelectedMult(selectedMult.concat([newOpt]));
+          }
+        }}
+      />
+    );
+  } else {
+    return(<div></div>);
+  }
+}
+
+const DropdownSetting = ({title, imageIcon, content}) => {
+  const [hidden, setHidden] = useState(true);
+  console.log(content);
   return (
     <DropdownWrapper hide={hidden}>
 
@@ -72,8 +144,8 @@ const Dropdown = ({title, imageIcon}) => {
       </div>
       <div className="content">
         <br></br>
-        Settings<br></br>
-        Content
+        <Content data={content} />
+        <br></br>
       </div>
     </DropdownWrapper>
   )
@@ -114,11 +186,11 @@ const Settings = () => {
         <img style={{width:'25px', padding: '2px'}} src="settings.svg"/>
       </Nav>
 
-      <Dropdown title="Hours of Operation" imageIcon="time.svg"/>
+      <DropdownSetting title="Hours of Operation" imageIcon="time.svg" content="ContentHO"/>
       <br></br>
-      <Dropdown title="Calendar Preferences" imageIcon="calendar.svg"/>
+      <DropdownSetting title="Calendar Preferences" imageIcon="calendar.svg" content="ContentCP"/>
       <br></br>
-      <Dropdown title="Categories" imageIcon="categories.svg"/>
+      <DropdownSetting title="Categories" imageIcon="categories.svg" content="ContentCat"/>
     </div>
   );
 };
