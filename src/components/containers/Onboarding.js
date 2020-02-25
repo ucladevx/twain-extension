@@ -163,11 +163,16 @@ const OptionSelection = ({ handleContinue }) => {
       
       for (let i = 0; i < res.length; i++) {
         let cal = res[i]
-        summaries.push(cal['summary'])
-        summaryToId[cal['summary']] = cal['id']
+        currSummary = cal['summary']
+        summaries.push(currSummary)
+
+        // In case users have multiple calendars with the same summary
+        if (currSummary in summaryToId) {
+          summaryToId[currSummary] = summaryToId[currSummary] + ',' + cal['id']
+        } else {
+          summaryToId[currSummary] = cal['id']
+        }
       }
-      console.log(summaries)
-      console.log(summaryToId)
 
       setCalendars(summaryToId)
       setCalendarOptions(summaries)
