@@ -61,7 +61,7 @@ const DropdownWrapper = styled.div`
   width: ${(props) => (props.mini ? '100%' : '90%')};
   margin: 15px auto;
   margin: ${(props) => (props.mini ? '15px 0' : '15px auto')};
-  font-size: ${(props) => (props.mini ? '11px' : '14px')};
+  font-size: ${(props) => (props.mini ? '12px' : '14px')};
   // text-align: left;
   // padding: 0 8px;
   padding: 0;
@@ -284,10 +284,11 @@ const DropdownGrid = css`
     border-radius: 10px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
     transition: opacity 0.25s;
+    z-index: 2;
   }
 
   & .content div {
-    padding: 5px;
+    padding: 5px 3px;
   }
 
   & .content div:hover {
@@ -302,7 +303,7 @@ const DropdownNumpadGrid = styled.div`
 
   & .content {
     grid-template-columns: 50px 50px 50px;
-    margin-top: 1px;
+    margin-top: -5px;
     margin-left: -53px;
   }
 
@@ -386,13 +387,13 @@ export const NumpadInput = (props) => {
 const DropdownDateGrid = styled.div`
   ${DropdownGrid}
   text-align: left;
-  width: 50%;
+  width: 55%;
 
   & .content {
-    width: 77%;
+    width: 100%;
     grid-template-columns: repeat(7, auto);
-    margin-left: 6px;
-    margin-top: -1px;
+    margin-left: 0px;
+    margin-top: -5px;
     text-align: center;
   }
 
@@ -445,7 +446,6 @@ const months = [
 
 const TimeWrapper = styled.div`
   ${Shared}
-  width: 40%;
   text-align: left;
 
   & .content {
@@ -546,13 +546,14 @@ const NumberScroller = ({ disabled, min, max, selected, onSelect }) => {
 
 const DropdownTimeGrid = styled.div`
   ${DropdownGrid}
-  width: 40%;
+  width: calc(30%);
+  margin-right: 14px;
   text-align: left;
 
   & .content {
-    width: 77%;
-    margin-left: -42.5%;
-    margin-top: -1px;
+    width: 100%;
+    margin-left: calc(-1 * (70% - 14px));
+    margin-top: -5px;
     grid-template-columns: repeat(3, auto);
   }
 
@@ -804,7 +805,14 @@ export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
 
   return (
     <DateTimeWrapper>
-      <Row spaceEvenly style={{ width: '100%', marginLeft: '-8px' }}>
+      <Row
+        spaceBetween
+        style={{
+          position: 'relative',
+          width: 'calc(90% + 16px)',
+          margin: '0 auto'
+        }}
+      >
         <DatePicker
           disabled={disabled}
           placeholder={placeholder}
@@ -812,6 +820,7 @@ export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
           onChange={(e) => {
             handleChange(e.target.value, time);
           }}
+          style={{ marginLeft: '0px' }}
         />
         <TimePicker
           disabled={disabled}
@@ -923,7 +932,7 @@ export const DatePicker = (props) => {
           <StaticIcon src="arrow-left.svg" />
         </div>
         <div
-          style={{ gridColumn: '3/6' }}
+          style={{ gridColumn: '3/6', lineHeight: '23px' }}
           onClick={() => updateDate(date.getMonth(), date.getFullYear())}
         >
           {months[viewDate.month].name} {viewDate.year}
