@@ -17,8 +17,8 @@ const App = () => {
       <Navbar />
       <Switch>
         <Route path="/tasklist" component={TaskList} />
-        <Route path="/scheduling" component={SchedulingList} />
         <Route path="/login" component={Login} />
+        <Route path="/scheduling/:ids" component={SchedulingList} />
         <Route component={Login} />
       </Switch>
     </>
@@ -32,8 +32,9 @@ const App = () => {
           <Route path="/help" component={Help} />
           <Route path="/tasklist" component={DefaultContainer} />
           <Route path="/login" component={DefaultContainer} />
+          <Route path="/scheduling" component={DefaultContainer} />
 
-          <Route component={SchedulingList} />
+          <Route component={TaskList} />
           <Route component={Onboarding} />
         </Switch>
       </Router>

@@ -65,6 +65,12 @@ const TaskList = () => {
   };
 
   useEffect(() => {
+    TaskService.getAllTasks((res) => {
+      setTasks([...res.not_scheduled, ...res.scheduled]);
+    });
+  }, []);
+
+  useEffect(() => {
     /* split into scheduled and unscheduled every time tasks updates */
     splitTasks();
   }, [tasks]);
@@ -153,7 +159,7 @@ const TaskList = () => {
       disabled={!unscheduled.length}
       onClick={() => {
         // scheduleSelected();
-        history.push('/scheduling');
+        history.push('/scheduling/1,2,3');
       }}
     >
       Schedule {selected.length ? selected.length : 'All'}{' '}

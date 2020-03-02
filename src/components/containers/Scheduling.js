@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 
 import Task from '../presentational/Task';
 import { FullButton } from '../presentational/styled/Button';
-import { TaskSection } from '../presentational/Dropdown';
 
 const tempScheduling = [
   {
@@ -29,10 +29,14 @@ const tempScheduling = [
   }
 ];
 
-const SchedulingList = () => {
+const SchedulingList = (props) => {
   const [scheduling, setScheduling] = useState(tempScheduling);
   const [errors, setErrors] = useState(tempScheduling);
   const [selected, setSelected] = useState([]);
+
+  useEffect(() => {
+    const ids = props.match.params.ids.split(',');
+  }, []);
 
   const deleteTask = (id) =>
     setScheduling(scheduling.filter((task) => task.id !== id));
@@ -81,4 +85,4 @@ const SchedulingList = () => {
   );
 };
 
-export default SchedulingList;
+export default withRouter(SchedulingList);
