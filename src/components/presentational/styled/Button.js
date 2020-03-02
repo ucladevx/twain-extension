@@ -70,7 +70,7 @@ const Button = styled.button`
 
 export const FullButton = styled(Button)`
   width: 90%;
-  height: 60px;
+  height: 50px;
   border-radius: 10px;
 `;
 

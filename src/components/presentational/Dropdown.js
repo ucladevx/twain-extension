@@ -58,10 +58,13 @@ const DropdownWrapper = styled.div`
   ${Shared}
 
   position: relative;
-  width: 90%;
-  margin: 5px auto;
+  width: ${(props) => (props.mini ? '100%' : '90%')};
+  margin: 15px auto;
+  margin: ${(props) => (props.mini ? '15px 0' : '15px auto')};
+  font-size: ${(props) => (props.mini ? '11px' : '14px')};
   // text-align: left;
-  padding: 0 8px;
+  // padding: 0 8px;
+  padding: 0;
   color: #666;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: ${(props) => (props.closed ? '7px' : '7px 7px 0 0')};
@@ -74,8 +77,9 @@ const DropdownWrapper = styled.div`
     max-height: ${(props) =>
       !props.myDisabled && !props.closed ? '300px' : '0'};
     overflow: auto;
+    // padding: 0 8px;
     margin-top: 2px;
-    margin-left: -8px;
+    // margin-left: -8px;
     // background-color: #fff;
     background-color: rgba(255, 255, 255, 0.7);
     border: none;
@@ -95,7 +99,7 @@ const DropdownWrapper = styled.div`
 
   & .content p {
     margin: 0;
-    padding: 10px 15px;
+    padding: ${(props) => (props.mini ? '5px 10px' : '10px 15px')};
     border-top: 1px solid #909090;
   }
 
@@ -116,9 +120,9 @@ const DropdownWrapper = styled.div`
 const SelectionWrapper = styled.div`
   ${Shared}
 
-  margin: 5px auto;
+  width: 90%;
+  margin: 15px auto;
   padding: 0;
-  width: 94%;
   color: #666;
 
   .selected {
@@ -128,7 +132,7 @@ const SelectionWrapper = styled.div`
   background-color: rgba(255, 255, 255, 0.7);
   border: none;
   border-radius: 7px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+  // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
   transition: opacity 0.25s;
 
   p {
@@ -144,6 +148,7 @@ const SelectionWrapper = styled.div`
 
   p:first-of-type {
     border-radius: 7px 7px 0 0;
+    border-top: none;
   }
 
   p:last-of-type {
@@ -190,7 +195,12 @@ const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini }) => {
   }, []);
 
   return (
-    <DropdownWrapper myDisabled={disabled} closed={closed} ref={node}>
+    <DropdownWrapper
+      myDisabled={disabled}
+      closed={closed}
+      ref={node}
+      mini={mini}
+    >
       <Row
         onClick={() => {
           if (!disabled) {
@@ -199,8 +209,7 @@ const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini }) => {
           }
         }}
         style={{
-          padding: '8px 0',
-          height: '30px'
+          padding: mini ? '5px 10px' : '10px 15px'
         }}
       >
         {disabled ? (
