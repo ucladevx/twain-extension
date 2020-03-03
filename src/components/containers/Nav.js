@@ -20,8 +20,8 @@ const Nav = styled.nav`
   justify-content: flex-end;
   align-items: center;
   margin-top: -10px;
-  margin-left: -10px;
-  margin-right: -10px;
+  margin-left: -8px;
+  margin-right: -8px;
   margin-bottom: 12px;
   border-bottom: 1px solid #ddd;
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
@@ -55,7 +55,7 @@ const Dropdown = styled.div`
     position: absolute;
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
     opacity: ${(props) => (props.closed ? 0 : 1)}
-    margin-left: -34%;
+    margin-left: -43%;
     margin-top: 9px;
     background-color: #fff;
     border: 2px solid #ddd;

@@ -18,7 +18,7 @@ const Card = styled.div`
   border: ${(props) =>
     props.selected ? '2px solid #5187ed' : '2px solid #ccc'};
   border-radius: 10px;
-  overflow: visible;
+  overflow: ${(props) => (props.expanded ? 'visible' : 'hidden')};
   transition: all 0.3s;
 
   &:hover {

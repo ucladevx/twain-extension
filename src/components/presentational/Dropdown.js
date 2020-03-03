@@ -11,7 +11,7 @@ const StyledTaskSection = styled.div`
   & .content {
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
     max-height: ${(props) => (props.closed ? 0 : '100vh')};
-    overflow: ${(props) => (props.closed ? 'hidden' : 'auto')};
+    // overflow: ${(props) => (props.closed ? 'hidden' : 'auto')};
     opacity: ${(props) => (props.closed ? 0 : 1)};
     transition: all 0.4s ease-in-out, max-height 0.3s ease-in-out;
   }
@@ -810,7 +810,8 @@ export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
         style={{
           position: 'relative',
           width: 'calc(90% + 16px)',
-          margin: '0 auto'
+          margin: '0 auto',
+          marginLeft: disabled ? '8px' : 'auto'
         }}
       >
         <DatePicker
