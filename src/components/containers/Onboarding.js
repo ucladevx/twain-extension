@@ -83,9 +83,10 @@ const OptionDropdown = ({ handleContinue }) => {
       <img
         src="primary_calendar.png"
         style={{
-          marginTop: '-200px',
-          marginLeft: '-80px',
-          marginBottom: '-80px'
+          width: '300px',
+          marginLeft: 'calc(-1 * (15%))',
+          marginTop: '-65%',
+          marginBottom: '-20%'
         }}
       />
       <h2 style={{ width: '90%', margin: '15px auto' }}>
@@ -139,9 +140,10 @@ const OptionSelection = ({ handleContinue }) => {
       <img
         src="secondary_calendar.png"
         style={{
-          marginTop: '-200px',
-          marginLeft: '-113px',
-          marginBottom: '-70px'
+          width: '300px',
+          marginLeft: 'calc(-1 * (15%))',
+          marginTop: '-65%',
+          marginBottom: '-20%'
         }}
       />
       <h2 style={{ width: '90%', margin: '15px auto' }}>Secondary Calendar</h2>
@@ -202,9 +204,10 @@ const Times = ({ handleContinue }) => {
       <img
         src="hours_of_op.png"
         style={{
-          marginTop: '-200px',
-          marginLeft: '-60px',
-          marginBottom: '-70px'
+          width: '300px',
+          marginLeft: 'calc(-1 * (15%))',
+          marginTop: '-65%',
+          marginBottom: '-20%'
         }}
       />
       <h2 style={{ width: '90%', margin: '15px auto' }}>Hours of Operation</h2>
