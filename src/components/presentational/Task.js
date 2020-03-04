@@ -51,7 +51,8 @@ const Task = ({
   toggleSelect,
   selected,
   categories,
-  creating = false
+  creating = false,
+  scheduling = false
 }) => {
   const {
     id,
@@ -60,6 +61,7 @@ const Task = ({
     completed_time,
     scheduled,
     scheduled_time,
+    scheduled_date,
     start_time,
     end_time
   } = task;
@@ -143,7 +145,7 @@ const Task = ({
           }}
         />
         <div
-          style={{ width: '70%', textAlign: 'left', margin: '0 auto 0 8px' }}
+          style={{ width: '80%', textAlign: 'left', margin: '0 auto 0 8px' }}
         >
           <Mini
             placeholder="Title"
@@ -156,34 +158,42 @@ const Task = ({
           />
           {!editing ? (
             <Text pointer={!editing && !expanded}>
-              {!scheduled
+              {!scheduled && !scheduling
                 ? time.hours + ' hr ' + time.minutes + ' min'
-                : `${new Date(task.start_time).toLocaleTimeString('en-US', {
+                : `${new Date(task.scheduled_date).toLocaleTimeString('en-US', {
                     timeStyle: 'short'
-                  })} ${new Date(task.start_time).toDateString()}`}
+                  })} ${new Date(task.scheduled_date).toDateString()}`}
             </Text>
           ) : (
             ''
           )}
         </div>
-        <Icon
-          src={
-            editing ? 'close.svg' : expanded ? 'arrow-up.svg' : 'arrow-down.svg'
-          }
-          alt={editing ? 'Close' : expanded ? 'Up' : 'Down'}
-          onClick={(e) => {
-            if (editing) {
-              if (!creating) {
-                if (window.confirm('Delete task?')) deleteTask(id);
-              } else {
-                deleteTask(id);
-              }
-            } else {
-              setExpanded(!expanded);
-              e.stopPropagation();
+        {!scheduling ? (
+          <Icon
+            src={
+              editing
+                ? '/close.svg'
+                : expanded
+                ? '/arrow-up.svg'
+                : '/arrow-down.svg'
             }
-          }}
-        />
+            alt={editing ? 'Close' : expanded ? 'Up' : 'Down'}
+            onClick={(e) => {
+              if (editing) {
+                if (!creating) {
+                  if (window.confirm('Delete task?')) deleteTask(id);
+                } else {
+                  deleteTask(id);
+                }
+              } else {
+                setExpanded(!expanded);
+                e.stopPropagation();
+              }
+            }}
+          />
+        ) : (
+          ''
+        )}
       </Row>
       {editing ? (
         <DurationRow>

@@ -73,31 +73,31 @@ const Navbar = () => {
       <Header>Twain</Header>
 
       <Link to="/tasklist">
-        <Icon src="tasklist.svg" alt="Tasklist" />
+        <Icon src="/tasklist.svg" alt="Tasklist" />
       </Link>
 
       <Dropdown closed={closed} onClick={() => setClosed(!closed)}>
-        <Icon src="settings.svg" alt="Menu" style={{ marginRight: '10px' }} />
+        <Icon src="/settings.svg" alt="Menu" />
 
         <div className="content">
           <StyledLink to="/settings">
             <img
               style={{ width: '20px', padding: '10px' }}
-              src="settings.svg"
+              src="/settings.svg"
             />
             <p>Settings</p>
             <img
               style={{ width: '20px', padding: '10px', marginLeft: '30px' }}
-              src="arrow-right.svg"
+              src="/arrow-right.svg"
             />
           </StyledLink>
 
           <StyledLink to="/help">
-            <img style={{ width: '20px', padding: '10px' }} src="help.svg" />
+            <img style={{ width: '20px', padding: '10px' }} src="/help.svg" />
             <p>Help</p>
             <img
               style={{ width: '20px', padding: '10px', marginLeft: '30px' }}
-              src="arrow-right.svg"
+              src="/arrow-right.svg"
             />
           </StyledLink>
 

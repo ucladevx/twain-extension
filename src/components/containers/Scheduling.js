@@ -62,6 +62,7 @@ const SchedulingList = (props) => {
           deleteTask={deleteTask}
           toggleSelect={selectTask}
           selected={selected.indexOf(task.id) !== -1}
+          scheduling={true}
         />
       ))}
       <h3>
