@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import Button, { FullButton } from '../presentational/styled/Button';
@@ -7,6 +7,7 @@ import { Row } from '../presentational/styled/Layout';
 import { Background, Centered } from '../presentational/styled/Layout';
 
 import AuthService from '../../services/AuthService';
+import UserService from '../../services/UserService';
 
 const Intro = ({ handleContinue }) => {
   const getUser = async () => {
@@ -76,7 +77,30 @@ const OptionDropdown = ({ handleContinue }) => {
   const [selected, setSelected] = useState(null);
   const [closed, setClosed] = useState(true);
 
-  const options = ['lorem', 'ipsum', 'here'];
+  const updateBackendAndContinue = () => {
+    UserService.setPrimaryCalendar(userCalendars[selected], handleContinue)
+  }
+
+  const [userCalendars, setCalendars] = useState({})
+  const [calendarOptions, setCalendarOptions] = useState([])
+
+  useEffect(() => {
+    UserService.getUserCalendars(function(res) {
+      let summaries = []
+      let summaryToId = {}
+      
+      for (let i = 0; i < res.length; i++) {
+        let cal = res[i]
+        summaries.push(cal['summary'])
+        summaryToId[cal['summary']] = cal['id']
+      }
+      console.log(summaries)
+      console.log(summaryToId)
+
+      setCalendars(summaryToId)
+      setCalendarOptions(summaries)
+    })
+  }, [])
 
   return (
     <div>
@@ -102,7 +126,7 @@ const OptionDropdown = ({ handleContinue }) => {
         Which calendar do you want Twain to schedule your tasks in?
       </p>
       <Dropdown
-        options={options}
+        options={calendarOptions}
         selected={selected ? selected : 'Default Calendar Name'}
         onSelect={(option) => setSelected(option)}
         onClose={(bool) => setClosed(bool)}
@@ -118,7 +142,7 @@ const OptionDropdown = ({ handleContinue }) => {
           <Button
             disabled={!selected}
             secondary={selected}
-            onClick={handleContinue}
+            onClick={updateBackendAndContinue}
             style={{ padding: '10px 30px' }}
             image="arrow-forward.svg"
           />
@@ -133,7 +157,40 @@ const OptionDropdown = ({ handleContinue }) => {
 const OptionSelection = ({ handleContinue }) => {
   const [selected, setSelected] = useState([]);
 
-  const options = ['more', 'lorem', 'ipsum', 'here'];
+  const updateBackendAndContinue = () => {
+    let selectedIDs = selected.map((summary) => {
+      return userCalendars[summary]
+    })
+
+    let commaSeparated = selectedIDs.join()
+    UserService.setRelevantCalendars(commaSeparated, handleContinue)
+  }
+
+  const [userCalendars, setCalendars] = useState({})
+  const [calendarOptions, setCalendarOptions] = useState([])
+
+  useEffect(() => {
+    UserService.getUserCalendars(function(res) {
+      let summaries = []
+      let summaryToId = {}
+      
+      for (let i = 0; i < res.length; i++) {
+        let cal = res[i]
+        let currSummary = cal['summary']
+        summaries.push(currSummary)
+
+        // In case users have multiple calendars with the same summary
+        if (currSummary in summaryToId) {
+          summaryToId[currSummary] = summaryToId[currSummary] + ',' + cal['id']
+        } else {
+          summaryToId[currSummary] = cal['id']
+        }
+      }
+
+      setCalendars(summaryToId)
+      setCalendarOptions(summaries)
+    })
+  }, [])
 
   return (
     <div>
@@ -157,7 +214,7 @@ const OptionSelection = ({ handleContinue }) => {
         Which other calendars do you want Twain to take into account?
       </p>
       <Selection
-        options={options}
+        options={calendarOptions}
         selected={selected}
         onSelect={(newOpt) => {
           if (selected.includes(newOpt)) {
@@ -177,7 +234,7 @@ const OptionSelection = ({ handleContinue }) => {
         <Button
           disabled={!selected.length}
           secondary={selected.length}
-          onClick={handleContinue}
+          onClick={updateBackendAndContinue}
           style={{ padding: '10px 30px' }}
           image="arrow-forward.svg"
         />
@@ -198,6 +255,24 @@ const Times = ({ handleContinue }) => {
   const [closed, setClosed] = useState(true);
   const [start, setStart] = useState('08:00 am');
   const [end, setEnd] = useState('06:00 pm');
+
+  const updateBackendAndContinue = () => {
+    const startHourString = start.substring(0, 2)
+    const endHourString = end.substring(0, 2)
+
+    let startHour = parseInt(startHourString, 10)
+    let endHour = parseInt(endHourString, 10)
+
+    if (start.substring(6, 8) == 'pm') {
+      startHour += 12
+    }
+
+    if (end.substring(6, 8) == 'pm') {
+      endHour += 12
+    }
+
+    UserService.setHours(startHour, endHour, handleContinue);
+  }
 
   return (
     <div>
@@ -248,7 +323,7 @@ const Times = ({ handleContinue }) => {
         >
           <Button
             secondary
-            onClick={handleContinue}
+            onClick={updateBackendAndContinue}
             style={{ padding: '10px 30px' }}
             image="arrow-forward.svg"
           />

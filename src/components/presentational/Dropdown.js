@@ -121,7 +121,9 @@ const SelectionWrapper = styled.div`
   ${Shared}
 
   width: 90%;
-  margin: 15px auto;
+  max-height: 250px;
+  overflow-y: scroll;
+  margin: 5px auto;
   padding: 0;
   color: #666;
 
