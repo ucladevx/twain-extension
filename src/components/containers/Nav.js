@@ -12,8 +12,8 @@ const Row = styled.div`
 `;
 
 const Nav = styled.nav`
-  background-image: url('background.png');
-  background-size: 350px 67px;
+  background-image: url('navbar.png');
+  // background-size: 350px 67px;
   background-repeat: no-repeat;
   height: 67px;
   display: flex;

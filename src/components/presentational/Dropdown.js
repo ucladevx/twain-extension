@@ -624,7 +624,7 @@ export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
 
   useEffect(() => {
     inputRef.current.setSelectionRange(cursorPos[0], cursorPos[1]);
-  }, [date]);
+  }, [date, cursorPos]);
 
   useEffect(() => {
     setDate(new Date(value));
@@ -693,6 +693,17 @@ export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
           }
           newDate.setMinutes(minutes);
 
+          try {
+            newDate.toISOString();
+          } catch (err) {
+            if (e.target.selectionStart <= 3) {
+              setCursorPos([0, 2]);
+            } else {
+              setCursorPos([3, 5]);
+            }
+            return;
+          }
+
           setDate(newDate);
           onChange({
             target: { value: newDate }
@@ -745,20 +756,20 @@ export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
           ))}
         </div>
         <div>
-          {[...Array(59).keys()].map((e) => (
+          {[...Array(60).keys()].map((e) => (
             <p
-              ref={getMinutes() === e + 1 ? minuteRef : null}
-              className={getMinutes() === e + 1 ? 'highlighted' : ''}
+              ref={getMinutes() === e ? minuteRef : null}
+              className={getMinutes() === e ? 'highlighted' : ''}
               onClick={() => {
                 const newDate = new Date(date);
-                newDate.setMinutes(e + 1);
+                newDate.setMinutes(e);
                 setDate(newDate);
                 onChange({
                   target: { value: newDate }
                 });
               }}
             >
-              {e + 1 < 10 ? '0' + (e + 1) : e + 1}
+              {e < 10 ? '0' + e : e}
             </p>
           ))}
         </div>

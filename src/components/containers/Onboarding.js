@@ -84,7 +84,7 @@ const OptionDropdown = ({ handleContinue }) => {
         src="primary_calendar.png"
         style={{
           width: '300px',
-          marginLeft: 'calc(-1 * (15%))',
+          marginLeft: 'calc(-1 * (10%))',
           marginTop: '-65%',
           marginBottom: '-20%'
         }}
@@ -141,7 +141,7 @@ const OptionSelection = ({ handleContinue }) => {
         src="secondary_calendar.png"
         style={{
           width: '300px',
-          marginLeft: 'calc(-1 * (15%))',
+          marginLeft: 'calc(-1 * (10%))',
           marginTop: '-65%',
           marginBottom: '-20%'
         }}
@@ -205,7 +205,7 @@ const Times = ({ handleContinue }) => {
         src="hours_of_op.png"
         style={{
           width: '300px',
-          marginLeft: 'calc(-1 * (15%))',
+          marginLeft: 'calc(-1 * (10%))',
           marginTop: '-65%',
           marginBottom: '-20%'
         }}
