@@ -12,17 +12,25 @@ const Row = styled.div`
 `;
 
 const Nav = styled.nav`
-  height: 63px;
+  background-image: url('navbar.png');
+  // background-size: 350px 67px;
+  background-repeat: no-repeat;
+  height: 67px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: -6px;
-  margin-bottom: 20px;
+  margin-top: -10px;
+  margin-left: -8px;
+  margin-right: -8px;
+  margin-bottom: 12px;
   border-bottom: 1px solid #ddd;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
 `;
 
-const Header = styled.h1`
-  margin-left: 15px;
+const Header = styled.p`
+  font-size: 18px;
+  color: #fff;
+  margin-left: 5%;
   margin-right: auto;
 `;
 
@@ -47,7 +55,7 @@ const Dropdown = styled.div`
     position: absolute;
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
     opacity: ${(props) => (props.closed ? 0 : 1)}
-    margin-left: -34%;
+    margin-left: -43%;
     margin-top: 9px;
     background-color: #fff;
     border: 2px solid #ddd;
@@ -69,7 +77,7 @@ const Navbar = () => {
       </Link>
 
       <Dropdown closed={closed} onClick={() => setClosed(!closed)}>
-        <Icon src="settings.svg" alt="Menu" />
+        <Icon src="settings.svg" alt="Menu" style={{ marginRight: '10px' }} />
 
         <div className="content">
           <StyledLink to="/settings">
@@ -111,4 +119,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

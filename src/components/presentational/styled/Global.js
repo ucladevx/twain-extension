@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
 
 export const Font = css`
-  font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
 `;
 
 export const Text = styled.p`

@@ -3,10 +3,11 @@ import styled from 'styled-components';
 const Icon = styled.img`
   width: 25px;
   padding: 8px;
-  transition: all 0.15s ease-in-out;
+  border-radius: 5px;
+  transition: all 0.1s ease-in-out;
 
   &:hover {
-    background-color: #ddd;
+    background-color: rgba(0, 0, 0, 0.1);
     border-radius: 25px;
     cursor: pointer;
   }

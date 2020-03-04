@@ -21,6 +21,7 @@ export const Shared = css`
 const Input = styled.input`
   ${Shared}
 
+  position: relative;
   width: 90%;
   color: #000;
 

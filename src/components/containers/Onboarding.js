@@ -42,7 +42,10 @@ const Intro = ({ handleContinue }) => {
         }}
         style={{ color: '#5187ED' }}
       >
-        Continue with Google
+        <Row spaceEvenly style={{ marginTop: '-4px' }}>
+          <img src="google.svg" style={{ width: '20px', height: '20px' }} />
+          <p>Continue with Google</p>
+        </Row>
       </FullButton>
     </div>
   );
@@ -104,16 +107,20 @@ const OptionDropdown = ({ handleContinue }) => {
       <img
         src="primary_calendar.png"
         style={{
-          marginTop: '-200px',
-          marginLeft: '-80px',
-          marginBottom: '-80px'
+          width: '300px',
+          marginLeft: 'calc(-1 * (10%))',
+          marginTop: '-65%',
+          marginBottom: '-20%'
         }}
       />
-      <h2>Your Primary Calendar</h2>
+      <h2 style={{ width: '90%', margin: '15px auto' }}>
+        Your Primary Calendar
+      </h2>
       <p
         style={{
           color: 'rgba(255,255,255,0.7)',
-          padding: '0 5%'
+          width: '90%',
+          margin: '15px auto'
         }}
       >
         Which calendar do you want Twain to schedule your tasks in?
@@ -125,7 +132,13 @@ const OptionDropdown = ({ handleContinue }) => {
         onClose={(bool) => setClosed(bool)}
       />
       {closed ? (
-        <Row flexEnd>
+        <Row
+          flexEnd
+          style={{
+            width: 'calc(90% + 20px)',
+            margin: '-10px auto'
+          }}
+        >
           <Button
             disabled={!selected}
             secondary={selected}
@@ -184,16 +197,18 @@ const OptionSelection = ({ handleContinue }) => {
       <img
         src="secondary_calendar.png"
         style={{
-          marginTop: '-200px',
-          marginLeft: '-113px',
-          marginBottom: '-70px'
+          width: '300px',
+          marginLeft: 'calc(-1 * (10%))',
+          marginTop: '-65%',
+          marginBottom: '-20%'
         }}
       />
-      <h2>Secondary Calendar</h2>
+      <h2 style={{ width: '90%', margin: '15px auto' }}>Secondary Calendar</h2>
       <p
         style={{
           color: 'rgba(255,255,255,0.7)',
-          padding: '0 5%'
+          width: '90%',
+          margin: '15px auto'
         }}
       >
         Which other calendars do you want Twain to take into account?
@@ -209,8 +224,13 @@ const OptionSelection = ({ handleContinue }) => {
           }
         }}
       />
-      <br />
-      <Row flexEnd>
+      <Row
+        flexEnd
+        style={{
+          width: 'calc(90% + 20px)',
+          margin: '-10px auto'
+        }}
+      >
         <Button
           disabled={!selected.length}
           secondary={selected.length}
@@ -259,46 +279,48 @@ const Times = ({ handleContinue }) => {
       <img
         src="hours_of_op.png"
         style={{
-          marginTop: '-200px',
-          marginLeft: '-60px',
-          marginBottom: '-70px'
+          width: '300px',
+          marginLeft: 'calc(-1 * (10%))',
+          marginTop: '-65%',
+          marginBottom: '-20%'
         }}
       />
-      <h2>Hours of Operation</h2>
+      <h2 style={{ width: '90%', margin: '15px auto' }}>Hours of Operation</h2>
       <p
         style={{
           color: 'rgba(255,255,255,0.7)',
-          padding: '0 5%'
+          width: '90%',
+          margin: '15px auto'
         }}
       >
         From which times do you want to schedule your tasks?
       </p>
-      <Row spaceBetween style={{ width: '90%', margin: '0 auto' }}>
-        <p>From</p>
-        <div>
-          <Dropdown
-            mini
-            options={hours}
-            selected={start}
-            onSelect={(opt) => setStart(opt)}
-            onClose={() => {}}
-            style={{ fontSize: '9px' }}
-          />
-        </div>
-        <p>to</p>
-        <div>
-          <Dropdown
-            mini
-            options={hours}
-            selected={end}
-            onSelect={(opt) => setEnd(opt)}
-            onClose={(bool) => setClosed(bool)}
-            style={{ fontSize: '9px' }}
-          />
-        </div>
+      <Row spaceBetween style={{ width: 'calc(90%)', margin: '-10px auto' }}>
+        <p style={{ marginRight: '10px' }}>From</p>
+        <Dropdown
+          mini
+          options={hours}
+          selected={start}
+          onSelect={(opt) => setStart(opt)}
+          onClose={() => {}}
+        />
+        <p style={{ margin: '14px 10px' }}>to</p>
+        <Dropdown
+          mini
+          options={hours}
+          selected={end}
+          onSelect={(opt) => setEnd(opt)}
+          onClose={(bool) => setClosed(bool)}
+        />
       </Row>
       {closed ? (
-        <Row flexEnd>
+        <Row
+          flexEnd
+          style={{
+            width: 'calc(90% + 20px)',
+            margin: '-10px auto'
+          }}
+        >
           <Button
             secondary
             onClick={updateBackendAndContinue}

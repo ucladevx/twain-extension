@@ -20,7 +20,7 @@ export const TextButton = styled.button`
   ${Shared}
 
   padding: 8px 13px;
-  margin-right: 7px;
+  // margin-right: 7px;
   color: #5187ed;
   background-color: #ddd;
 
@@ -70,7 +70,7 @@ const Button = styled.button`
 
 export const FullButton = styled(Button)`
   width: 90%;
-  height: 60px;
+  height: 50px;
   border-radius: 10px;
 `;
 

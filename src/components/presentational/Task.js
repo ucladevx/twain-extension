@@ -18,7 +18,7 @@ const Card = styled.div`
   border: ${(props) =>
     props.selected ? '2px solid #5187ed' : '2px solid #ccc'};
   border-radius: 10px;
-  overflow: hidden;
+  overflow: ${(props) => (props.expanded ? 'visible' : 'hidden')};
   transition: all 0.3s;
 
   &:hover {
@@ -29,15 +29,17 @@ const Card = styled.div`
 
 const DurationRow = styled(Row)`
   justify-content: space-between;
-  width: 90%;
-  margin: 0 0;
+  width: calc(90% + 16px);
+  margin: 0 auto;
+  // margin-right: 5px;
 `;
 
 const Label = styled(Text)`
   visibility: ${(props) => (props.editing ? 'visible' : 'hidden')};
   height: ${(props) => (props.editing ? 'auto' : '0')};
-  margin: 0;
-  margin-left: 3px;
+  width: calc(90% + 16px);
+  margin: 0 auto;
+  // margin-left: 3px;
   text-align: left;
 `;
 
@@ -185,7 +187,9 @@ const Task = ({
       </Row>
       {editing ? (
         <DurationRow>
-          <Text style={{ marginRight: '30px' }}>Duration:</Text>
+          <Text style={{ marginLeft: '0', marginRight: '10px' }}>
+            Duration:
+          </Text>
           <SpinButton
             units="hr"
             val={time.hours}
@@ -223,7 +227,7 @@ const Task = ({
         myDisabled={!editing}
         disabled={!editing}
       />
-      <Row spaceBetween>
+      <Row spaceBetween style={{ width: 'calc(90% + 16px)', margin: '0 auto' }}>
         <Text>
           {editing && created_time
             ? 'Created ' + new Date(created_time).toDateString()
