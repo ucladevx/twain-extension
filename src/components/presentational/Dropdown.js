@@ -116,6 +116,8 @@ const DropdownWrapper = styled.div`
 const SelectionWrapper = styled.div`
   ${Shared}
 
+  max-height: 250px;
+  overflow-y: scroll;
   margin: 5px auto;
   padding: 0;
   width: 94%;

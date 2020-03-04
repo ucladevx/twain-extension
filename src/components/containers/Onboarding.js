@@ -163,7 +163,7 @@ const OptionSelection = ({ handleContinue }) => {
       
       for (let i = 0; i < res.length; i++) {
         let cal = res[i]
-        currSummary = cal['summary']
+        let currSummary = cal['summary']
         summaries.push(currSummary)
 
         // In case users have multiple calendars with the same summary
