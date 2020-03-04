@@ -60,28 +60,17 @@ const DropdownWrapper = styled.div`
   }
 `;
 
-const Content = (data) => {
-  const hours = [...Array(48).keys()].map((e) => {
-    const i = parseInt(e / 2);
-    const ampm = i > 12 ? 'pm' : 'am';
-    const hour = ampm === 'am' ? i : i - 12;
-    const minute = e % 2 === 0 ? '00' : '30';
-    return `${hour < 10 ? '0' + hour : hour}:${minute} ${ampm}`;
-  });
+const ContentHO = () => {
+    const hours = [...Array(48).keys()].map((e) => {
+      const i = parseInt(e / 2);
+      const ampm = i > 12 ? 'pm' : 'am';
+      const hour = ampm === 'am' ? i : i - 12;
+      const minute = e % 2 === 0 ? '00' : '30';
+      return `${hour < 10 ? '0' + hour : hour}:${minute} ${ampm}`;
+    });
+    const [start, setStart] = useState('08:00 am');
+    const [end, setEnd] = useState('06:00 pm');
 
-  const [selected, setSelected] = useState(null);
-  const [closed, setClosed] = useState(true);
-
-  const [selectedMult, setSelectedMult] = useState([]);
-
-  const optionsMult = ['more', 'lorem', 'ipsum', 'here'];
-
-
-  const options = ['lorem', 'ipsum', 'here'];
-
-  const [start, setStart] = useState('08:00 am');
-  const [end, setEnd] = useState('06:00 pm');
-  if(data.data=="ContentHO"){
     return(<div style={{ display: 'flex' }}>
       <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>From</p>
       <div style={{ width: '33%' }}>
@@ -90,7 +79,6 @@ const Content = (data) => {
             options={hours}
             selected={start}
             onSelect={(opt) => setStart(opt)}
-            onClose={() => {}}
           />
         </div>
         <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>to</p>
@@ -100,19 +88,38 @@ const Content = (data) => {
             options={hours}
             selected={end}
             onSelect={(opt) => setEnd(opt)}
-            onClose={() => {}}
           />
         </div>
       </div>
     );
-  } else if(data.data=="ContentCP") {
+}
+const ContentCP = () => {
+  const [selected, setSelected] = useState(null);
+  const [closed, setClosed] = useState(true);
+
+  const options = ['lorem', 'ipsum', 'here'];
+
     return (<Dropdown
         options={options}
         selected={selected ? selected : 'Default Calendar Name'}
-        onSelect={(option) => setSelected(option)}
-        onClose={(bool) => setClosed(bool)}
+        onSelect={(option) => {
+            if(closed == false){
+              console.log("Primary calendar selected")
+              setSelected(option)
+            }
+          }
+        }
+        onClose={(bool) => {
+          setClosed(bool);
+          console.log("Dropdown "+bool);
+        }}
       />);
-  } else if(data.data=="ContentCat"){
+}
+const ContentCat = () => {
+
+  const [selectedMult, setSelectedMult] = useState([]);
+  const optionsMult = ['more', 'lorem', 'ipsum', 'here'];
+
       return(<Selection
         options={optionsMult}
         selected={selectedMult}
@@ -125,30 +132,73 @@ const Content = (data) => {
         }}
       />
     );
-  } else {
-    return(<div></div>);
-  }
 }
-
 const DropdownSetting = ({title, imageIcon, content}) => {
-  const [hidden, setHidden] = useState(true);
+  const [hidden1, setHidden1] = useState(true);
+  const [hidden2, setHidden2] = useState(true);
+  const [hidden3, setHidden3] = useState(true);
+
   console.log(content);
-  return (
-    <DropdownWrapper hide={hidden}>
-
-      <div style={{display:'flex' }}>
-      <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
-      {title}
-      <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=>setHidden(!hidden)}/>
-
-      </div>
-      <div className="content">
-        <br></br>
-        <Content data={content} />
-        <br></br>
-      </div>
-    </DropdownWrapper>
-  )
+  if(content=="ContentCP"){
+      return (
+        <DropdownWrapper hide={hidden1}>
+          <div style={{display:'flex' }}>
+          <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
+          {title}
+          <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
+            console.log("Toggle" + content)
+            setHidden1(!hidden1)}
+          }
+          />
+          </div>
+          <div className="content">
+            <br></br>
+            <ContentCP />
+            <br></br>
+          </div>
+        </DropdownWrapper>
+      );
+    } else if(content=="ContentCat") {
+      return (
+        <DropdownWrapper hide={hidden2}>
+          <div style={{display:'flex' }}>
+          <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
+          {title}
+          <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
+            console.log("Toggle" + content)
+            setHidden2(!hidden2)}
+          }
+          />
+          </div>
+          <div className="content">
+            <br></br>
+            <ContentCat />
+            <br></br>
+          </div>
+        </DropdownWrapper>
+      );
+    } else if (content=="ContentHO") {
+      return (
+        <DropdownWrapper hide={hidden3}>
+          <div style={{display:'flex' }}>
+          <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
+          {title}
+          <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
+            console.log("Toggle" + content)
+            setHidden3(!hidden3)}
+          }
+          />
+          </div>
+          <div className="content">
+            <br></br>
+            <ContentHO />
+            <br></br>
+          </div>
+        </DropdownWrapper>
+      );
+    } else {
+      return(<div></div>);
+    }
 }
 
 const Settings = () => {
