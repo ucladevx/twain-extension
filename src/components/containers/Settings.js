@@ -49,7 +49,7 @@ const DropdownWrapper = styled.div`
   padding: 15px;
   background-color: #eee;
 
-  & .content {
+  & .outside-content {
     display: block;
     visibility: ${props => props.hide ? 'hidden' : 'visible'};
     max-height: ${props => props.hide ? 0 : '300px'};
@@ -79,6 +79,8 @@ const ContentHO = () => {
             options={hours}
             selected={start}
             onSelect={(opt) => setStart(opt)}
+            onClose={() => {}}
+
           />
         </div>
         <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>to</p>
@@ -88,6 +90,8 @@ const ContentHO = () => {
             options={hours}
             selected={end}
             onSelect={(opt) => setEnd(opt)}
+            onClose={() => {}}
+
           />
         </div>
       </div>
@@ -103,16 +107,13 @@ const ContentCP = () => {
         options={options}
         selected={selected ? selected : 'Default Calendar Name'}
         onSelect={(option) => {
-            if(closed == false){
+            if(closed == true){
               console.log("Primary calendar selected")
               setSelected(option)
             }
           }
         }
-        onClose={(bool) => {
-          setClosed(bool);
-          console.log("Dropdown "+bool);
-        }}
+        onClose={() => {}}
       />);
 }
 const ContentCat = () => {
@@ -141,7 +142,7 @@ const DropdownSetting = ({title, imageIcon, content}) => {
   console.log(content);
   if(content=="ContentCP"){
       return (
-        <DropdownWrapper hide={hidden1}>
+        <DropdownWrapper hide={hidden1} onClose={() => {}} interior={false}>
           <div style={{display:'flex' }}>
           <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
           {title}
@@ -151,7 +152,7 @@ const DropdownSetting = ({title, imageIcon, content}) => {
           }
           />
           </div>
-          <div className="content">
+          <div className="outside-content">
             <br></br>
             <ContentCP />
             <br></br>
@@ -160,7 +161,7 @@ const DropdownSetting = ({title, imageIcon, content}) => {
       );
     } else if(content=="ContentCat") {
       return (
-        <DropdownWrapper hide={hidden2}>
+        <DropdownWrapper hide={hidden2} onClose={() => {}} interior={false}>
           <div style={{display:'flex' }}>
           <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
           {title}
@@ -170,7 +171,7 @@ const DropdownSetting = ({title, imageIcon, content}) => {
           }
           />
           </div>
-          <div className="content">
+          <div className="outside-content">
             <br></br>
             <ContentCat />
             <br></br>
@@ -179,7 +180,7 @@ const DropdownSetting = ({title, imageIcon, content}) => {
       );
     } else if (content=="ContentHO") {
       return (
-        <DropdownWrapper hide={hidden3}>
+        <DropdownWrapper hide={hidden3} onClose={() => {}} interior={false}>
           <div style={{display:'flex' }}>
           <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
           {title}
@@ -189,7 +190,7 @@ const DropdownSetting = ({title, imageIcon, content}) => {
           }
           />
           </div>
-          <div className="content">
+          <div className="outside-content">
             <br></br>
             <ContentHO />
             <br></br>

@@ -84,6 +84,24 @@ const DropdownWrapper = styled.div`
     transition: opacity 0.25s;
   }
 
+  & .content-outside {
+    position: absolute;
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    // width: 76%;
+    width: 100%;
+    max-height: ${(props) =>
+      !props.myDisabled && !props.closed ? '300px' : '0'};
+    overflow: auto;
+    margin-top: 2px;
+    margin-left: -8px;
+    // background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 0 0 7px 7px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+    transition: opacity 0.25s;
+  }
+
   .content::webkit-scrollbar {
     width: 0px;
     background: transparent;
@@ -99,6 +117,12 @@ const DropdownWrapper = styled.div`
     border-top: 1px solid #909090;
   }
 
+  & .content-outside p {
+    margin: 0;
+    padding: 10px 15px;
+    border-top: 1px solid #909090;
+  }
+
   // & .content p:first-of-type {
   //   border-radius: 10px 10px 0 0;
   // }
@@ -108,6 +132,19 @@ const DropdownWrapper = styled.div`
   }
 
   & .content p:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+  }
+
+  // & .content-outside p:first-of-type {
+  //   border-radius: 10px 10px 0 0;
+  // }
+
+  & .content-outside p:last-of-type {
+    border-radius: 0 0 7px 7px;
+  }
+
+  & .content-outside p:hover {
     background-color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
   }
@@ -169,7 +206,7 @@ export const Selection = ({ selected, onSelect, options }) => {
   );
 };
 
-const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini }) => {
+const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini, interior=true }) => {
   /* parent element controls disabled property,
      selecting an option changes the closed property */
   const [closed, setClosed] = useState(true);
@@ -222,7 +259,7 @@ const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini }) => {
           <StaticIcon src={closed ? 'arrow-down.svg' : 'arrow-up.svg'} />
         )}
       </Row>
-      <div className="content">
+      <div className={interior ? "content" : "content-outside"}>
         {options.map((option) => (
           <p
             key={option}
