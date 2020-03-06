@@ -106,6 +106,24 @@ const DropdownWrapper = styled.div`
     transition: opacity 0.25s;
   }
 
+  & .content-outside {
+    position: absolute;
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    // width: 76%;
+    width: 100%;
+    max-height: ${(props) =>
+      !props.myDisabled && !props.closed ? '300px' : '0'};
+    overflow: auto;
+    margin-top: 2px;
+    margin-left: -8px;
+    // background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 0 0 7px 7px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+    transition: opacity 0.25s;
+  }
+
   .content::webkit-scrollbar {
     width: 0px;
     background: transparent;
@@ -118,6 +136,12 @@ const DropdownWrapper = styled.div`
   & .content p {
     margin: 0;
     padding: ${(props) => (props.mini ? '5px 10px' : '10px 15px')};
+    border-top: 1px solid #909090;
+  }
+
+  & .content-outside p {
+    margin: 0;
+    padding: 10px 15px;
     border-top: 1px solid #909090;
   }
 
