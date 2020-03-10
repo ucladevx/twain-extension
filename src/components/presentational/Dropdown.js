@@ -8,10 +8,12 @@ import { Text } from './styled/Global';
 import { FullButton } from './styled/Button';
 
 const StyledTaskSection = styled.div`
+  position: relative;
   & .content {
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
-    max-height: ${(props) => (props.closed ? 0 : '100vh')};
-    // overflow: ${(props) => (props.closed ? 'hidden' : 'auto')};
+    max-height: ${(props) =>
+      props.closed ? 0 : props.fullHeight ? '55vh' : '30vh'};
+    overflow: ${(props) => (props.closed ? 'hidden' : 'auto')};
     opacity: ${(props) => (props.closed ? 0 : 1)};
     transition: all 0.4s ease-in-out, max-height 0.3s ease-in-out;
   }
@@ -21,35 +23,41 @@ export const TaskSection = ({
   title,
   emptyPrompt,
   children,
+  fullHeight,
+  onToggle = (closed) => {},
   actionButton = ''
 }) => {
-  const defaultClosed = !children.length;
-  const [closed, setClosed] = useState(defaultClosed);
+  const [closed, setClosed] = useState(true);
+
+  useEffect(() => {
+    onToggle(closed);
+  }, [closed]);
 
   useEffect(() => {
     setClosed(!children.length);
   }, [children.length]);
 
   const content = children.length ? (
-    <>
-      {children} {!actionButton.length ? actionButton : ''}
-    </>
+    <>{children}</>
   ) : (
     <FullButton info>{emptyPrompt}</FullButton>
   );
 
   return (
-    <StyledTaskSection closed={closed}>
+    <StyledTaskSection closed={closed} fullHeight={fullHeight}>
       <Row style={{ margin: '0' }}>
         <Text primary style={{ marginRight: 'auto' }}>
           {title}
         </Text>
         <Icon
-          src={closed ? 'arrow-down.svg' : 'arrow-up.svg'}
+          src={closed ? '/arrow-down.svg' : '/arrow-up.svg'}
           onClick={() => setClosed(!closed)}
         />
       </Row>
       <div className="content">{content}</div>
+      <div className="content" style={{ overflow: 'visible' }}>
+        {actionButton}
+      </div>
     </StyledTaskSection>
   );
 };
@@ -230,7 +238,7 @@ const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini }) => {
         {disabled || mini ? (
           ''
         ) : (
-          <StaticIcon src={closed ? 'arrow-down.svg' : 'arrow-up.svg'} />
+          <StaticIcon src={closed ? '/arrow-down.svg' : '/arrow-up.svg'} />
         )}
       </Row>
       <div className="content">
@@ -281,6 +289,7 @@ const DropdownGrid = css`
     visibility: ${(props) =>
       !props.myDisabled && !props.closed ? 'visible' : 'hidden'};
     opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    max-height: ${(props) => (!props.myDisabled && !props.closed ? '' : '0')};
     display: grid;
     background-color: #fff;
     border-radius: 10px;
@@ -370,7 +379,7 @@ export const NumpadInput = (props) => {
             setFirstDigit(true);
           }}
         >
-          <StaticIcon src="close.svg" />
+          <StaticIcon src="/close.svg" />
         </div>
         <div onClick={() => updateNumber(0)}>0</div>
         <div
@@ -379,7 +388,7 @@ export const NumpadInput = (props) => {
             setFirstDigit(true);
           }}
         >
-          <StaticIcon src="check.svg" />
+          <StaticIcon src="/check.svg" />
         </div>
       </div>
     </DropdownNumpadGrid>
@@ -954,7 +963,7 @@ export const DatePicker = (props) => {
             }
           }}
         >
-          <StaticIcon src="arrow-left.svg" />
+          <StaticIcon src="/arrow-left.svg" />
         </div>
         <div
           style={{ gridColumn: '3/6', lineHeight: '23px' }}
@@ -972,7 +981,7 @@ export const DatePicker = (props) => {
             }
           }}
         >
-          <StaticIcon src="arrow-right.svg" />
+          <StaticIcon src="/arrow-right.svg" />
         </div>
         {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => (
           <div

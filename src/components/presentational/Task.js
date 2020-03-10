@@ -23,7 +23,8 @@ const Card = styled.div`
 
   &:hover {
     box-shadow: 0px 3px 6px 0 rgba(0, 0, 0, 0.2);
-    cursor: ${(props) => (props.expanded ? 'default' : 'pointer')};
+    cursor: ${(props) =>
+      props.expanded || props.failed ? 'default' : 'pointer'};
   }
 `;
 
@@ -43,6 +44,18 @@ const Label = styled(Text)`
   text-align: left;
 `;
 
+const Button = styled.p`
+  border-radius: 5px;
+  background-color: #4f4f4f;
+  color: #fff;
+  font-size: 11px;
+  padding: 10px 15px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 const Task = ({
   task,
   completeTask,
@@ -51,14 +64,17 @@ const Task = ({
   toggleSelect,
   selected,
   categories,
+  updateTask = () => {},
   creating = false,
-  scheduling = false
+  scheduling = false,
+  failed = false
 }) => {
   const {
     id,
     created_time,
     completed,
     completed_time,
+    duration,
     scheduled,
     scheduled_time,
     scheduled_date,
@@ -114,87 +130,21 @@ const Task = ({
   );
 
   const formatScheduledDate = () => {
-    const start_time = new Date(task.start_time);
+    const start_time = new Date(scheduled_time);
+    const end_time = new Date(start_time.getTime() + 1000 * 60 * duration);
+    console.log(duration, start_time, end_time);
     const time = start_time.toLocaleTimeString('en-US', {
       timeStyle: 'short'
     });
+    const end = end_time.toLocaleTimeString('en-US', {
+      timeStyle: 'short'
+    });
     const date = start_time.toDateString();
-    return `${time} ${date}`;
+    return `${time.substring(0, 5)}-${end} ${date.substring(0, 11)}`;
   };
 
-  return (
-    <Card
-      expanded={expanded}
-      select={!scheduled}
-      onClick={
-        !scheduled && !expanded
-          ? () => {
-              toggleSelect(id);
-            }
-          : () => {}
-      }
-      selected={selected}
-    >
-      <Row style={{ height: '50px', marginBottom: '8px' }}>
-        <Select
-          hide={!scheduled}
-          onClick={() => {
-            if (scheduled) {
-              completeTask(id);
-            }
-          }}
-        />
-        <div
-          style={{ width: '80%', textAlign: 'left', margin: '0 auto 0 8px' }}
-        >
-          <Mini
-            placeholder="Title"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            myDisabled={!editing}
-            disabled={!editing}
-            pointer={!editing && !expanded}
-            text={editing && expanded}
-          />
-          {!editing ? (
-            <Text pointer={!editing && !expanded}>
-              {!scheduled && !scheduling
-                ? time.hours + ' hr ' + time.minutes + ' min'
-                : `${new Date(task.scheduled_date).toLocaleTimeString('en-US', {
-                    timeStyle: 'short'
-                  })} ${new Date(task.scheduled_date).toDateString()}`}
-            </Text>
-          ) : (
-            ''
-          )}
-        </div>
-        {!scheduling ? (
-          <Icon
-            src={
-              editing
-                ? '/close.svg'
-                : expanded
-                ? '/arrow-up.svg'
-                : '/arrow-down.svg'
-            }
-            alt={editing ? 'Close' : expanded ? 'Up' : 'Down'}
-            onClick={(e) => {
-              if (editing) {
-                if (!creating) {
-                  if (window.confirm('Delete task?')) deleteTask(id);
-                } else {
-                  deleteTask(id);
-                }
-              } else {
-                setExpanded(!expanded);
-                e.stopPropagation();
-              }
-            }}
-          />
-        ) : (
-          ''
-        )}
-      </Row>
+  let content = (
+    <>
       {editing ? (
         <DurationRow>
           <Text style={{ marginLeft: '0', marginRight: '10px' }}>
@@ -252,6 +202,129 @@ const Task = ({
           {creating ? 'Create' : editing ? 'Save' : 'Edit'}
         </TextButton>
       </Row>
+    </>
+  );
+
+  if (failed) {
+    content = (
+      <>
+        <Label editing={true}>Start Date:</Label>
+        <DateTimePicker
+          placeholder="Start Date and Time"
+          value={new Date(due).toISOString()}
+          onChange={(e) => {
+            setDue(e.target.value);
+          }}
+          disabled={false}
+        />
+        <Row
+          spaceBetween
+          style={{
+            width: 'calc(90% + 16px)',
+            margin: '0 auto',
+            marginTop: '10px'
+          }}
+        >
+          <Text></Text>
+          <TextButton
+            tabIndex="-1"
+            onClick={() => {
+              updateTask({
+                ...task,
+                scheduled_time: new Date(due).toISOString()
+              });
+            }}
+          >
+            Schedule
+          </TextButton>
+        </Row>
+      </>
+    );
+  }
+
+  return (
+    <Card
+      failed={failed}
+      expanded={expanded}
+      select={!scheduled}
+      onClick={
+        !scheduled && !expanded
+          ? () => {
+              toggleSelect(id);
+            }
+          : () => {}
+      }
+      selected={selected}
+    >
+      <Row style={{ height: '50px', marginBottom: '8px' }}>
+        <Select
+          hide={!scheduled}
+          onClick={() => {
+            if (scheduled) {
+              completeTask(id);
+            }
+          }}
+        />
+        <div
+          style={{
+            width: failed ? '50%' : '80%',
+            textAlign: 'left',
+            margin: '0 auto 0 8px'
+          }}
+        >
+          <Mini
+            placeholder="Title"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            myDisabled={!editing}
+            disabled={!editing}
+            pointer={!editing && !expanded && !failed}
+            text={editing && expanded}
+          />
+          {!editing ? (
+            <Text pointer={!editing && !expanded && !failed}>
+              {!scheduled && !scheduling
+                ? time.hours + ' hr ' + time.minutes + ' min'
+                : formatScheduledDate()}
+            </Text>
+          ) : (
+            ''
+          )}
+        </div>
+        {!scheduling && !failed ? (
+          <Icon
+            src={
+              editing
+                ? '/close.svg'
+                : expanded
+                ? '/arrow-up.svg'
+                : failed
+                ? ''
+                : '/arrow-down.svg'
+            }
+            alt={editing ? 'Close' : expanded ? 'Up' : 'Down'}
+            onClick={(e) => {
+              if (editing) {
+                if (!creating) {
+                  if (window.confirm('Delete task?')) deleteTask(id);
+                } else {
+                  deleteTask(id);
+                }
+              } else {
+                setExpanded(!expanded);
+                e.stopPropagation();
+              }
+            }}
+          />
+        ) : !scheduling && !expanded ? (
+          <Button onClick={() => setExpanded(true)}>Force Schedule</Button>
+        ) : !scheduling ? (
+          <Icon src="/close.svg" onClick={() => setExpanded(false)} />
+        ) : (
+          ''
+        )}
+      </Row>
+      {content}
     </Card>
   );
 };

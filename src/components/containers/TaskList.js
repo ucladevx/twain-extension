@@ -3,7 +3,8 @@ import { useHistory } from 'react-router-dom';
 
 import Task from '../presentational/Task';
 import { FullButton } from '../presentational/styled/Button';
-import { TaskSection } from '../presentational/Dropdown';
+import { TaskSection, DateTimePicker } from '../presentational/Dropdown';
+import { Row } from '../presentational/styled/Layout';
 
 import TaskService from '../../services/TaskService';
 
@@ -42,6 +43,13 @@ const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [unscheduled, setUnscheduled] = useState([]);
   const [scheduled, setScheduled] = useState([]);
+  const [listsOpen, setListsOpen] = useState(2);
+
+  const initDate = new Date();
+  initDate.setMinutes(0);
+
+  const [schedulingStart, setSchedulingStart] = useState(initDate);
+  const [showSchedulingStart, setShowScheduling] = useState(false);
 
   const [creating, setCreating] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -74,6 +82,14 @@ const TaskList = () => {
     /* split into scheduled and unscheduled every time tasks updates */
     splitTasks();
   }, [tasks]);
+
+  useEffect(() => {
+    if (selected.length > 0) {
+      setShowScheduling(true);
+    } else {
+      setShowScheduling(false);
+    }
+  }, [selected]);
 
   const createTask = (task) => {
     const { name, description, duration, due_date } = task;
@@ -154,17 +170,47 @@ const TaskList = () => {
   };
 
   const scheduleButton = (
-    <FullButton
-      primary={unscheduled.length}
-      disabled={!unscheduled.length}
-      onClick={() => {
-        // scheduleSelected();
-        history.push('/scheduling/1,2,3');
-      }}
-    >
-      Schedule {selected.length ? selected.length : 'All'}{' '}
-      {selected.length === 1 ? 'Task' : 'Tasks'}
-    </FullButton>
+    <div>
+      <div
+        style={{
+          width: '90%',
+          margin: '0 auto',
+          visibility: showSchedulingStart ? 'visible' : 'hidden',
+          opacity: showSchedulingStart ? '1' : '0',
+          maxHeight: showSchedulingStart ? '' : '0',
+          transition: 'all 0s'
+        }}
+      >
+        <p>When do you want to start scheduling?</p>
+        <DateTimePicker
+          value={schedulingStart}
+          onChange={(e) => setSchedulingStart(e.target.value)}
+        />
+      </div>
+      <FullButton
+        primary={unscheduled.length}
+        disabled={!unscheduled.length}
+        onClick={() => {
+          if (!showSchedulingStart) {
+            setShowScheduling(true);
+          } else {
+            // scheduleSelected();
+            let selectedstr = '';
+            if (selected.length) {
+              selectedstr = selected.join(',');
+            } else {
+              selectedstr = unscheduled.map((elem) => elem.id).join(',');
+            }
+            history.push(
+              `/scheduling/${selectedstr}?start=${schedulingStart.toISOString()}`
+            );
+          }
+        }}
+      >
+        Schedule {selected.length ? selected.length : 'All'}{' '}
+        {selected.length === 1 ? 'Task' : 'Tasks'}
+      </FullButton>
+    </div>
   );
 
   return (
@@ -184,6 +230,14 @@ const TaskList = () => {
         title="Not yet scheduled"
         emptyPrompt="No created tasks"
         actionButton={scheduleButton}
+        onToggle={(closed) => {
+          if (closed) {
+            setListsOpen((listsOpen) => listsOpen - 1);
+          } else {
+            setListsOpen((listsOpen) => listsOpen + 1);
+          }
+        }}
+        fullHeight={listsOpen !== 2}
       >
         {unscheduled.map((task) => (
           <Task
@@ -196,7 +250,18 @@ const TaskList = () => {
           />
         ))}
       </TaskSection>
-      <TaskSection title="Scheduled" emptyPrompt="No scheduled tasks">
+      <TaskSection
+        title="Scheduled"
+        emptyPrompt="No scheduled tasks"
+        onToggle={(closed) => {
+          if (closed) {
+            setListsOpen((listsOpen) => listsOpen - 1);
+          } else {
+            setListsOpen((listsOpen) => listsOpen + 1);
+          }
+        }}
+        fullHeight={listsOpen !== 2}
+      >
         {scheduled.map((task) => (
           <Task
             key={task.id}

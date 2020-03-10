@@ -55,7 +55,7 @@ const Dropdown = styled.div`
     position: absolute;
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
     opacity: ${(props) => (props.closed ? 0 : 1)}
-    margin-left: -43%;
+    margin-left: -70%;
     margin-top: 9px;
     background-color: #fff;
     border: 2px solid #ddd;

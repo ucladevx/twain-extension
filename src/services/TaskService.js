@@ -109,10 +109,12 @@ const taskComplete = async (taskIds, taskCompleteHandler) => {
   AuthService.runWithAuthToken(taskCompleteCallback);
 };
 
-const scheduleTask = async (id, taskScheduleHandler) => {
+const scheduleTasks = async (ids, minTime, timezone, taskScheduleHandler) => {
   let taskScheduleCallback = async function(token) {
     let body = {
-      ids: [id]
+      ids,
+      timeMin: minTime,
+      timeZone: timezone
     };
     let header = {
       Authorization: 'Bearer ' + token
@@ -131,4 +133,35 @@ const scheduleTask = async (id, taskScheduleHandler) => {
   AuthService.runWithAuthToken(taskScheduleCallback);
 };
 
-export default { getTask, getAllTasks, postTask, taskComplete, scheduleTask };
+const confirmTasks = async (ids, forceTasks, timezone, taskConfirmHandler) => {
+  let taskConfirmCallback = async function(token) {
+    let body = {
+      good_ids: ids,
+      force: forceTasks,
+      timeZone: timezone
+    };
+    let header = {
+      Authorization: 'Bearer ' + token
+    };
+    let res = await axios
+      .post('http://localhost:31337/api/schedule/confirm', body, {
+        headers: header
+      })
+      .then((res) => res.data.data)
+      .catch((err) => {
+        console.log(err.response);
+        return err;
+      });
+    taskConfirmHandler(res);
+  };
+  AuthService.runWithAuthToken(taskConfirmCallback);
+};
+
+export default {
+  getTask,
+  getAllTasks,
+  postTask,
+  taskComplete,
+  scheduleTasks,
+  confirmTasks
+};
