@@ -55,6 +55,13 @@ const SchedulingList = (props) => {
 
   const history = useHistory();
 
+  const newDateNextHour = () => {
+    const initDate = new Date();
+    initDate.setTime(initDate.getTime() + 60 * 60 * 1000);
+    initDate.setMinutes(0);
+    return initDate.toISOString();
+  };
+
   useEffect(() => {
     // console.log(props.match, props.location);
     const ids = props.match.params.ids.split(',');
@@ -66,10 +73,10 @@ const SchedulingList = (props) => {
       const tempScheduling = [],
         tempErrors = [];
       res.data.forEach((task) => {
-        if (task.scheduled) {
+        if (task.scheduled_time) {
           tempScheduling.push(task);
         } else {
-          tempErrors.push(task);
+          tempErrors.push({ ...task, scheduled_time: newDateNextHour() });
         }
       });
       setScheduling(tempScheduling);
@@ -92,13 +99,21 @@ const SchedulingList = (props) => {
   };
 
   const errText = errors.length
-    ? `With the current scheduling settings, we couldn't find slots for ${errors.length} tasks:`
+    ? `With the current scheduling settings, we couldn't find slots for ${
+        errors.length
+      } ${errors.length === 1 ? 'task' : 'tasks'}:`
+    : '';
+
+  const schedText = scheduling.length
+    ? `We found slots for ${scheduling.length} ${
+        scheduling.length === 1 ? 'task' : 'tasks'
+      }:`
     : '';
 
   return (
     <div>
       <Text primary style={{ textAlign: 'left' }}>
-        We found slots for {scheduling.length} tasks:
+        {schedText}
       </Text>
       {scheduling.map((task) => (
         <Task
@@ -142,6 +157,7 @@ const SchedulingList = (props) => {
       <Row>
         <FullButton>Make Changes</FullButton>
         <FullButton
+          disabled={!selected.length && !force.length}
           onClick={() => {
             const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             const forceTasks = force.map((task) => ({
@@ -159,8 +175,11 @@ const SchedulingList = (props) => {
             ? 'All'
             : selected.length + selectedForce.length === 0
             ? 'No'
-            : selected.length + selectedForce.length}
-          {selected.length + selectedForce.length === 1 ? 'Task' : 'Tasks'}
+            : selected.length + selectedForce.length}{' '}
+          {selected.length + selectedForce.length > 1 ||
+          selected.length + selectedForce.length === scheduling.length
+            ? 'Tasks'
+            : 'Task'}
         </FullButton>
       </Row>
     </div>

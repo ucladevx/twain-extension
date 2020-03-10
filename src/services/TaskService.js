@@ -96,10 +96,10 @@ const taskComplete = async (taskIds, taskCompleteHandler) => {
       Authorization: 'Bearer ' + token
     };
     let res = await axios
-      .post('http://localhost:31337/api/tasks/complete_task', body, {
+      .post('http://localhost:31337/api/tasks/complete', body, {
         headers: header
       })
-      .then((res) => res.data.data)
+      .then((res) => res.data)
       .catch((err) => {
         console.log(err.response);
         return err;
@@ -123,7 +123,7 @@ const scheduleTasks = async (ids, minTime, timezone, taskScheduleHandler) => {
       .post('http://localhost:31337/api/schedule/', body, {
         headers: header
       })
-      .then((res) => res.data.data)
+      .then((res) => res.data)
       .catch((err) => {
         console.log(err.response);
         return err;
@@ -147,7 +147,7 @@ const confirmTasks = async (ids, forceTasks, timezone, taskConfirmHandler) => {
       .post('http://localhost:31337/api/schedule/confirm', body, {
         headers: header
       })
-      .then((res) => res.data.data)
+      .then((res) => res.data)
       .catch((err) => {
         console.log(err.response);
         return err;

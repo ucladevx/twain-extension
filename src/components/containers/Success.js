@@ -30,8 +30,8 @@ const Success = (props) => {
           Confirmation success!
         </h3>
         <p style={{ textAlign: 'center', color: '#828282' }}>
-          {num} {num === 1 ? 'task' : 'tasks'} {num === 1 ? 'was' : 'were'}{' '}
-          successfully scheduled onto your calendar!
+          {num} {num === 1 ? 'task' : 'tasks'} {num === 1 ? 'was' : 'were'} will
+          be scheduled onto your calendar shortly!
         </p>
         <FullButton primary onClick={() => history.push('/tasklist')}>
           Continue

@@ -275,19 +275,19 @@ const Times = ({ handleContinue }) => {
   const [end, setEnd] = useState({ key: 18, text: '06:00 pm' });
 
   const updateBackendAndContinue = () => {
-    const startHourString = start.substring(0, 2);
-    const endHourString = end.substring(0, 2);
+    // const startHourString = start.substring(0, 2);
+    // const endHourString = end.substring(0, 2);
 
-    let startHour = parseInt(startHourString, 10);
-    let endHour = parseInt(endHourString, 10);
+    // let startHour = parseInt(startHourString, 10);
+    // let endHour = parseInt(endHourString, 10);
 
-    if (start.substring(6, 8) == 'pm') {
-      startHour += 12;
-    }
+    // if (start.substring(6, 8) == 'pm') {
+    //   startHour += 12;
+    // }
 
-    if (end.substring(6, 8) == 'pm') {
-      endHour += 12;
-    }
+    // if (end.substring(6, 8) == 'pm') {
+    //   endHour += 12;
+    // }
 
     // UserService.setHours(startHour, endHour, handleContinue);
     UserService.setHours(start.key, end.key, handleContinue);

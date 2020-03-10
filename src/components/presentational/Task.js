@@ -95,6 +95,7 @@ const Task = ({
   const [name, setName] = useState(task.name);
   const [time, setTime] = useState(initDuration(task.duration));
   const [due, setDue] = useState(task.due_date);
+  const [sched, setSched] = useState(task.scheduled_time);
   const [dueTime, setDueTime] = useState({ hours: 15, minutes: 30 });
   const [category, setCategory] = useState(task.category);
   const [description, setDescription] = useState(task.description);
@@ -130,8 +131,13 @@ const Task = ({
   );
 
   const formatScheduledDate = () => {
-    const start_time = new Date(scheduled_time);
-    const end_time = new Date(start_time.getTime() + 1000 * 60 * duration);
+    console.log(task);
+    let start_time = new Date(scheduled_time);
+    let end_time = new Date(start_time.getTime() + 1000 * 60 * duration);
+    if (task.start_time && task.end_time) {
+      start_time = new Date(task.start_time);
+      end_time = new Date(task.end_time);
+    }
     console.log(duration, start_time, end_time);
     const time = start_time.toLocaleTimeString('en-US', {
       timeStyle: 'short'
@@ -140,7 +146,13 @@ const Task = ({
       timeStyle: 'short'
     });
     const date = start_time.toDateString();
-    return `${time.substring(0, 5)}-${end} ${date.substring(0, 11)}`;
+    let datetext;
+    if (start_time.getDate() < new Date().getDate() + 7) {
+      datetext = date.substring(0, 3);
+    } else {
+      datetext = date.substring(4, 10);
+    }
+    return `${time.substring(0, 5)}-${end} ${datetext}`;
   };
 
   let content = (
@@ -170,7 +182,7 @@ const Task = ({
       ) : (
         ''
       )}
-      <Label editing={editing}>Due:</Label>
+      <Label editing={true}>Due:</Label>
       <DateTimePicker
         placeholder="Due Date"
         value={new Date(due).toISOString()}
@@ -179,7 +191,7 @@ const Task = ({
         }}
         disabled={!editing}
       />
-      <Label editing={editing}>Description:</Label>
+      <Label editing={true}>Description:</Label>
       <TextArea
         placeholder="Add Description."
         value={description}
@@ -211,9 +223,9 @@ const Task = ({
         <Label editing={true}>Start Date:</Label>
         <DateTimePicker
           placeholder="Start Date and Time"
-          value={new Date(due).toISOString()}
+          value={new Date(sched).toISOString()}
           onChange={(e) => {
-            setDue(e.target.value);
+            setSched(e.target.value);
           }}
           disabled={false}
         />
@@ -231,7 +243,7 @@ const Task = ({
             onClick={() => {
               updateTask({
                 ...task,
-                scheduled_time: new Date(due).toISOString()
+                scheduled_time: new Date(sched).toISOString()
               });
             }}
           >
@@ -258,6 +270,8 @@ const Task = ({
     >
       <Row style={{ height: '50px', marginBottom: '8px' }}>
         <Select
+          image="/background.png"
+          style={{ flex: '0 0 25px' }}
           hide={!scheduled}
           onClick={() => {
             if (scheduled) {

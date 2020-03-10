@@ -9,17 +9,24 @@ import Icon from '../presentational/styled/Icon';
 
 import TaskService from '../../services/TaskService';
 
+const newDateNextDay = () => {
+  const initDate = new Date();
+  initDate.setTime(initDate.getTime() + 24 * 60 * 60 * 1000);
+  initDate.setMinutes(0);
+  return initDate.toISOString();
+};
+
 const emptyTask = {
   id: 0,
   name: '',
-  duration: 60,
+  duration: 30,
   description: '',
   category: '',
   created_date: '',
   scheduled_date: '',
   completed: false,
   scheduled: false,
-  due_date: new Date().toISOString()
+  due_date: newDateNextDay()
 };
 
 const categories = ['School', 'Work', 'Personal', 'Holidays']; // temporary
@@ -47,6 +54,7 @@ const TaskList = () => {
   const [listsOpen, setListsOpen] = useState(2);
 
   const initDate = new Date();
+  initDate.setTime(initDate.getTime() + 60 * 60 * 1000);
   initDate.setMinutes(0);
 
   const [schedulingStart, setSchedulingStart] = useState(initDate);
@@ -75,6 +83,7 @@ const TaskList = () => {
 
   useEffect(() => {
     TaskService.getAllTasks((res) => {
+      console.log(res);
       setTasks([...res.not_scheduled, ...res.scheduled]);
     });
   }, []);
@@ -119,12 +128,13 @@ const TaskList = () => {
 
   const completeTask = (id) =>
     TaskService.taskComplete([id], (completedTasks) =>
-      completedTasks.forEach((completedTask) => {
+      completedTasks.data.forEach((completedTask) => {
         console.log('Task completed:', completedTask);
         setTasks(
           tasks.map((task) =>
             task.id === completedTask.id
-              ? { ...completedTask, category: 'Twain' }
+              ? // ? { ...completedTask, category: 'Twain' }
+                completedTask
               : task
           )
         );
@@ -171,7 +181,7 @@ const TaskList = () => {
   };
 
   const getCustomHeight = () => {
-    const vh = listsOpen === 2 ? 30 : 55;
+    const vh = listsOpen === 2 ? 40 : 65;
     if (showSchedulingStart) {
       return `calc(${vh}vh - 110px)`;
     } else return `${vh}vh`;
@@ -277,7 +287,7 @@ const TaskList = () => {
             setListsOpen((listsOpen) => listsOpen + 1);
           }
         }}
-        customHeight={listsOpen !== 2 ? '55vh' : '30vh'}
+        customHeight={listsOpen !== 2 ? '65vh' : '40vh'}
       >
         {scheduled.map((task) => (
           <Task
