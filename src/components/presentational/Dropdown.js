@@ -598,7 +598,7 @@ const NumberScroller = ({ disabled, min, max, selected, onSelect }) => {
 const DropdownTimeGrid = styled.div`
   ${DropdownGrid}
   width: calc(30%);
-  margin-right: 14px;
+  margin-right: ${(props) => (props.myDisabled ? '0' : '14px')};
   text-align: left;
 
   & .content {
@@ -903,6 +903,7 @@ export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
           onChange={(e) => {
             handleChange(date, e.target.value);
           }}
+          style={{ marginLeft: '13px' }}
         />
       </Row>
     </DateTimeWrapper>

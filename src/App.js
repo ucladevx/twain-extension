@@ -11,6 +11,7 @@ import Settings from './components/containers/Settings';
 import Help from './components/containers/Help';
 import Success from './components/containers/Success';
 import SchedulingList from './components/containers/Scheduling';
+import ChangeList from './components/containers/MakeChanges';
 
 const App = () => {
   const DefaultContainer = () => (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/tasklist" component={TaskList} />
         <Route path="/login" component={Login} />
         <Route path="/scheduling/:ids" component={SchedulingList} />
+        <Route path="/changelist/:ids" component={ChangeList} />
         <Route component={TaskList} />
         <Route component={Login} />
       </Switch>
@@ -32,10 +34,12 @@ const App = () => {
         <Switch>
           <Route path="/settings" component={Settings} />
           <Route path="/help" component={Help} />
-          <Route path="/success/:numsched" component={Success} />
           <Route path="/tasklist" component={DefaultContainer} />
           <Route path="/login" component={DefaultContainer} />
           <Route path="/scheduling" component={DefaultContainer} />
+          <Route path="/changelist" component={DefaultContainer} />
+
+          <Route path="/success/:numsched" component={Success} />
 
           <Route component={Onboarding} />
         </Switch>

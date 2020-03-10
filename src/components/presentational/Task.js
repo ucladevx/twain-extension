@@ -191,14 +191,20 @@ const Task = ({
         }}
         disabled={!editing}
       />
-      <Label editing={true}>Description:</Label>
-      <TextArea
-        placeholder="Add Description."
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        myDisabled={!editing}
-        disabled={!editing}
-      />
+      {!description.length && !editing ? (
+        ''
+      ) : (
+        <>
+          <Label editing={true}>Description:</Label>
+          <TextArea
+            placeholder="Add Description."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            myDisabled={!editing}
+            disabled={!editing}
+          />
+        </>
+      )}
       <Row spaceBetween style={{ width: 'calc(90% + 16px)', margin: '0 auto' }}>
         <Text>
           {editing && created_time
@@ -220,7 +226,7 @@ const Task = ({
   if (failed) {
     content = (
       <>
-        <Label editing={true}>Start Date:</Label>
+        <Label editing={true}>Start Date and Time:</Label>
         <DateTimePicker
           placeholder="Start Date and Time"
           value={new Date(sched).toISOString()}
@@ -271,7 +277,7 @@ const Task = ({
       <Row style={{ height: '50px', marginBottom: '8px' }}>
         <Select
           image="/background.png"
-          style={{ flex: '0 0 25px' }}
+          style={{ flex: scheduled ? '0 0 25px' : '0 0 0' }}
           hide={!scheduled}
           onClick={() => {
             if (scheduled) {

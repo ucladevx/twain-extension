@@ -5,51 +5,13 @@ import Task from '../presentational/Task';
 import { Text } from '../presentational/styled/Global';
 import { FullButton } from '../presentational/styled/Button';
 import { Row } from '../presentational/styled/Layout';
+import Loading from '../presentational/styled/Loading';
 import TaskService from '../../services/TaskService';
 
-const dummyScheduling = [
-  {
-    id: 0,
-    name: 'Task 1',
-    duration: 60,
-    description: 'cool tasks',
-    created_date: '',
-    scheduled_time: new Date().toISOString(),
-    completed: false,
-    scheduled: false,
-    due_date: new Date().toISOString()
-  },
-  {
-    id: 1,
-    name: 'Task 2',
-    duration: 90,
-    description: 'a task',
-    created_date: '',
-    scheduled_time: new Date().toISOString(),
-    completed: false,
-    scheduled: false,
-    due_date: new Date().toISOString()
-  }
-];
-
-const dummyErrors = [
-  {
-    id: 3,
-    name: 'Task 3',
-    duration: 60,
-    description: 'cool tasks',
-    created_date: '',
-    scheduled_time: new Date().toISOString(),
-    completed: false,
-    scheduled: false,
-    due_date: new Date().toISOString()
-  }
-];
-
 const SchedulingList = (props) => {
-  const [scheduling, setScheduling] = useState(dummyScheduling);
-  const [errors, setErrors] = useState(dummyErrors);
-  const [selected, setSelected] = useState(dummyScheduling.map((e) => e.id));
+  const [scheduling, setScheduling] = useState([]);
+  const [errors, setErrors] = useState([]);
+  const [selected, setSelected] = useState([]);
   const [selectedForce, setSelectedForce] = useState([]);
   const [force, setForce] = useState([]);
 
@@ -110,6 +72,14 @@ const SchedulingList = (props) => {
       }:`
     : '';
 
+  if (!scheduling.length && !errors.length) {
+    return (
+      <Row style={{ marginTop: '30vh' }}>
+        <Loading />
+      </Row>
+    );
+  }
+
   return (
     <div>
       <Text primary style={{ textAlign: 'left' }}>
@@ -155,7 +125,17 @@ const SchedulingList = (props) => {
         />
       ))}
       <Row>
-        <FullButton>Make Changes</FullButton>
+        <FullButton
+          onClick={() => {
+            let ids = scheduling
+              .map((t) => t.id)
+              .concat(errors.map((t) => t.id))
+              .join(',');
+            history.push(`/changelist/${ids}`);
+          }}
+        >
+          Make Changes
+        </FullButton>
         <FullButton
           disabled={!selected.length && !force.length}
           onClick={() => {

@@ -181,7 +181,7 @@ const TaskList = () => {
   };
 
   const getCustomHeight = () => {
-    const vh = listsOpen === 2 ? 40 : 65;
+    const vh = listsOpen === 2 ? 33 : 65;
     if (showSchedulingStart) {
       return `calc(${vh}vh - 110px)`;
     } else return `${vh}vh`;
@@ -287,7 +287,7 @@ const TaskList = () => {
             setListsOpen((listsOpen) => listsOpen + 1);
           }
         }}
-        customHeight={listsOpen !== 2 ? '65vh' : '40vh'}
+        customHeight={listsOpen !== 2 ? '65vh' : '33vh'}
       >
         {scheduled.map((task) => (
           <Task
