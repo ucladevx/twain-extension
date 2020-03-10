@@ -5,6 +5,8 @@ import { Row } from '../presentational/styled/Layout';
 import Input, { Shared } from '../presentational/styled/Input';
 import { Link } from 'react-router-dom';
 import { StaticIcon } from '../presentational/styled/Icon';
+import Dropdown, { Selection } from '../presentational/Dropdown';
+
 
 import UserService from '../../services/UserService';
 
@@ -47,7 +49,7 @@ const DropdownWrapper = styled.div`
   padding: 15px;
   background-color: #eee;
 
-  & .content {
+  & .outside-content {
     display: block;
     visibility: ${props => props.hide ? 'hidden' : 'visible'};
     max-height: ${props => props.hide ? 0 : '300px'};
@@ -58,25 +60,146 @@ const DropdownWrapper = styled.div`
   }
 `;
 
-const Dropdown = ({title, imageIcon}) => {
-  const [hidden, setHidden] = useState(true);
+const ContentHO = () => {
+    const hours = [...Array(48).keys()].map((e) => {
+      const i = parseInt(e / 2);
+      const ampm = i > 12 ? 'pm' : 'am';
+      const hour = ampm === 'am' ? i : i - 12;
+      const minute = e % 2 === 0 ? '00' : '30';
+      return `${hour < 10 ? '0' + hour : hour}:${minute} ${ampm}`;
+    });
+    const [start, setStart] = useState('08:00 am');
+    const [end, setEnd] = useState('06:00 pm');
 
-  return (
-    <DropdownWrapper hide={hidden}>
+    return(<div style={{ display: 'flex' }}>
+      <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>From</p>
+      <div style={{ width: '33%' }}>
+          <Dropdown
+            mini
+            options={hours}
+            selected={start}
+            onSelect={(opt) => setStart(opt)}
+            onClose={() => {}}
 
-      <div style={{display:'flex' }}>
-      <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
-      {title}
-      <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=>setHidden(!hidden)}/>
+          />
+        </div>
+        <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>to</p>
+        <div style={{ width: '33%' }}>
+          <Dropdown
+            mini
+            options={hours}
+            selected={end}
+            onSelect={(opt) => setEnd(opt)}
+            onClose={() => {}}
 
+          />
+        </div>
       </div>
-      <div className="content">
-        <br></br>
-        Settings<br></br>
-        Content
-      </div>
-    </DropdownWrapper>
-  )
+    );
+}
+const ContentCP = () => {
+  const [selected, setSelected] = useState(null);
+  const [closed, setClosed] = useState(true);
+
+  const options = ['lorem', 'ipsum', 'here'];
+
+    return (<Dropdown
+        options={options}
+        selected={selected ? selected : 'Default Calendar Name'}
+        onSelect={(option) => {
+            if(closed == true){
+              console.log("Primary calendar selected")
+              setSelected(option)
+            }
+          }
+        }
+        onClose={() => {}}
+      />);
+}
+const ContentCat = () => {
+
+  const [selectedMult, setSelectedMult] = useState([]);
+  const optionsMult = ['more', 'lorem', 'ipsum', 'here'];
+
+      return(<Selection
+        options={optionsMult}
+        selected={selectedMult}
+        onSelect={(newOpt) => {
+          if (selectedMult.includes(newOpt)) {
+            setSelectedMult(selectedMult.filter((o) => o !== newOpt));
+          } else {
+            setSelectedMult(selectedMult.concat([newOpt]));
+          }
+        }}
+      />
+    );
+}
+const DropdownSetting = ({title, imageIcon, content}) => {
+  const [hidden1, setHidden1] = useState(true);
+  const [hidden2, setHidden2] = useState(true);
+  const [hidden3, setHidden3] = useState(true);
+
+  console.log(content);
+  if(content=="ContentCP"){
+      return (
+        <DropdownWrapper hide={hidden1} onClose={() => {}} interior={false}>
+          <div style={{display:'flex' }}>
+          <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
+          {title}
+          <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
+            console.log("Toggle" + content)
+            setHidden1(!hidden1)}
+          }
+          />
+          </div>
+          <div className="outside-content">
+            <br></br>
+            <ContentCP />
+            <br></br>
+          </div>
+        </DropdownWrapper>
+      );
+    } else if(content=="ContentCat") {
+      return (
+        <DropdownWrapper hide={hidden2} onClose={() => {}} interior={false}>
+          <div style={{display:'flex' }}>
+          <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
+          {title}
+          <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
+            console.log("Toggle" + content)
+            setHidden2(!hidden2)}
+          }
+          />
+          </div>
+          <div className="outside-content">
+            <br></br>
+            <ContentCat />
+            <br></br>
+          </div>
+        </DropdownWrapper>
+      );
+    } else if (content=="ContentHO") {
+      return (
+        <DropdownWrapper hide={hidden3} onClose={() => {}} interior={false}>
+          <div style={{display:'flex' }}>
+          <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
+          {title}
+          <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
+            console.log("Toggle" + content)
+            setHidden3(!hidden3)}
+          }
+          />
+          </div>
+          <div className="outside-content">
+            <br></br>
+            <ContentHO />
+            <br></br>
+          </div>
+        </DropdownWrapper>
+      );
+    } else {
+      return(<div></div>);
+    }
 }
 
 const Settings = () => {
@@ -114,11 +237,11 @@ const Settings = () => {
         <img style={{width:'25px', padding: '2px'}} src="settings.svg"/>
       </Nav>
 
-      <Dropdown title="Hours of Operation" imageIcon="time.svg"/>
+      <DropdownSetting title="Hours of Operation" imageIcon="time.svg" content="ContentHO"/>
       <br></br>
-      <Dropdown title="Calendar Preferences" imageIcon="calendar.svg"/>
+      <DropdownSetting title="Calendar Preferences" imageIcon="calendar.svg" content="ContentCP"/>
       <br></br>
-      <Dropdown title="Categories" imageIcon="categories.svg"/>
+      <DropdownSetting title="Categories" imageIcon="categories.svg" content="ContentCat"/>
     </div>
   );
 };
