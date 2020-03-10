@@ -25,13 +25,10 @@ const SchedulingList = (props) => {
   };
 
   useEffect(() => {
-    // console.log(props.match, props.location);
     const ids = props.match.params.ids.split(',');
     const startTime = props.location.search.substring(7);
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    console.log(ids, startTime, timezone);
     TaskService.scheduleTasks(ids, startTime, timezone, (res) => {
-      console.log(res);
       const tempScheduling = [],
         tempErrors = [];
       res.data.forEach((task) => {
@@ -108,17 +105,10 @@ const SchedulingList = (props) => {
           deleteTask={deleteTask}
           toggleSelect={() => {}}
           updateTask={(newTask) => {
-            console.log(newTask);
-            // const newArr = scheduling.map((task) =>
-            //   task.id === newTask.id ? newTask : task
-            // );
-            // console.log(newArr);
             setScheduling(scheduling.concat({ ...newTask, force: true }));
             setSelectedForce(selectedForce.concat(newTask.id));
             setErrors(errors.filter((task) => task.id !== newTask.id));
             setForce(force.concat(newTask));
-
-            console.log(scheduling, errors, force);
           }}
           selected={false}
           failed={true}
@@ -144,7 +134,6 @@ const SchedulingList = (props) => {
               id: task.id,
               time: task.scheduled_time
             }));
-            console.log(selected, forceTasks, timezone);
             TaskService.confirmTasks(selected, forceTasks, timezone, (res) => {
               history.push('/success/' + res.data.length);
             });

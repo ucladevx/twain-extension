@@ -16,7 +16,7 @@ async function getTask(id, taskHandler) {
         },
         withCredentials: true
       })
-      .then((res) => res.data.data)
+      .then((res) => res.data)
       .catch((err) => {
         console.log(err.response);
         return err;
@@ -41,7 +41,7 @@ const getAllTasks = (taskHandler) => {
         },
         withCredentials: true
       })
-      .then((res) => res.data.data)
+      .then((res) => res.data)
       .catch((err) => {
         console.log(err.response);
         return err;
@@ -76,7 +76,7 @@ const postTask = async (
       .post('http://localhost:31337/api/tasks', body, {
         headers: header
       })
-      .then((res) => res.data.data)
+      .then((res) => res.data)
       .catch((err) => {
         console.log(err.response);
         return err;

@@ -83,8 +83,7 @@ const TaskList = () => {
 
   useEffect(() => {
     TaskService.getAllTasks((res) => {
-      console.log(res);
-      setTasks([...res.not_scheduled, ...res.scheduled]);
+      setTasks([...res.data.not_scheduled, ...res.data.scheduled]);
     });
   }, []);
 
@@ -103,8 +102,8 @@ const TaskList = () => {
 
   const createTask = (task) => {
     const { name, description, duration, due_date } = task;
-    TaskService.postTask(name, description, duration, due_date, (task) => {
-      console.log('Creating:', task);
+    TaskService.postTask(name, description, duration, due_date, (res) => {
+      const task = res.data;
       setTasks(
         tasks.concat({
           /* temporarily filling out extra fields */
@@ -129,7 +128,6 @@ const TaskList = () => {
   const completeTask = (id) =>
     TaskService.taskComplete([id], (completedTasks) =>
       completedTasks.data.forEach((completedTask) => {
-        console.log('Task completed:', completedTask);
         setTasks(
           tasks.map((task) =>
             task.id === completedTask.id
@@ -140,45 +138,6 @@ const TaskList = () => {
         );
       })
     );
-
-  const scheduleTask = (id) => {
-    console.log('Scheduling task with id:', id);
-    TaskService.scheduleTask(id, (updatedTask) => {
-      console.log('Updated scheduled task:', updatedTask);
-      setTasks((tasks) =>
-        tasks.map((task) =>
-          task.id === id
-            ? updatedTask
-            : // previous scheduling logic:
-              //    {
-              //       ...task,
-              //       scheduled: true,
-              //       start_time: new Date(
-              //         Date.now() + 2 * 60 * 60 * 1000
-              //       ).toISOString(),
-              //       end_time: new Date(
-              //         Date.now() + 3 * 60 * 60 * 1000
-              //       ).toISOString()
-              //     }
-              task
-        )
-      );
-    });
-  };
-
-  const scheduleSelected = () => {
-    /* schedule selected tasks or all */
-    if (selected.length) {
-      selected.forEach((id) => scheduleTask(id));
-    } else {
-      tasks.forEach((task) => {
-        if (!task.scheduled) {
-          scheduleTask(task.id);
-        }
-      });
-    }
-    setSelected([]);
-  };
 
   const getCustomHeight = () => {
     const vh = listsOpen === 2 ? 33 : 65;

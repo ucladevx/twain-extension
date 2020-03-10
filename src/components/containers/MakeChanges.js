@@ -24,8 +24,8 @@ const ChangeList = (props) => {
     const tempChanging = [];
     const ids = props.match.params.ids.split(',');
     ids.forEach((id) => {
-      TaskService.getTask(id, (task) => {
-        console.log('got', task);
+      TaskService.getTask(id, (res) => {
+        const task = res.data;
         tempChanging.push(task);
         if (tempChanging.length === ids.length) {
           setChanging(tempChanging);

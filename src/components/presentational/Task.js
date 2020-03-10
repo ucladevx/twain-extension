@@ -131,14 +131,12 @@ const Task = ({
   );
 
   const formatScheduledDate = () => {
-    console.log(task);
     let start_time = new Date(scheduled_time);
     let end_time = new Date(start_time.getTime() + 1000 * 60 * duration);
     if (task.start_time && task.end_time) {
       start_time = new Date(task.start_time);
       end_time = new Date(task.end_time);
     }
-    console.log(duration, start_time, end_time);
     const time = start_time.toLocaleTimeString('en-US', {
       timeStyle: 'short'
     });
