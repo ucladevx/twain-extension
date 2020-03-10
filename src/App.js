@@ -37,7 +37,6 @@ const App = () => {
           <Route path="/login" component={DefaultContainer} />
           <Route path="/scheduling" component={DefaultContainer} />
 
-          <Route component={DefaultContainer} />
           <Route component={Onboarding} />
         </Switch>
       </Router>

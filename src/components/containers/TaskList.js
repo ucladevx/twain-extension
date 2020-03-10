@@ -5,6 +5,7 @@ import Task from '../presentational/Task';
 import { FullButton } from '../presentational/styled/Button';
 import { TaskSection, DateTimePicker } from '../presentational/Dropdown';
 import { Row } from '../presentational/styled/Layout';
+import Icon from '../presentational/styled/Icon';
 
 import TaskService from '../../services/TaskService';
 
@@ -169,6 +170,13 @@ const TaskList = () => {
     setSelected([]);
   };
 
+  const getCustomHeight = () => {
+    const vh = listsOpen === 2 ? 30 : 55;
+    if (showSchedulingStart) {
+      return `calc(${vh}vh - 110px)`;
+    } else return `${vh}vh`;
+  };
+
   const scheduleButton = (
     <div>
       <div
@@ -177,11 +185,20 @@ const TaskList = () => {
           margin: '0 auto',
           visibility: showSchedulingStart ? 'visible' : 'hidden',
           opacity: showSchedulingStart ? '1' : '0',
-          maxHeight: showSchedulingStart ? '' : '0',
-          transition: 'all 0s'
+          maxHeight: showSchedulingStart ? '110px' : '0',
+          transition: 'all 0.3s ease-in-out'
         }}
       >
-        <p>When do you want to start scheduling?</p>
+        <Row>
+          <p>When do you want to start scheduling?</p>
+          <Icon
+            src={'/close.svg'}
+            onClick={(e) => {
+              setShowScheduling(false);
+              setSelected([]);
+            }}
+          />
+        </Row>
         <DateTimePicker
           value={schedulingStart}
           onChange={(e) => setSchedulingStart(e.target.value)}
@@ -237,7 +254,7 @@ const TaskList = () => {
             setListsOpen((listsOpen) => listsOpen + 1);
           }
         }}
-        fullHeight={listsOpen !== 2}
+        customHeight={getCustomHeight()}
       >
         {unscheduled.map((task) => (
           <Task
@@ -260,7 +277,7 @@ const TaskList = () => {
             setListsOpen((listsOpen) => listsOpen + 1);
           }
         }}
-        fullHeight={listsOpen !== 2}
+        customHeight={listsOpen !== 2 ? '55vh' : '30vh'}
       >
         {scheduled.map((task) => (
           <Task

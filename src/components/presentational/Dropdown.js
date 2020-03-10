@@ -12,10 +12,10 @@ const StyledTaskSection = styled.div`
   & .content {
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
     max-height: ${(props) =>
-      props.closed ? 0 : props.fullHeight ? '55vh' : '30vh'};
+      props.closed ? 0 : props.customHeight ? props.customHeight : '55vh'};
     overflow: ${(props) => (props.closed ? 'hidden' : 'auto')};
     opacity: ${(props) => (props.closed ? 0 : 1)};
-    transition: all 0.4s ease-in-out, max-height 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out, max-height 0.3s ease-in-out;
   }
 `;
 
@@ -23,7 +23,7 @@ export const TaskSection = ({
   title,
   emptyPrompt,
   children,
-  fullHeight,
+  customHeight,
   onToggle = (closed) => {},
   actionButton = ''
 }) => {
@@ -44,7 +44,7 @@ export const TaskSection = ({
   );
 
   return (
-    <StyledTaskSection closed={closed} fullHeight={fullHeight}>
+    <StyledTaskSection closed={closed} customHeight={customHeight}>
       <Row style={{ margin: '0' }}>
         <Text primary style={{ marginRight: 'auto' }}>
           {title}
@@ -123,6 +123,19 @@ const DropdownWrapper = styled.div`
     background-color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
   }
+
+  .selected {
+    background-color: #fff;
+  }
+
+  .disabled {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  & p.disabled:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: default;
+  }
 `;
 
 const SelectionWrapper = styled.div`
@@ -130,8 +143,8 @@ const SelectionWrapper = styled.div`
 
   width: 90%;
   max-height: 250px;
-  overflow-y: scroll;
-  margin: 5px auto;
+  overflow-y: auto;
+  margin: 15px auto;
   padding: 0;
   color: #666;
 
@@ -190,6 +203,19 @@ const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini }) => {
   const [closed, setClosed] = useState(true);
 
   const node = useRef();
+  const selectedRef = useRef();
+
+  const scrollRef = (ref, offset) => {
+    const elem = ref.current;
+    if (elem) {
+      const parent = elem.parentNode;
+      parent.scrollTop = elem.offsetTop - parent.offsetTop - offset;
+    }
+  };
+
+  useEffect(() => {
+    scrollRef(selectedRef, 80);
+  }, [selected]);
 
   const handleClick = (e) => {
     if (node.current.contains(e.target)) {
@@ -244,14 +270,28 @@ const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini }) => {
       <div className="content">
         {options.map((option) => (
           <p
-            key={option}
+            ref={
+              selected === option || (option.text && selected === option.text)
+                ? selectedRef
+                : null
+            }
+            className={
+              selected === option || (option.text && selected === option.text)
+                ? 'selected'
+                : option.disabled
+                ? 'disabled'
+                : ''
+            }
+            key={option.key ? option.key : option}
             onClick={() => {
-              onSelect(option);
-              setClosed(true);
-              onClose(true);
+              if (!option.disabled) {
+                onSelect(option);
+                setClosed(true);
+                onClose(true);
+              }
             }}
           >
-            {option}
+            {option.text ? option.text : option}
           </p>
         ))}
       </div>

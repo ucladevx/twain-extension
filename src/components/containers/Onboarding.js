@@ -244,17 +244,35 @@ const OptionSelection = ({ handleContinue }) => {
 };
 
 const Times = ({ handleContinue }) => {
-  const hours = [...Array(48).keys()].map((e) => {
-    const i = parseInt(e / 2);
-    const ampm = i > 12 ? 'pm' : 'am';
-    const hour = ampm === 'am' ? i : i - 12;
-    const minute = e % 2 === 0 ? '00' : '30';
-    return `${hour < 10 ? '0' + hour : hour}:${minute} ${ampm}`;
+  // const hours = [...Array(48).keys()].map((e) => {
+  //   const i = parseInt(e / 2);
+  //   let ampm = i > 12 ? 'pm' : 'am';
+  //   let hour = ampm === 'am' ? i : i - 12;
+  //   if (i === 0) {
+  //     hour = 12;
+  //   }
+  //   if (i === 12) {
+  //     ampm = 'pm';
+  //   }
+  //   let minute = e % 2 === 0 ? '00' : '30';
+  //   return `${hour < 10 ? '0' + hour : hour}:${minute} ${ampm}`;
+  // });
+
+  const hours = [...Array(24).keys()].map((e) => {
+    let ampm = e > 12 ? 'pm' : 'am';
+    let hour = ampm === 'am' ? e : e - 12;
+    if (e === 0) {
+      hour = 12;
+    }
+    if (e === 12) {
+      ampm = 'pm';
+    }
+    return { key: e, text: `${hour < 10 ? '0' + hour : hour}:00 ${ampm}` };
   });
 
   const [closed, setClosed] = useState(true);
-  const [start, setStart] = useState('08:00 am');
-  const [end, setEnd] = useState('06:00 pm');
+  const [start, setStart] = useState({ key: 8, text: '08:00 am' });
+  const [end, setEnd] = useState({ key: 18, text: '06:00 pm' });
 
   const updateBackendAndContinue = () => {
     const startHourString = start.substring(0, 2);
@@ -271,7 +289,8 @@ const Times = ({ handleContinue }) => {
       endHour += 12;
     }
 
-    UserService.setHours(startHour, endHour, handleContinue);
+    // UserService.setHours(startHour, endHour, handleContinue);
+    UserService.setHours(start.key, end.key, handleContinue);
   };
 
   return (
@@ -300,15 +319,17 @@ const Times = ({ handleContinue }) => {
         <Dropdown
           mini
           options={hours}
-          selected={start}
+          selected={start.text}
           onSelect={(opt) => setStart(opt)}
           onClose={() => {}}
         />
         <p style={{ margin: '14px 10px' }}>to</p>
         <Dropdown
           mini
-          options={hours}
-          selected={end}
+          options={hours.map((hr) =>
+            hr.key <= start.key ? { ...hr, disabled: true } : hr
+          )}
+          selected={end.text}
           onSelect={(opt) => setEnd(opt)}
           onClose={(bool) => setClosed(bool)}
         />
