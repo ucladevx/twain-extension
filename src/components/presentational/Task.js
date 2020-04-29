@@ -63,7 +63,6 @@ const Task = ({
   createTask,
   toggleSelect,
   selected,
-  categories,
   updateTask = () => {},
   creating = false,
   scheduling = false,
@@ -117,18 +116,6 @@ const Task = ({
     };
     return obj;
   };
-
-  const categoriesDropdown = (
-    <>
-      <Label editing={editing}>Category:</Label>
-      <Dropdown
-        selected={category}
-        onSelect={(option) => setCategory(option)}
-        options={categories}
-        disabled={!editing}
-      />
-    </>
-  );
 
   const formatScheduledDate = () => {
     let start_time = new Date(scheduled_time);
@@ -193,7 +180,7 @@ const Task = ({
         ''
       ) : (
         <>
-          <Label editing={true}>Description:</Label>
+          <Label editing={editing}>Description:</Label>
           <TextArea
             placeholder="Add Description."
             value={description}
