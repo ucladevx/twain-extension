@@ -6,6 +6,7 @@ import { Row } from './styled/Layout';
 import { TextButton } from './styled/Button';
 import { TextArea, Mini } from './styled/Input';
 import Icon, { Select } from './styled/Icon';
+
 import SpinButton from './Spin';
 import Dropdown, { DateTimePicker } from './Dropdown';
 
@@ -19,10 +20,11 @@ const Card = styled.div`
     props.selected ? '2px solid #5187ed' : '2px solid #ccc'};
   border-radius: 10px;
   overflow: ${(props) => (props.expanded ? 'visible' : 'hidden')};
-  transition: all 0.3s;
+  transition: all 0.3s, max-height 0.3s;
 
   &:hover {
-    box-shadow: 0px 3px 6px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: ${(props) =>
+      props.failed ? '' : '0px 3px 6px 0 rgba(0, 0, 0, 0.2)'};
     cursor: ${(props) =>
       props.expanded || props.failed ? 'default' : 'pointer'};
   }
@@ -32,7 +34,6 @@ const DurationRow = styled(Row)`
   justify-content: space-between;
   width: calc(90% + 16px);
   margin: 0 auto;
-  // margin-right: 5px;
 `;
 
 const Label = styled(Text)`
@@ -40,7 +41,6 @@ const Label = styled(Text)`
   height: ${(props) => (props.editing ? 'auto' : '0')};
   width: calc(90% + 16px);
   margin: 0 auto;
-  // margin-left: 3px;
   text-align: left;
 `;
 
@@ -260,7 +260,7 @@ const Task = ({
 
   return (
     <Card
-      failed={failed}
+      failed={failed || scheduled}
       expanded={expanded}
       select={!scheduled}
       onClick={
@@ -296,11 +296,11 @@ const Task = ({
             onChange={(e) => setName(e.target.value)}
             myDisabled={!editing}
             disabled={!editing}
-            pointer={!editing && !expanded && !failed}
+            pointer={!editing && !expanded && !failed && !scheduled}
             text={editing && expanded}
           />
           {!editing ? (
-            <Text pointer={!editing && !expanded && !failed}>
+            <Text pointer={!editing && !expanded && !failed && !scheduled}>
               {!scheduled && !scheduling
                 ? time.hours + ' hr ' + time.minutes + ' min'
                 : formatScheduledDate()}

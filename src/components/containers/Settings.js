@@ -8,7 +8,6 @@ import { StaticIcon } from '../presentational/styled/Icon';
 
 import UserService from '../../services/UserService';
 
-
 const Nav = styled.nav`
   height: 63px;
   display: flex;
@@ -22,17 +21,17 @@ const Nav = styled.nav`
 const HelpHeader = styled.h2`
   margin-left: 15px;
   margin-right: auto;
-  font:'Roboto';
+  font: 'Roboto';
   font-size: 17px;
 `;
 
 const StyledLink = styled(Link)`
-    display: flex;    //left to right
-    align-items: center;
-    justify-content: flex-start;
+  display: flex; //left to right
+  align-items: center;
+  justify-content: flex-start;
   text-decoration: none;
   font-size: 14px;
-  font:'Roboto';
+  font: 'Roboto';
   color: #000;
 
   & p {
@@ -49,8 +48,8 @@ const DropdownWrapper = styled.div`
 
   & .content {
     display: block;
-    visibility: ${props => props.hide ? 'hidden' : 'visible'};
-    max-height: ${props => props.hide ? 0 : '300px'};
+    visibility: ${(props) => (props.hide ? 'hidden' : 'visible')};
+    max-height: ${(props) => (props.hide ? 0 : '300px')};
   }
 
   & img:hover {
@@ -58,17 +57,19 @@ const DropdownWrapper = styled.div`
   }
 `;
 
-const Dropdown = ({title, imageIcon}) => {
+const Dropdown = ({ title, imageIcon }) => {
   const [hidden, setHidden] = useState(true);
 
   return (
     <DropdownWrapper hide={hidden}>
-
-      <div style={{display:'flex' }}>
-      <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
-      {title}
-      <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=>setHidden(!hidden)}/>
-
+      <div style={{ display: 'flex' }}>
+        <img style={{ width: '20px', padding: '5px' }} src={imageIcon} />
+        {title}
+        <img
+          style={{ width: '20px', padding: '2px', marginLeft: 'auto' }}
+          src="arrow-down.svg"
+          onClick={() => setHidden(!hidden)}
+        />
       </div>
       <div className="content">
         <br></br>
@@ -76,8 +77,8 @@ const Dropdown = ({title, imageIcon}) => {
         Content
       </div>
     </DropdownWrapper>
-  )
-}
+  );
+};
 
 const Settings = () => {
   /* Sample UserService use: */
@@ -106,19 +107,19 @@ const Settings = () => {
   return (
     <div>
       <Nav>
-            <StyledLink to="/login" >
-            <img style={{width:'20px', padding: '2px'}} src="arrow-left.svg"/>
-            </StyledLink>
+        <StyledLink to="/login">
+          <img style={{ width: '20px', padding: '2px' }} src="arrow-left.svg" />
+        </StyledLink>
         <HelpHeader>Settings</HelpHeader>
 
-        <img style={{width:'25px', padding: '2px'}} src="settings.svg"/>
+        <img style={{ width: '25px', padding: '2px' }} src="settings.svg" />
       </Nav>
 
-      <Dropdown title="Hours of Operation" imageIcon="time.svg"/>
+      <Dropdown title="Hours of Operation" imageIcon="time.svg" />
       <br></br>
-      <Dropdown title="Calendar Preferences" imageIcon="calendar.svg"/>
+      <Dropdown title="Calendar Preferences" imageIcon="calendar.svg" />
       <br></br>
-      <Dropdown title="Categories" imageIcon="categories.svg"/>
+      <Dropdown title="Categories" imageIcon="categories.svg" />
     </div>
   );
 };

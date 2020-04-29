@@ -9,11 +9,11 @@ import { FullButton } from './styled/Button';
 
 const StyledTaskSection = styled.div`
   position: relative;
-  & .content {
+  .content {
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
     max-height: ${(props) =>
       props.closed ? 0 : props.customHeight ? props.customHeight : '55vh'};
-    overflow: ${(props) => (props.closed ? 'hidden' : 'auto')};
+    overflow: ${(props) => (props.scroll ? 'auto' : 'hidden')};
     opacity: ${(props) => (props.closed ? 0 : 1)};
     transition: all 0.3s ease-in-out, max-height 0.3s ease-in-out;
   }
@@ -28,9 +28,16 @@ export const TaskSection = ({
   actionButton = ''
 }) => {
   const [closed, setClosed] = useState(true);
+  const [scroll, setScroll] = useState(false);
 
   useEffect(() => {
     onToggle(closed);
+    // hide scrollbar until animation completes
+    if (!closed) {
+      setTimeout(() => setScroll(true), 300);
+    } else {
+      setScroll(false);
+    }
   }, [closed]);
 
   useEffect(() => {
@@ -44,7 +51,11 @@ export const TaskSection = ({
   );
 
   return (
-    <StyledTaskSection closed={closed} customHeight={customHeight}>
+    <StyledTaskSection
+      closed={closed}
+      customHeight={customHeight}
+      scroll={scroll}
+    >
       <Row style={{ margin: '0' }}>
         <Text primary style={{ marginRight: 'auto' }}>
           {title}
@@ -61,82 +72,6 @@ export const TaskSection = ({
     </StyledTaskSection>
   );
 };
-
-const DropdownWrapper = styled.div`
-  ${Shared}
-
-  position: relative;
-  width: ${(props) => (props.mini ? '100%' : '90%')};
-  margin: 15px auto;
-  margin: ${(props) => (props.mini ? '15px 0' : '15px auto')};
-  font-size: ${(props) => (props.mini ? '12px' : '14px')};
-  // text-align: left;
-  // padding: 0 8px;
-  padding: 0;
-  color: #666;
-  background-color: rgba(255, 255, 255, 0.7);
-  border-radius: ${(props) => (props.closed ? '7px' : '7px 7px 0 0')};
-
-  & .content {
-    position: absolute;
-    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
-    // width: 76%;
-    width: 100%;
-    max-height: ${(props) =>
-      !props.myDisabled && !props.closed ? '300px' : '0'};
-    overflow: auto;
-    // padding: 0 8px;
-    margin-top: 2px;
-    // margin-left: -8px;
-    // background-color: #fff;
-    background-color: rgba(255, 255, 255, 0.7);
-    border: none;
-    border-radius: 0 0 7px 7px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
-    transition: opacity 0.25s;
-  }
-
-  .content::-webkit-scrollbar {
-    width: 0px;
-    background: transparent;
-  }
-
-  &:hover {
-    cursor: ${(props) => (props.myDisabled ? 'default' : 'pointer')};
-  }
-
-  & .content p {
-    margin: 0;
-    padding: ${(props) => (props.mini ? '5px 10px' : '10px 15px')};
-    border-top: 1px solid #909090;
-  }
-
-  // & .content p:first-of-type {
-  //   border-radius: 10px 10px 0 0;
-  // }
-
-  & .content p:last-of-type {
-    border-radius: 0 0 7px 7px;
-  }
-
-  & .content p:hover {
-    background-color: rgba(255, 255, 255, 0.8);
-    cursor: pointer;
-  }
-
-  .selected {
-    background-color: #fff;
-  }
-
-  .disabled {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-
-  & p.disabled:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-    cursor: default;
-  }
-`;
 
 const SelectionWrapper = styled.div`
   ${Shared}
@@ -155,7 +90,6 @@ const SelectionWrapper = styled.div`
   background-color: rgba(255, 255, 255, 0.7);
   border: none;
   border-radius: 7px;
-  // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
   transition: opacity 0.25s;
 
   p {
@@ -196,6 +130,74 @@ export const Selection = ({ selected, onSelect, options }) => {
     </SelectionWrapper>
   );
 };
+
+const DropdownWrapper = styled.div`
+  ${Shared}
+
+  position: relative;
+  width: ${(props) => (props.mini ? '100%' : '90%')};
+  margin: 15px auto;
+  margin: ${(props) => (props.mini ? '15px 0' : '15px auto')};
+
+  font-size: ${(props) => (props.mini ? '12px' : '14px')};
+  padding: 0;
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: ${(props) => (props.closed ? '7px' : '7px 7px 0 0')};
+
+  & .content {
+    position: absolute;
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    width: 100%;
+    max-height: ${(props) =>
+      !props.myDisabled && !props.closed ? '300px' : '0'};
+    overflow: auto;
+    margin-top: 2px;
+
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 0 0 7px 7px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+    transition: opacity 0.25s;
+  }
+
+  .content::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+
+  &:hover {
+    cursor: ${(props) => (props.myDisabled ? 'default' : 'pointer')};
+  }
+
+  & .content p {
+    margin: 0;
+    padding: ${(props) => (props.mini ? '5px 10px' : '10px 15px')};
+    border-top: 1px solid #909090;
+  }
+
+  & .content p:last-of-type {
+    border-radius: 0 0 7px 7px;
+  }
+
+  & .content p:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+  }
+
+  .selected {
+    background-color: #fff;
+  }
+
+  .disabled {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  & p.disabled:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: default;
+  }
+`;
 
 const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini }) => {
   /* parent element controls disabled property,
@@ -536,8 +538,6 @@ const TimeWrapper = styled.div`
   }
 `;
 
-const DateTimeWrapper = styled.div``;
-
 const NumberScroller = ({ disabled, min, max, selected, onSelect }) => {
   const [closed, setClosed] = useState(true);
 
@@ -617,7 +617,6 @@ const DropdownTimeGrid = styled.div`
 
   & .content div::-webkit-scrollbar {
     width: 0;
-    // background: transparent;
   }
 
   & .content .highlighted {
@@ -849,67 +848,6 @@ export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
   );
 };
 
-export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
-  const [date, setDate] = useState(new Date(value));
-  const [time, setTime] = useState(new Date(value));
-
-  const handleChange = (date, time) => {
-    setDate(date);
-    setTime(time);
-    const newDate = new Date(date);
-    newDate.setHours(time.getHours());
-    newDate.setMinutes(time.getMinutes());
-
-    onChange({
-      target: { value: newDate }
-    });
-  };
-
-  const formatTime = (date) => {
-    let hours = date.getHours();
-    hours = hours < 10 ? `0${hours}` : hours;
-    let minutes = date.getMinutes();
-    minutes = minutes < 10 ? `0${minutes}` : minutes;
-    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
-
-    const str = `${hours}:${minutes} ${ampm}`;
-    return str;
-  };
-
-  return (
-    <DateTimeWrapper>
-      <Row
-        spaceBetween
-        style={{
-          position: 'relative',
-          width: 'calc(90% + 16px)',
-          margin: '0 auto',
-          marginLeft: disabled ? '8px' : 'auto'
-        }}
-      >
-        <DatePicker
-          disabled={disabled}
-          placeholder={placeholder}
-          value={date.toDateString()}
-          onChange={(e) => {
-            handleChange(e.target.value, time);
-          }}
-          style={{ marginLeft: '0px' }}
-        />
-        <TimePicker
-          disabled={disabled}
-          placeholder="Time"
-          value={time}
-          onChange={(e) => {
-            handleChange(date, e.target.value);
-          }}
-          style={{ marginLeft: '13px' }}
-        />
-      </Row>
-    </DateTimeWrapper>
-  );
-};
-
 export const DatePicker = (props) => {
   const [closed, setClosed] = useState(true);
   const [date, setDate] = useState(new Date(props.value));
@@ -1055,6 +993,69 @@ export const DatePicker = (props) => {
         ))}
       </div>
     </DropdownDateGrid>
+  );
+};
+
+const DateTimeWrapper = styled.div``;
+
+export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
+  const [date, setDate] = useState(new Date(value));
+  const [time, setTime] = useState(new Date(value));
+
+  const handleChange = (date, time) => {
+    setDate(date);
+    setTime(time);
+    const newDate = new Date(date);
+    newDate.setHours(time.getHours());
+    newDate.setMinutes(time.getMinutes());
+
+    onChange({
+      target: { value: newDate }
+    });
+  };
+
+  const formatTime = (date) => {
+    let hours = date.getHours();
+    hours = hours < 10 ? `0${hours}` : hours;
+    let minutes = date.getMinutes();
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+
+    const str = `${hours}:${minutes} ${ampm}`;
+    return str;
+  };
+
+  return (
+    <DateTimeWrapper>
+      <Row
+        spaceBetween
+        style={{
+          position: 'relative',
+          width: 'calc(90% + 16px)',
+          margin: '0 auto',
+          marginLeft: disabled ? '8px' : 'auto'
+        }}
+      >
+        <DatePicker
+          disabled={disabled}
+          placeholder={placeholder}
+          value={date.toDateString()}
+          onChange={(e) => {
+            handleChange(e.target.value, time);
+          }}
+          style={{ marginLeft: '0px' }}
+        />
+        <TimePicker
+          disabled={disabled}
+          placeholder="Time"
+          value={time}
+          onChange={(e) => {
+            handleChange(date, e.target.value);
+          }}
+          style={{ marginLeft: '13px' }}
+        />
+      </Row>
+    </DateTimeWrapper>
   );
 };
 

@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 
 import Task from '../presentational/Task';
+import { DateTimePicker } from '../presentational/Dropdown';
+
 import { Text } from '../presentational/styled/Global';
 import { FullButton } from '../presentational/styled/Button';
 import { Row } from '../presentational/styled/Layout';
-import { DateTimePicker } from '../presentational/Dropdown';
+import Loading from '../presentational/styled/Loading';
+
 import TaskService from '../../services/TaskService';
 
 const ChangeList = (props) => {
   const [changing, setChanging] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [num, setNum] = useState(0);
 
   const initDate = new Date();
   initDate.setTime(initDate.getTime() + 60 * 60 * 1000);
@@ -20,9 +24,9 @@ const ChangeList = (props) => {
   const history = useHistory();
 
   useEffect(() => {
-    // console.log(props.match, props.location);
     const tempChanging = [];
     const ids = props.match.params.ids.split(',');
+    setNum(ids.length);
     ids.forEach((id) => {
       TaskService.getTask(id, (res) => {
         const task = res.data;
@@ -47,6 +51,14 @@ const ChangeList = (props) => {
     }
   };
 
+  if (changing.length !== num) {
+    return (
+      <Row style={{ marginTop: '30vh' }}>
+        <Loading />
+      </Row>
+    );
+  }
+
   return (
     <div>
       <Text primary style={{ textAlign: 'left' }}>
@@ -61,9 +73,9 @@ const ChangeList = (props) => {
           selected={selected.indexOf(task.id) !== -1}
         />
       ))}
-      <Row>
-        <p>When do you want to start scheduling?</p>
-      </Row>
+      <Text primary style={{ textAlign: 'center' }}>
+        When do you want to start scheduling?
+      </Text>
       <DateTimePicker
         value={schedulingStart}
         onChange={(e) => setSchedulingStart(e.target.value)}
@@ -77,6 +89,7 @@ const ChangeList = (props) => {
           Cancel Scheduling
         </FullButton>
         <FullButton
+          primary
           disabled={!selected.length}
           onClick={() => {
             let selectedstr = selected.join(',');

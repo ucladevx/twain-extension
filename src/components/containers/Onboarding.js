@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import Button, { FullButton } from '../presentational/styled/Button';
-import Dropdown, { Selection, TimePicker } from '../presentational/Dropdown';
+import Dropdown, { Selection } from '../presentational/Dropdown';
 import { Row } from '../presentational/styled/Layout';
 import { Background, Centered } from '../presentational/styled/Layout';
 
@@ -244,20 +244,6 @@ const OptionSelection = ({ handleContinue }) => {
 };
 
 const Times = ({ handleContinue }) => {
-  // const hours = [...Array(48).keys()].map((e) => {
-  //   const i = parseInt(e / 2);
-  //   let ampm = i > 12 ? 'pm' : 'am';
-  //   let hour = ampm === 'am' ? i : i - 12;
-  //   if (i === 0) {
-  //     hour = 12;
-  //   }
-  //   if (i === 12) {
-  //     ampm = 'pm';
-  //   }
-  //   let minute = e % 2 === 0 ? '00' : '30';
-  //   return `${hour < 10 ? '0' + hour : hour}:${minute} ${ampm}`;
-  // });
-
   const hours = [...Array(24).keys()].map((e) => {
     let ampm = e > 12 ? 'pm' : 'am';
     let hour = ampm === 'am' ? e : e - 12;
@@ -275,21 +261,6 @@ const Times = ({ handleContinue }) => {
   const [end, setEnd] = useState({ key: 18, text: '06:00 pm' });
 
   const updateBackendAndContinue = () => {
-    // const startHourString = start.substring(0, 2);
-    // const endHourString = end.substring(0, 2);
-
-    // let startHour = parseInt(startHourString, 10);
-    // let endHour = parseInt(endHourString, 10);
-
-    // if (start.substring(6, 8) == 'pm') {
-    //   startHour += 12;
-    // }
-
-    // if (end.substring(6, 8) == 'pm') {
-    //   endHour += 12;
-    // }
-
-    // UserService.setHours(startHour, endHour, handleContinue);
     UserService.setHours(start.key, end.key, handleContinue);
   };
 

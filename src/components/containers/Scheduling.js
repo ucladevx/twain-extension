@@ -6,6 +6,7 @@ import { Text } from '../presentational/styled/Global';
 import { FullButton } from '../presentational/styled/Button';
 import { Row } from '../presentational/styled/Layout';
 import Loading from '../presentational/styled/Loading';
+
 import TaskService from '../../services/TaskService';
 
 const SchedulingList = (props) => {
@@ -128,6 +129,7 @@ const SchedulingList = (props) => {
         </FullButton>
         <FullButton
           disabled={!selected.length && !force.length}
+          primary
           onClick={() => {
             const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             const forceTasks = force.map((task) => ({

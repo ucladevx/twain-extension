@@ -29,8 +29,6 @@ const emptyTask = {
   due_date: newDateNextDay()
 };
 
-const categories = ['School', 'Work', 'Personal', 'Holidays']; // temporary
-
 const TaskList = () => {
   /* Sample TaskService use: */
   // let time_now = new Date().toISOString();
@@ -104,13 +102,7 @@ const TaskList = () => {
     const { name, description, duration, due_date } = task;
     TaskService.postTask(name, description, duration, due_date, (res) => {
       const task = res.data;
-      setTasks(
-        tasks.concat({
-          /* temporarily filling out extra fields */
-          ...task,
-          category: 'Twain'
-        })
-      );
+      setTasks(tasks.concat(task));
       setCreating(false);
     });
   };
@@ -130,20 +122,31 @@ const TaskList = () => {
       completedTasks.data.forEach((completedTask) => {
         setTasks(
           tasks.map((task) =>
-            task.id === completedTask.id
-              ? // ? { ...completedTask, category: 'Twain' }
-                completedTask
-              : task
+            task.id === completedTask.id ? completedTask : task
           )
         );
       })
     );
 
-  const getCustomHeight = () => {
-    const vh = listsOpen === 2 ? 33 : 65;
+  const getCustomHeight = (other) => {
+    let vh = 65;
+    if (creating) {
+      vh = 30;
+    } else if (listsOpen === 2) {
+      if (other.length > 1) {
+        vh = 35;
+      } else {
+        vh = 55;
+      }
+    }
+    return `${vh}vh`;
+  };
+
+  const getTrimmedHeight = () => {
+    let vh = getCustomHeight(scheduled);
     if (showSchedulingStart) {
-      return `calc(${vh}vh - 110px)`;
-    } else return `${vh}vh`;
+      return `calc(${vh} - 110px)`;
+    } else return vh;
   };
 
   const scheduleButton = (
@@ -154,7 +157,7 @@ const TaskList = () => {
           margin: '0 auto',
           visibility: showSchedulingStart ? 'visible' : 'hidden',
           opacity: showSchedulingStart ? '1' : '0',
-          maxHeight: showSchedulingStart ? '110px' : '0',
+          height: showSchedulingStart ? '110px' : '0',
           transition: 'all 0.3s ease-in-out'
         }}
       >
@@ -162,7 +165,7 @@ const TaskList = () => {
           <p>When do you want to start scheduling?</p>
           <Icon
             src={'/close.svg'}
-            onClick={(e) => {
+            onClick={() => {
               setShowScheduling(false);
               setSelected([]);
             }}
@@ -180,7 +183,6 @@ const TaskList = () => {
           if (!showSchedulingStart) {
             setShowScheduling(true);
           } else {
-            // scheduleSelected();
             let selectedstr = '';
             if (selected.length) {
               selectedstr = selected.join(',');
@@ -200,13 +202,12 @@ const TaskList = () => {
   );
 
   return (
-    <div>
+    <div style={{ maxHeight: '90vh', overflowY: 'auto' }}>
       {creating ? (
         <Task
           task={emptyTask}
           deleteTask={() => setCreating(false)}
           createTask={createTask}
-          categories={categories}
           creating
         />
       ) : (
@@ -223,7 +224,7 @@ const TaskList = () => {
             setListsOpen((listsOpen) => listsOpen + 1);
           }
         }}
-        customHeight={getCustomHeight()}
+        customHeight={getTrimmedHeight()}
       >
         {unscheduled.map((task) => (
           <Task
@@ -232,7 +233,6 @@ const TaskList = () => {
             deleteTask={deleteTask}
             toggleSelect={selectTask}
             selected={selected.indexOf(task.id) !== -1}
-            categories={categories}
           />
         ))}
       </TaskSection>
@@ -246,7 +246,7 @@ const TaskList = () => {
             setListsOpen((listsOpen) => listsOpen + 1);
           }
         }}
-        customHeight={listsOpen !== 2 ? '65vh' : '33vh'}
+        customHeight={getCustomHeight(unscheduled)}
       >
         {scheduled.map((task) => (
           <Task
@@ -254,11 +254,16 @@ const TaskList = () => {
             task={task}
             completeTask={completeTask}
             deleteTask={deleteTask}
-            categories={categories}
           />
         ))}
       </TaskSection>
-      <FullButton onClick={() => setCreating(true)}>Create Task</FullButton>
+      <FullButton
+        onClick={() => {
+          setCreating(true);
+        }}
+      >
+        Create Task
+      </FullButton>
     </div>
   );
 };

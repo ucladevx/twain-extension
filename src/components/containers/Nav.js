@@ -13,16 +13,14 @@ const Row = styled.div`
 
 const Nav = styled.nav`
   background-image: url('navbar.png');
-  // background-size: 350px 67px;
   background-repeat: no-repeat;
+
   height: 67px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: -10px;
-  margin-left: -8px;
-  margin-right: -8px;
-  margin-bottom: 12px;
+
+  margin: -10px -8px 12px -8px;
   border-bottom: 1px solid #ddd;
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
 `;
@@ -35,7 +33,7 @@ const Header = styled.p`
 `;
 
 const StyledLink = styled(Link)`
-  display: flex; //left to right
+  display: flex; // left to right
   align-items: center;
   justify-content: flex-start;
   text-decoration: none;
@@ -46,7 +44,7 @@ const StyledLink = styled(Link)`
 
   & p {
     margin: 10px;
-    margin-right: auto; //text and right arrow icon
+    margin-right: auto; // text and right arrow icon
   }
 `;
 
@@ -55,13 +53,15 @@ const Dropdown = styled.div`
     position: absolute;
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
     opacity: ${(props) => (props.closed ? 0 : 1)}
-    margin-left: -70%;
+    margin-left: -41%;
     margin-top: 9px;
+
     background-color: #fff;
     border: 2px solid #ddd;
     border-radius: 4px;
     color: #000;
     transition: opacity 1s ease;
+    z-index: 2;
   }
 `;
 
@@ -77,7 +77,7 @@ const Navbar = () => {
       </Link>
 
       <Dropdown closed={closed} onClick={() => setClosed(!closed)}>
-        <Icon src="/settings.svg" alt="Menu" />
+        <Icon src="/settings.svg" alt="Menu" style={{ marginRight: '11px' }} />
 
         <div className="content">
           <StyledLink to="/settings">

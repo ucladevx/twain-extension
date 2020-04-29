@@ -31,7 +31,6 @@ export const Select = styled.div`
   &:hover {
     border: 1px solid transparent;
     background-image: ${(props) => (props.image ? `url(${props.image})` : '')};
-    // background-color: #00e676;
   }
 `;
 
