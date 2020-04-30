@@ -251,7 +251,7 @@ const DropdownWrapper = styled.div`
   }
 `;
 
-const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini }) => {
+const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini, interior=true }) => {
   /* parent element controls disabled property,
      selecting an option changes the closed property */
   const [closed, setClosed] = useState(true);
