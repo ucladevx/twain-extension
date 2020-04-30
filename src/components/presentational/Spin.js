@@ -37,12 +37,12 @@ const SpinButton = ({ units, val, setVal, min, max, hidden }) => {
     <Row>
       <Spinner hidden={hidden}>
         <img
-          src="arrow-up.svg"
+          src="/arrow-up.svg"
           alt="Arrow-up"
           onClick={() => setVal(constrain(val + 1))}
         />
         <img
-          src="arrow-down.svg"
+          src="/arrow-down.svg"
           alt="Arrow-down"
           onClick={() => setVal(constrain(val - 1))}
         />

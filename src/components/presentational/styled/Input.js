@@ -40,7 +40,7 @@ export const TextArea = styled.textarea`
   ${Shared}
 
   width: 90%;
-  height: ${(props) => (props.myDisabled ? '20px' : '100px')};
+  height: ${(props) => (props.myDisabled ? '20px' : '60px')};
   overflow: auto;
   resize: ${(props) => (props.myDisabled ? 'none' : 'none')};
 
