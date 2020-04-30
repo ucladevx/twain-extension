@@ -67,7 +67,7 @@ const Welcome = ({ handleContinue }) => (
       <li>Create your list of tasks</li>
       <li>Let Twain schedule your tasks into your Google calendar</li>
     </ul>
-    <FullButton secondary onClick={handleContinue}> // styled button
+    <FullButton secondary onClick={handleContinue}>
       Let's get started!
     </FullButton>
   </div>
@@ -390,7 +390,7 @@ const WeekendSetting = ({ handleContinue }) => {
         <Button
           disabled={!selected}
           secondary={selected}
-          onClick={updateBackendAndContinue}
+          onClick={handleContinue}
           style={{ padding: '10px 30px' }}
           image="arrow-forward.svg"
         />
