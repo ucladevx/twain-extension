@@ -10,7 +10,6 @@ import Dropdown, { Selection } from '../presentational/Dropdown';
 
 import UserService from '../../services/UserService';
 
-
 const Nav = styled.nav`
   height: 63px;
   display: flex;
@@ -24,17 +23,17 @@ const Nav = styled.nav`
 const HelpHeader = styled.h2`
   margin-left: 15px;
   margin-right: auto;
-  font:'Roboto';
+  font: 'Roboto';
   font-size: 17px;
 `;
 
 const StyledLink = styled(Link)`
-    display: flex;    //left to right
-    align-items: center;
-    justify-content: flex-start;
+  display: flex; //left to right
+  align-items: center;
+  justify-content: flex-start;
   text-decoration: none;
   font-size: 14px;
-  font:'Roboto';
+  font: 'Roboto';
   color: #000;
 
   & p {
@@ -51,8 +50,8 @@ const DropdownWrapper = styled.div`
 
   & .outside-content {
     display: block;
-    visibility: ${props => props.hide ? 'hidden' : 'visible'};
-    max-height: ${props => props.hide ? 0 : '300px'};
+    visibility: ${(props) => (props.hide ? 'hidden' : 'visible')};
+    max-height: ${(props) => (props.hide ? 0 : '300px')};
   }
 
   & img:hover {
@@ -229,12 +228,12 @@ const Settings = () => {
   return (
     <div>
       <Nav>
-            <StyledLink to="/login" >
-            <img style={{width:'20px', padding: '2px'}} src="arrow-left.svg"/>
-            </StyledLink>
+        <StyledLink to="/login">
+          <img style={{ width: '20px', padding: '2px' }} src="arrow-left.svg" />
+        </StyledLink>
         <HelpHeader>Settings</HelpHeader>
 
-        <img style={{width:'25px', padding: '2px'}} src="settings.svg"/>
+        <img style={{ width: '25px', padding: '2px' }} src="settings.svg" />
       </Nav>
 
       <DropdownSetting title="Hours of Operation" imageIcon="time.svg" content="ContentHO"/>

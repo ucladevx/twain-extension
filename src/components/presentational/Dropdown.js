@@ -8,12 +8,14 @@ import { Text } from './styled/Global';
 import { FullButton } from './styled/Button';
 
 const StyledTaskSection = styled.div`
-  & .content {
+  position: relative;
+  .content {
     visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
-    max-height: ${(props) => (props.closed ? 0 : '100vh')};
-    // overflow: ${(props) => (props.closed ? 'hidden' : 'auto')};
+    max-height: ${(props) =>
+      props.closed ? 0 : props.customHeight ? props.customHeight : '55vh'};
+    overflow: ${(props) => (props.scroll ? 'auto' : 'hidden')};
     opacity: ${(props) => (props.closed ? 0 : 1)};
-    transition: all 0.4s ease-in-out, max-height 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out, max-height 0.3s ease-in-out;
   }
 `;
 
@@ -21,36 +23,111 @@ export const TaskSection = ({
   title,
   emptyPrompt,
   children,
+  customHeight,
+  onToggle = (closed) => {},
   actionButton = ''
 }) => {
-  const defaultClosed = !children.length;
-  const [closed, setClosed] = useState(defaultClosed);
+  const [closed, setClosed] = useState(true);
+  const [scroll, setScroll] = useState(false);
+
+  useEffect(() => {
+    onToggle(closed);
+    // hide scrollbar until animation completes
+    if (!closed) {
+      setTimeout(() => setScroll(true), 300);
+    } else {
+      setScroll(false);
+    }
+  }, [closed]);
 
   useEffect(() => {
     setClosed(!children.length);
   }, [children.length]);
 
   const content = children.length ? (
-    <>
-      {children} {!actionButton.length ? actionButton : ''}
-    </>
+    <>{children}</>
   ) : (
     <FullButton info>{emptyPrompt}</FullButton>
   );
 
   return (
-    <StyledTaskSection closed={closed}>
+    <StyledTaskSection
+      closed={closed}
+      customHeight={customHeight}
+      scroll={scroll}
+    >
       <Row style={{ margin: '0' }}>
         <Text primary style={{ marginRight: 'auto' }}>
           {title}
         </Text>
         <Icon
-          src={closed ? 'arrow-down.svg' : 'arrow-up.svg'}
+          src={closed ? '/arrow-down.svg' : '/arrow-up.svg'}
           onClick={() => setClosed(!closed)}
         />
       </Row>
       <div className="content">{content}</div>
+      <div className="content" style={{ overflow: 'visible' }}>
+        {actionButton}
+      </div>
     </StyledTaskSection>
+  );
+};
+
+const SelectionWrapper = styled.div`
+  ${Shared}
+
+  width: 90%;
+  max-height: 250px;
+  overflow-y: auto;
+  margin: 15px auto;
+  padding: 0;
+  color: #666;
+
+  .selected {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 7px;
+  transition: opacity 0.25s;
+
+  p {
+    margin: 0;
+    padding: 10px 15px;
+    border-top: 1px solid #909090;
+  }
+
+  p:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+  }
+
+  p:first-of-type {
+    border-radius: 7px 7px 0 0;
+    border-top: none;
+  }
+
+  p:last-of-type {
+    border-radius: 0 0 7px 7px;
+  }
+`;
+
+export const Selection = ({ selected, onSelect, options }) => {
+  return (
+    <SelectionWrapper>
+      {options.map((option) => (
+        <p
+          className={selected.includes(option) ? 'selected' : ''}
+          key={option}
+          onClick={() => {
+            onSelect(option);
+          }}
+        >
+          {option}
+        </p>
+      ))}
+    </SelectionWrapper>
   );
 };
 
@@ -61,9 +138,8 @@ const DropdownWrapper = styled.div`
   width: ${(props) => (props.mini ? '100%' : '90%')};
   margin: 15px auto;
   margin: ${(props) => (props.mini ? '15px 0' : '15px auto')};
+
   font-size: ${(props) => (props.mini ? '12px' : '14px')};
-  // text-align: left;
-  // padding: 0 8px;
   padding: 0;
   color: #666;
   background-color: rgba(255, 255, 255, 0.7);
@@ -72,15 +148,12 @@ const DropdownWrapper = styled.div`
   & .content {
     position: absolute;
     opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
-    // width: 76%;
     width: 100%;
     max-height: ${(props) =>
       !props.myDisabled && !props.closed ? '300px' : '0'};
     overflow: auto;
-    // padding: 0 8px;
     margin-top: 2px;
-    // margin-left: -8px;
-    // background-color: #fff;
+
     background-color: rgba(255, 255, 255, 0.7);
     border: none;
     border-radius: 0 0 7px 7px;
@@ -164,85 +237,39 @@ const DropdownWrapper = styled.div`
     cursor: pointer;
   }
 
-  // & .content-outside p:first-of-type {
-  //   border-radius: 10px 10px 0 0;
-  // }
-
-  & .content-outside p:last-of-type {
-    border-radius: 0 0 7px 7px;
-  }
-
-  & .content-outside p:hover {
-    background-color: rgba(255, 255, 255, 0.8);
-    cursor: pointer;
-  }
-`;
-
-const SelectionWrapper = styled.div`
-  ${Shared}
-
-  width: 90%;
-  max-height: 250px;
-  overflow-y: scroll;
-  margin: 5px auto;
-  padding: 0;
-  color: #666;
-
   .selected {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: #fff;
   }
 
-  background-color: rgba(255, 255, 255, 0.7);
-  border: none;
-  border-radius: 7px;
-  // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
-  transition: opacity 0.25s;
-
-  p {
-    margin: 0;
-    padding: 10px 15px;
-    border-top: 1px solid #909090;
+  .disabled {
+    background-color: rgba(0, 0, 0, 0.1);
   }
 
-  p:hover {
-    background-color: rgba(255, 255, 255, 0.8);
-    cursor: pointer;
-  }
-
-  p:first-of-type {
-    border-radius: 7px 7px 0 0;
-    border-top: none;
-  }
-
-  p:last-of-type {
-    border-radius: 0 0 7px 7px;
+  & p.disabled:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: default;
   }
 `;
 
-export const Selection = ({ selected, onSelect, options }) => {
-  return (
-    <SelectionWrapper>
-      {options.map((option) => (
-        <p
-          className={selected.includes(option) ? 'selected' : ''}
-          key={option}
-          onClick={() => {
-            onSelect(option);
-          }}
-        >
-          {option}
-        </p>
-      ))}
-    </SelectionWrapper>
-  );
-};
-
-const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini, interior=true }) => {
+const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini }) => {
   /* parent element controls disabled property,
      selecting an option changes the closed property */
   const [closed, setClosed] = useState(true);
 
   const node = useRef();
+  const selectedRef = useRef();
+
+  const scrollRef = (ref, offset) => {
+    const elem = ref.current;
+    if (elem) {
+      const parent = elem.parentNode;
+      parent.scrollTop = elem.offsetTop - parent.offsetTop - offset;
+    }
+  };
+
+  useEffect(() => {
+    scrollRef(selectedRef, 80);
+  }, [selected]);
 
   const handleClick = (e) => {
     if (node.current.contains(e.target)) {
@@ -291,20 +318,34 @@ const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini, interi
         {disabled || mini ? (
           ''
         ) : (
-          <StaticIcon src={closed ? 'arrow-down.svg' : 'arrow-up.svg'} />
+          <StaticIcon src={closed ? '/arrow-down.svg' : '/arrow-up.svg'} />
         )}
       </Row>
       <div className={interior ? "content" : "content-outside"}>
         {options.map((option) => (
           <p
-            key={option}
+            ref={
+              selected === option || (option.text && selected === option.text)
+                ? selectedRef
+                : null
+            }
+            className={
+              selected === option || (option.text && selected === option.text)
+                ? 'selected'
+                : option.disabled
+                ? 'disabled'
+                : ''
+            }
+            key={option.key ? option.key : option}
             onClick={() => {
-              onSelect(option);
-              setClosed(true);
-              onClose(true);
+              if (!option.disabled) {
+                onSelect(option);
+                setClosed(true);
+                onClose(true);
+              }
             }}
           >
-            {option}
+            {option.text ? option.text : option}
           </p>
         ))}
       </div>
@@ -342,6 +383,7 @@ const DropdownGrid = css`
     visibility: ${(props) =>
       !props.myDisabled && !props.closed ? 'visible' : 'hidden'};
     opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    max-height: ${(props) => (!props.myDisabled && !props.closed ? '' : '0')};
     display: grid;
     background-color: #fff;
     border-radius: 10px;
@@ -431,7 +473,7 @@ export const NumpadInput = (props) => {
             setFirstDigit(true);
           }}
         >
-          <StaticIcon src="close.svg" />
+          <StaticIcon src="/close.svg" />
         </div>
         <div onClick={() => updateNumber(0)}>0</div>
         <div
@@ -440,7 +482,7 @@ export const NumpadInput = (props) => {
             setFirstDigit(true);
           }}
         >
-          <StaticIcon src="check.svg" />
+          <StaticIcon src="/check.svg" />
         </div>
       </div>
     </DropdownNumpadGrid>
@@ -548,8 +590,6 @@ const TimeWrapper = styled.div`
   }
 `;
 
-const DateTimeWrapper = styled.div``;
-
 const NumberScroller = ({ disabled, min, max, selected, onSelect }) => {
   const [closed, setClosed] = useState(true);
 
@@ -610,7 +650,7 @@ const NumberScroller = ({ disabled, min, max, selected, onSelect }) => {
 const DropdownTimeGrid = styled.div`
   ${DropdownGrid}
   width: calc(30%);
-  margin-right: 14px;
+  margin-right: ${(props) => (props.myDisabled ? '0' : '14px')};
   text-align: left;
 
   & .content {
@@ -629,7 +669,6 @@ const DropdownTimeGrid = styled.div`
 
   & .content div::-webkit-scrollbar {
     width: 0;
-    // background: transparent;
   }
 
   & .content .highlighted {
@@ -861,55 +900,6 @@ export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
   );
 };
 
-export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
-  const [date, setDate] = useState(new Date(value));
-  const [time, setTime] = useState(new Date(value));
-
-  const handleChange = (date, time) => {
-    setDate(date);
-    setTime(time);
-    const newDate = new Date(date);
-    newDate.setHours(time.getHours());
-    newDate.setMinutes(time.getMinutes());
-
-    onChange({
-      target: { value: newDate }
-    });
-  };
-
-  return (
-    <DateTimeWrapper>
-      <Row
-        spaceBetween
-        style={{
-          position: 'relative',
-          width: 'calc(90% + 16px)',
-          margin: '0 auto',
-          marginLeft: disabled ? '8px' : 'auto'
-        }}
-      >
-        <DatePicker
-          disabled={disabled}
-          placeholder={placeholder}
-          value={date.toDateString()}
-          onChange={(e) => {
-            handleChange(e.target.value, time);
-          }}
-          style={{ marginLeft: '0px' }}
-        />
-        <TimePicker
-          disabled={disabled}
-          placeholder="Time"
-          value={time}
-          onChange={(e) => {
-            handleChange(date, e.target.value);
-          }}
-        />
-      </Row>
-    </DateTimeWrapper>
-  );
-};
-
 export const DatePicker = (props) => {
   const [closed, setClosed] = useState(true);
   const [date, setDate] = useState(new Date(props.value));
@@ -1004,7 +994,7 @@ export const DatePicker = (props) => {
             }
           }}
         >
-          <StaticIcon src="arrow-left.svg" />
+          <StaticIcon src="/arrow-left.svg" />
         </div>
         <div
           style={{ gridColumn: '3/6', lineHeight: '23px' }}
@@ -1022,7 +1012,7 @@ export const DatePicker = (props) => {
             }
           }}
         >
-          <StaticIcon src="arrow-right.svg" />
+          <StaticIcon src="/arrow-right.svg" />
         </div>
         {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => (
           <div
@@ -1055,6 +1045,69 @@ export const DatePicker = (props) => {
         ))}
       </div>
     </DropdownDateGrid>
+  );
+};
+
+const DateTimeWrapper = styled.div``;
+
+export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
+  const [date, setDate] = useState(new Date(value));
+  const [time, setTime] = useState(new Date(value));
+
+  const handleChange = (date, time) => {
+    setDate(date);
+    setTime(time);
+    const newDate = new Date(date);
+    newDate.setHours(time.getHours());
+    newDate.setMinutes(time.getMinutes());
+
+    onChange({
+      target: { value: newDate }
+    });
+  };
+
+  const formatTime = (date) => {
+    let hours = date.getHours();
+    hours = hours < 10 ? `0${hours}` : hours;
+    let minutes = date.getMinutes();
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+
+    const str = `${hours}:${minutes} ${ampm}`;
+    return str;
+  };
+
+  return (
+    <DateTimeWrapper>
+      <Row
+        spaceBetween
+        style={{
+          position: 'relative',
+          width: 'calc(90% + 16px)',
+          margin: '0 auto',
+          marginLeft: disabled ? '8px' : 'auto'
+        }}
+      >
+        <DatePicker
+          disabled={disabled}
+          placeholder={placeholder}
+          value={date.toDateString()}
+          onChange={(e) => {
+            handleChange(e.target.value, time);
+          }}
+          style={{ marginLeft: '0px' }}
+        />
+        <TimePicker
+          disabled={disabled}
+          placeholder="Time"
+          value={time}
+          onChange={(e) => {
+            handleChange(date, e.target.value);
+          }}
+          style={{ marginLeft: '13px' }}
+        />
+      </Row>
+    </DateTimeWrapper>
   );
 };
 

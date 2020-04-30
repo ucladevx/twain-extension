@@ -6,6 +6,7 @@ import { Row } from './styled/Layout';
 import { TextButton } from './styled/Button';
 import { TextArea, Mini } from './styled/Input';
 import Icon, { Select } from './styled/Icon';
+
 import SpinButton from './Spin';
 import Dropdown, { DateTimePicker } from './Dropdown';
 
@@ -19,11 +20,13 @@ const Card = styled.div`
     props.selected ? '2px solid #5187ed' : '2px solid #ccc'};
   border-radius: 10px;
   overflow: ${(props) => (props.expanded ? 'visible' : 'hidden')};
-  transition: all 0.3s;
+  transition: all 0.3s, max-height 0.3s;
 
   &:hover {
-    box-shadow: 0px 3px 6px 0 rgba(0, 0, 0, 0.2);
-    cursor: ${(props) => (props.expanded ? 'default' : 'pointer')};
+    box-shadow: ${(props) =>
+      props.failed ? '' : '0px 3px 6px 0 rgba(0, 0, 0, 0.2)'};
+    cursor: ${(props) =>
+      props.expanded || props.failed ? 'default' : 'pointer'};
   }
 `;
 
@@ -31,7 +34,6 @@ const DurationRow = styled(Row)`
   justify-content: space-between;
   width: calc(90% + 16px);
   margin: 0 auto;
-  // margin-right: 5px;
 `;
 
 const Label = styled(Text)`
@@ -39,8 +41,19 @@ const Label = styled(Text)`
   height: ${(props) => (props.editing ? 'auto' : '0')};
   width: calc(90% + 16px);
   margin: 0 auto;
-  // margin-left: 3px;
   text-align: left;
+`;
+
+const Button = styled.p`
+  border-radius: 5px;
+  background-color: #4f4f4f;
+  color: #fff;
+  font-size: 11px;
+  padding: 10px 15px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Task = ({
@@ -50,16 +63,20 @@ const Task = ({
   createTask,
   toggleSelect,
   selected,
-  categories,
-  creating = false
+  updateTask = () => {},
+  creating = false,
+  scheduling = false,
+  failed = false
 }) => {
   const {
     id,
     created_time,
     completed,
     completed_time,
+    duration,
     scheduled,
     scheduled_time,
+    scheduled_date,
     start_time,
     end_time
   } = task;
@@ -77,6 +94,7 @@ const Task = ({
   const [name, setName] = useState(task.name);
   const [time, setTime] = useState(initDuration(task.duration));
   const [due, setDue] = useState(task.due_date);
+  const [sched, setSched] = useState(task.scheduled_time);
   const [dueTime, setDueTime] = useState({ hours: 15, minutes: 30 });
   const [category, setCategory] = useState(task.category);
   const [description, setDescription] = useState(task.description);
@@ -99,92 +117,31 @@ const Task = ({
     return obj;
   };
 
-  const categoriesDropdown = (
-    <>
-      <Label editing={editing}>Category:</Label>
-      <Dropdown
-        selected={category}
-        onSelect={(option) => setCategory(option)}
-        options={categories}
-        disabled={!editing}
-      />
-    </>
-  );
-
   const formatScheduledDate = () => {
-    const start_time = new Date(task.start_time);
+    let start_time = new Date(scheduled_time);
+    let end_time = new Date(start_time.getTime() + 1000 * 60 * duration);
+    if (task.start_time && task.end_time) {
+      start_time = new Date(task.start_time);
+      end_time = new Date(task.end_time);
+    }
     const time = start_time.toLocaleTimeString('en-US', {
       timeStyle: 'short'
     });
+    const end = end_time.toLocaleTimeString('en-US', {
+      timeStyle: 'short'
+    });
     const date = start_time.toDateString();
-    return `${time} ${date}`;
+    let datetext;
+    if (start_time.getDate() < new Date().getDate() + 7) {
+      datetext = date.substring(0, 3);
+    } else {
+      datetext = date.substring(4, 10);
+    }
+    return `${time.substring(0, 5)}-${end} ${datetext}`;
   };
 
-  return (
-    <Card
-      expanded={expanded}
-      select={!scheduled}
-      onClick={
-        !scheduled && !expanded
-          ? () => {
-              toggleSelect(id);
-            }
-          : () => {}
-      }
-      selected={selected}
-    >
-      <Row style={{ height: '50px', marginBottom: '8px' }}>
-        <Select
-          hide={!scheduled}
-          onClick={() => {
-            if (scheduled) {
-              completeTask(id);
-            }
-          }}
-        />
-        <div
-          style={{ width: '70%', textAlign: 'left', margin: '0 auto 0 8px' }}
-        >
-          <Mini
-            placeholder="Title"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            myDisabled={!editing}
-            disabled={!editing}
-            pointer={!editing && !expanded}
-            text={editing && expanded}
-          />
-          {!editing ? (
-            <Text pointer={!editing && !expanded}>
-              {!scheduled
-                ? time.hours + ' hr ' + time.minutes + ' min'
-                : `${new Date(task.start_time).toLocaleTimeString('en-US', {
-                    timeStyle: 'short'
-                  })} ${new Date(task.start_time).toDateString()}`}
-            </Text>
-          ) : (
-            ''
-          )}
-        </div>
-        <Icon
-          src={
-            editing ? 'close.svg' : expanded ? 'arrow-up.svg' : 'arrow-down.svg'
-          }
-          alt={editing ? 'Close' : expanded ? 'Up' : 'Down'}
-          onClick={(e) => {
-            if (editing) {
-              if (!creating) {
-                if (window.confirm('Delete task?')) deleteTask(id);
-              } else {
-                deleteTask(id);
-              }
-            } else {
-              setExpanded(!expanded);
-              e.stopPropagation();
-            }
-          }}
-        />
-      </Row>
+  let content = (
+    <>
       {editing ? (
         <DurationRow>
           <Text style={{ marginLeft: '0', marginRight: '10px' }}>
@@ -210,7 +167,7 @@ const Task = ({
       ) : (
         ''
       )}
-      <Label editing={editing}>Due:</Label>
+      <Label editing={true}>Due:</Label>
       <DateTimePicker
         placeholder="Due Date"
         value={new Date(due).toISOString()}
@@ -219,14 +176,20 @@ const Task = ({
         }}
         disabled={!editing}
       />
-      <Label editing={editing}>Description:</Label>
-      <TextArea
-        placeholder="Add Description."
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        myDisabled={!editing}
-        disabled={!editing}
-      />
+      {!description.length && !editing ? (
+        ''
+      ) : (
+        <>
+          <Label editing={editing}>Description:</Label>
+          <TextArea
+            placeholder="Add Description."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            myDisabled={!editing}
+            disabled={!editing}
+          />
+        </>
+      )}
       <Row spaceBetween style={{ width: 'calc(90% + 16px)', margin: '0 auto' }}>
         <Text>
           {editing && created_time
@@ -242,6 +205,131 @@ const Task = ({
           {creating ? 'Create' : editing ? 'Save' : 'Edit'}
         </TextButton>
       </Row>
+    </>
+  );
+
+  if (failed) {
+    content = (
+      <>
+        <Label editing={true}>Start Date and Time:</Label>
+        <DateTimePicker
+          placeholder="Start Date and Time"
+          value={new Date(sched).toISOString()}
+          onChange={(e) => {
+            setSched(e.target.value);
+          }}
+          disabled={false}
+        />
+        <Row
+          spaceBetween
+          style={{
+            width: 'calc(90% + 16px)',
+            margin: '0 auto',
+            marginTop: '10px'
+          }}
+        >
+          <Text></Text>
+          <TextButton
+            tabIndex="-1"
+            onClick={() => {
+              updateTask({
+                ...task,
+                scheduled_time: new Date(sched).toISOString()
+              });
+            }}
+          >
+            Schedule
+          </TextButton>
+        </Row>
+      </>
+    );
+  }
+
+  return (
+    <Card
+      failed={failed || scheduled}
+      expanded={expanded}
+      select={!scheduled}
+      onClick={
+        !scheduled && !expanded
+          ? () => {
+              toggleSelect(id);
+            }
+          : () => {}
+      }
+      selected={selected}
+    >
+      <Row style={{ height: '50px', marginBottom: '8px' }}>
+        <Select
+          image="/background.png"
+          style={{ flex: scheduled ? '0 0 25px' : '0 0 0' }}
+          hide={!scheduled}
+          onClick={() => {
+            if (scheduled) {
+              completeTask(id);
+            }
+          }}
+        />
+        <div
+          style={{
+            width: failed ? '50%' : '80%',
+            textAlign: 'left',
+            margin: '0 auto 0 8px'
+          }}
+        >
+          <Mini
+            placeholder="Title"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            myDisabled={!editing}
+            disabled={!editing}
+            pointer={!editing && !expanded && !failed && !scheduled}
+            text={editing && expanded}
+          />
+          {!editing ? (
+            <Text pointer={!editing && !expanded && !failed && !scheduled}>
+              {!scheduled && !scheduling
+                ? time.hours + ' hr ' + time.minutes + ' min'
+                : formatScheduledDate()}
+            </Text>
+          ) : (
+            ''
+          )}
+        </div>
+        {!scheduling && !failed ? (
+          <Icon
+            src={
+              editing
+                ? '/close.svg'
+                : expanded
+                ? '/arrow-up.svg'
+                : failed
+                ? ''
+                : '/arrow-down.svg'
+            }
+            alt={editing ? 'Close' : expanded ? 'Up' : 'Down'}
+            onClick={(e) => {
+              if (editing) {
+                if (!creating) {
+                  if (window.confirm('Delete task?')) deleteTask(id);
+                } else {
+                  deleteTask(id);
+                }
+              } else {
+                setExpanded(!expanded);
+                e.stopPropagation();
+              }
+            }}
+          />
+        ) : !scheduling && !expanded ? (
+          <Button onClick={() => setExpanded(true)}>Force Schedule</Button>
+        ) : !scheduling ? (
+          <Icon src="/close.svg" onClick={() => setExpanded(false)} />
+        ) : (
+          ''
+        )}
+      </Row>
+      {content}
     </Card>
   );
 };

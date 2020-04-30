@@ -22,7 +22,7 @@ export const StaticIcon = styled.img`
 export const Select = styled.div`
   height: 25px;
   width: ${(props) => (props.hide ? 0 : '25px')}
-  margin: ${(props) => (props.hide ? 0 : '10px')}
+  margin: ${(props) => (props.hide ? 0 : '0px')}
   opacity: ${(props) => (props.hide ? 0 : 1)}
   border: 1px solid #ccc;
   border-radius: 30px;
@@ -30,7 +30,7 @@ export const Select = styled.div`
 
   &:hover {
     border: 1px solid transparent;
-    background-color: #00e676;
+    background-image: ${(props) => (props.image ? `url(${props.image})` : '')};
   }
 `;
 
