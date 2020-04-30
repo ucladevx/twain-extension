@@ -19,7 +19,7 @@ const Intro = ({ handleContinue }) => {
   return (
     <div>
       <img
-        src="logo.png"
+        src="logo.png" // point on 'i'
         style={{
           width: '150px',
           position: 'absolute',
@@ -67,7 +67,7 @@ const Welcome = ({ handleContinue }) => (
       <li>Create your list of tasks</li>
       <li>Let Twain schedule your tasks into your Google calendar</li>
     </ul>
-    <FullButton secondary onClick={handleContinue}>
+    <FullButton secondary onClick={handleContinue}> // styled button
       Let's get started!
     </FullButton>
   </div>
@@ -88,7 +88,7 @@ const OptionDropdown = ({ handleContinue }) => {
     UserService.getUserCalendars(function(res) {
       let summaries = []
       let summaryToId = {}
-      
+
       for (let i = 0; i < res.length; i++) {
         let cal = res[i]
         summaries.push(cal['summary'])
@@ -173,7 +173,7 @@ const OptionSelection = ({ handleContinue }) => {
     UserService.getUserCalendars(function(res) {
       let summaries = []
       let summaryToId = {}
-      
+
       for (let i = 0; i < res.length; i++) {
         let cal = res[i]
         let currSummary = cal['summary']
@@ -335,12 +335,80 @@ const Times = ({ handleContinue }) => {
   );
 };
 
+const WeekendSetting = ({ handleContinue }) => {
+  const yesOption = "Yes, I'd like Twain to help me with weekend tasks.";
+  const noOption = "No, I prefer not using Twain on weekends.";
+  const display = [yesOption, noOption];
+  const [selected, setSelected] = useState(null);
+  const [closed, setClosed] = useState(true);
+
+  const updateBackendAndContinue = () => {
+    console.log('UserService needed to be updated');
+  };
+
+  useEffect(()=> {
+
+  });
+
+  return (
+    <div>
+    <img
+      src="primary_calendar.png"
+      style={{
+        width: '300px',
+        marginLeft: 'calc(-1 * (10%))',
+        marginTop: '-65%',
+        marginBottom: '-20%'
+      }}
+    />
+    <h2 style={{ width: '90%', margin: '15px auto' }}>
+      Weekend Setting
+    </h2>
+    <p
+      style={{
+        color: 'rgba(255,255,255,0.7)',
+        width: '90%',
+        margin: '15px auto'
+      }}
+    >
+      Woule you like Twain to help you schedule tasks on weekends?
+    </p>
+    <Dropdown
+      options={display}
+      selected={selected ? selected : yesOption}
+      onSelect={(option) => setSelected(option)}
+      onClose={(bool) => setClosed(bool)}
+    />
+    {closed ? (
+      <Row
+        flexEnd
+        style={{
+          width: 'calc(90% + 20px)',
+          margin: '-10px auto'
+        }}
+      >
+        <Button
+          disabled={!selected}
+          secondary={selected}
+          onClick={updateBackendAndContinue}
+          style={{ padding: '10px 30px' }}
+          image="arrow-forward.svg"
+        />
+      </Row>
+    ) : (
+      ''
+    )}
+    </div>
+  );
+};
+
 const Content = [
   { component: Intro, customButton: true },
   { component: Welcome, customButton: true },
   { component: OptionDropdown, customButton: true },
   { component: OptionSelection, customButton: true },
-  { component: Times, customButton: true }
+  { component: Times, customButton: true },
+  { component: WeekendSetting, customButton: true},
 ];
 
 const Onboarding = () => {
