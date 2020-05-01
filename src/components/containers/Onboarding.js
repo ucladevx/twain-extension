@@ -86,9 +86,14 @@ const OptionDropdown = ({ handleContinue }) => {
 
   useEffect(() => {
     UserService.getUserCalendars(function(res) {
+<<<<<<< HEAD
 
       let summaries = [];
       let summaryToId = {};
+=======
+      let summaries = []
+      let summaryToId = {}
+>>>>>>> eb713b44fc065b2ff72bc405cdef84a637cd7d76
 
       for (let i = 0; i < res.length; i++) {
         let cal = res[i];
@@ -172,9 +177,14 @@ const OptionSelection = ({ handleContinue }) => {
 
   useEffect(() => {
     UserService.getUserCalendars(function(res) {
+<<<<<<< HEAD
 
       let summaries = [];
       let summaryToId = {};
+=======
+      let summaries = []
+      let summaryToId = {}
+>>>>>>> eb713b44fc065b2ff72bc405cdef84a637cd7d76
 
       for (let i = 0; i < res.length; i++) {
         let cal = res[i];
