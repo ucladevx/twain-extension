@@ -263,7 +263,7 @@ const Times = ({ handleContinue }) => {
   const [end, setEnd] = useState({ key: 18, text: '06:00 pm' });
 
   const updateBackendAndContinue = () => {
-    UserService.setHours(start, end, handleContinue);
+    UserService.setHours(start.text, end.text, handleContinue);
   }
 
   return (
