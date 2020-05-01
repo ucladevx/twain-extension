@@ -298,6 +298,8 @@ const Settings = () => {
       <ContentCP />
       <br></br>
       <ContentCat />
+      <br></br>
+      <SaveBtn />
     </div>
   );
 };
