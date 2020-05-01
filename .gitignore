@@ -2,3 +2,4 @@
 /build
 .vscode/*
 public/manifest.json
+.env

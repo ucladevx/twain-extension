@@ -88,7 +88,7 @@ const OptionDropdown = ({ handleContinue }) => {
     UserService.getUserCalendars(function(res) {
       let summaries = []
       let summaryToId = {}
-      
+
       for (let i = 0; i < res.length; i++) {
         let cal = res[i]
         summaries.push(cal['summary'])
@@ -173,7 +173,7 @@ const OptionSelection = ({ handleContinue }) => {
     UserService.getUserCalendars(function(res) {
       let summaries = []
       let summaryToId = {}
-      
+
       for (let i = 0; i < res.length; i++) {
         let cal = res[i]
         let currSummary = cal['summary']
@@ -257,21 +257,7 @@ const Times = ({ handleContinue }) => {
   const [end, setEnd] = useState('06:00 pm');
 
   const updateBackendAndContinue = () => {
-    const startHourString = start.substring(0, 2)
-    const endHourString = end.substring(0, 2)
-
-    let startHour = parseInt(startHourString, 10)
-    let endHour = parseInt(endHourString, 10)
-
-    if (start.substring(6, 8) == 'pm') {
-      startHour += 12
-    }
-
-    if (end.substring(6, 8) == 'pm') {
-      endHour += 12
-    }
-
-    UserService.setHours(startHour, endHour, handleContinue);
+    UserService.setHours(start, end, handleContinue);
   }
 
   return (

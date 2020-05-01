@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../containers/Nav';
 import styled, { css } from 'styled-components';
 import { Row } from '../presentational/styled/Layout';
@@ -68,138 +68,195 @@ const ContentHO = () => {
       const minute = e % 2 === 0 ? '00' : '30';
       return `${hour < 10 ? '0' + hour : hour}:${minute} ${ampm}`;
     });
+    const [hidden, setHidden] = useState(true);
     const [start, setStart] = useState('08:00 am');
     const [end, setEnd] = useState('06:00 pm');
 
-    return(<div style={{ display: 'flex' }}>
-      <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>From</p>
-      <div style={{ width: '33%' }}>
-          <Dropdown
-            mini
-            options={hours}
-            selected={start}
-            onSelect={(opt) => setStart(opt)}
-            onClose={() => {}}
-
-          />
-        </div>
-        <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>to</p>
-        <div style={{ width: '33%' }}>
-          <Dropdown
-            mini
-            options={hours}
-            selected={end}
-            onSelect={(opt) => setEnd(opt)}
-            onClose={() => {}}
-
-          />
-        </div>
+    useEffect(() => {
+      UserService.getLoggedInUser(function(res){
+        setStart(res.hours_start)
+        setEnd(res.hours_end)
+      })
+    }, [])
+    return(
+    <DropdownWrapper hide={hidden} onClose={() => {}} interior={false}>
+      <div style={{display:'flex' }}>
+      <img style={{width:'20px', padding: '5px'}} src="time.svg"/>
+      Hours of Operation
+      <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
+        if(!hidden){
+          UserService.setHours(start, end, function(res) {
+            console.log(res);
+          });
+        }
+        setHidden(!hidden)
+      }}
+      />
       </div>
+      <div className="outside-content">
+        <br></br>
+        <div style={{ display: 'flex' }}>
+        <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>From</p>
+        <div style={{ width: '33%' }}>
+            <Dropdown
+              mini
+              options={hours}
+              selected={start}
+              onSelect={(opt) => setStart(opt)}
+              onClose={() => {}}
+
+            />
+          </div>
+          <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>to</p>
+          <div style={{ width: '33%' }}>
+            <Dropdown
+              mini
+              options={hours}
+              selected={end}
+              onSelect={(opt) => setEnd(opt)}
+              onClose={() => {}}
+
+            />
+          </div></div>
+        <br></br>
+      </div>
+    </DropdownWrapper>
+
     );
 }
 const ContentCP = () => {
-  const [selected, setSelected] = useState(null);
+  const [hidden, setHidden] = useState(true);
   const [closed, setClosed] = useState(true);
+  const [options, setOptions] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [userCalendars, setCalendars] = useState({})
 
-  const options = ['lorem', 'ipsum', 'here'];
+  useEffect(() => {
+    UserService.getUserCalendars(function(res){
+      let summaries = []
+      let idToSummary = {}
 
-    return (<Dropdown
-        options={options}
-        selected={selected ? selected : 'Default Calendar Name'}
-        onSelect={(option) => {
-            if(closed == true){
-              console.log("Primary calendar selected")
-              setSelected(option)
-            }
-          }
+      let summaryToId = {}
+      for (let i = 0; i < res.length; i++) {
+        let cal = res[i]
+        let currSummary = cal['summary']
+        summaries.push(currSummary)
+
+        // In case users have multiple calendars with the same summary
+        if (currSummary in summaryToId) {
+          summaryToId[currSummary] = summaryToId[currSummary] + ',' + cal['id']
+        } else {
+          summaryToId[currSummary] = cal['id']
         }
-        onClose={() => {}}
-      />);
+
+        idToSummary[summaryToId[currSummary]] = currSummary
+      }
+      setOptions(summaries)
+      setCalendars(summaryToId)
+      UserService.getLoggedInUser(function(res){
+        setSelected(idToSummary[res.primary_calendar])
+      })
+    })
+
+  }, [])
+    return (
+      <DropdownWrapper hide={hidden} onClose={() => {}} interior={false}>
+        <div style={{display:'flex' }}>
+        <img style={{width:'20px', padding: '5px'}} src="calendar.svg"/>
+        Calendar Preferences
+        <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
+          setHidden(!hidden)}
+        }
+        />
+        </div>
+        <div className="outside-content">
+          <br></br>
+          <Dropdown
+            options={options}
+            selected={selected ? selected : 'Default'}
+            onSelect={(option) => {
+                if(closed == true){
+                  console.log("Primary calendar selected")
+                  setSelected(option)
+                }
+                UserService.setPrimaryCalendar(userCalendars[option], function(res){
+                  console.log(res);
+                });
+              }
+            }
+            onClose={() => {}}
+          />
+          <br></br>
+        </div>
+      </DropdownWrapper>);
 }
 const ContentCat = () => {
-
+  const [hidden, setHidden] = useState(true);
   const [selectedMult, setSelectedMult] = useState([]);
-  const optionsMult = ['more', 'lorem', 'ipsum', 'here'];
+  const [userCalendars, setCalendars] = useState({});
+  const [optionsMult, setOptionsMult] = useState([]);
 
-      return(<Selection
-        options={optionsMult}
-        selected={selectedMult}
-        onSelect={(newOpt) => {
-          if (selectedMult.includes(newOpt)) {
-            setSelectedMult(selectedMult.filter((o) => o !== newOpt));
-          } else {
-            setSelectedMult(selectedMult.concat([newOpt]));
+  useEffect(() => {
+    UserService.getUserCalendars(function(res) {
+      let summaries = []
+      let sel = []
+      let idToSummary = {}
+      let summaryToId = {}
+      for (let i = 0; i < res.length; i++) {
+        let cal = res[i]
+        let currSummary = cal['summary']
+        summaries.push(currSummary)
+
+        // In case users have multiple calendars with the same summary
+        if (currSummary in summaryToId) {
+          summaryToId[currSummary] = summaryToId[currSummary] + ',' + cal['id']
+        } else {
+          summaryToId[currSummary] = cal['id']
+        }
+        idToSummary[summaryToId[currSummary]] = currSummary
+      }
+      setCalendars(summaryToId)
+      setOptionsMult(summaries)
+      UserService.getLoggedInUser(function(res){
+        sel = res.relevant_calendars.split(',')
+        let selInit = sel.map((id) =>idToSummary[id])
+        setSelectedMult(selInit);
+      });
+    })
+  }, [])
+      return(<DropdownWrapper hide={hidden} onClose={() => {}} interior={false}>
+        <div style={{display:'flex' }}>
+        <img style={{width:'20px', padding: '5px'}} src="categories.svg"/>
+        Categories
+        <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
+          if(!hidden){
+            let selectedIDs = selectedMult.map((summary) => { return userCalendars[summary] });
+            console.log("Relevant cals selected")
+            let commaSeparated = selectedIDs.join();
+            console.log(commaSeparated);
+            UserService.setRelevantCalendars(commaSeparated, function(res){console.log(res)});
           }
+          setHidden(!hidden);
         }}
-      />
+        />
+        </div>
+        <div className="outside-content">
+          <br></br>
+          <Selection
+            options={optionsMult}
+            selected={selectedMult}
+            onSelect={(newOpt) => {
+              if (selectedMult.includes(newOpt)) {
+                setSelectedMult(selectedMult.filter((o) => o !== newOpt));
+              } else {
+                setSelectedMult(selectedMult.concat([newOpt]));
+              }
+            }}
+          />
+          <br></br>
+        </div>
+      </DropdownWrapper>
     );
-}
-const DropdownSetting = ({title, imageIcon, content}) => {
-  const [hidden1, setHidden1] = useState(true);
-  const [hidden2, setHidden2] = useState(true);
-  const [hidden3, setHidden3] = useState(true);
-
-  console.log(content);
-  if(content=="ContentCP"){
-      return (
-        <DropdownWrapper hide={hidden1} onClose={() => {}} interior={false}>
-          <div style={{display:'flex' }}>
-          <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
-          {title}
-          <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
-            console.log("Toggle" + content)
-            setHidden1(!hidden1)}
-          }
-          />
-          </div>
-          <div className="outside-content">
-            <br></br>
-            <ContentCP />
-            <br></br>
-          </div>
-        </DropdownWrapper>
-      );
-    } else if(content=="ContentCat") {
-      return (
-        <DropdownWrapper hide={hidden2} onClose={() => {}} interior={false}>
-          <div style={{display:'flex' }}>
-          <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
-          {title}
-          <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
-            console.log("Toggle" + content)
-            setHidden2(!hidden2)}
-          }
-          />
-          </div>
-          <div className="outside-content">
-            <br></br>
-            <ContentCat />
-            <br></br>
-          </div>
-        </DropdownWrapper>
-      );
-    } else if (content=="ContentHO") {
-      return (
-        <DropdownWrapper hide={hidden3} onClose={() => {}} interior={false}>
-          <div style={{display:'flex' }}>
-          <img style={{width:'20px', padding: '5px'}} src={imageIcon}/>
-          {title}
-          <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
-            console.log("Toggle" + content)
-            setHidden3(!hidden3)}
-          }
-          />
-          </div>
-          <div className="outside-content">
-            <br></br>
-            <ContentHO />
-            <br></br>
-          </div>
-        </DropdownWrapper>
-      );
-    } else {
-      return(<div></div>);
-    }
 }
 
 const Settings = () => {
@@ -237,11 +294,11 @@ const Settings = () => {
         <img style={{width:'25px', padding: '2px'}} src="settings.svg"/>
       </Nav>
 
-      <DropdownSetting title="Hours of Operation" imageIcon="time.svg" content="ContentHO"/>
+      <ContentHO />
       <br></br>
-      <DropdownSetting title="Calendar Preferences" imageIcon="calendar.svg" content="ContentCP"/>
+      <ContentCP />
       <br></br>
-      <DropdownSetting title="Categories" imageIcon="categories.svg" content="ContentCat"/>
+      <ContentCat />
     </div>
   );
 };
