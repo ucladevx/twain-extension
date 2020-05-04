@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Task from '../presentational/Task';
 import { FullButton } from '../presentational/styled/Button';
 import { TaskSection } from '../presentational/Dropdown';
-import {Walkthroughbackground, SkipButton} from '../presentational/styled/Walkthrough'
 
 import TaskService from '../../services/TaskService';
 
@@ -45,7 +44,6 @@ const TaskList = () => {
 
   const [creating, setCreating] = useState(false);
   const [selected, setSelected] = useState([]);
-  const [skip, setSkip] = useState(false);
 
   const splitTasks = () => {
     let schedArr = [],
@@ -157,17 +155,6 @@ const TaskList = () => {
     </FullButton>
   );
 
-  const WalkthroughButtonStyle = {
-    color: '#5187ED',
-    flex: 0.8,
-    marignTop: "2%"
-  };
-
-
-  const startWalkThrough = () => {
-    console.log("Start Walkthrough");
-  }
-
   return (
     <div>
       {creating ? (
@@ -209,12 +196,6 @@ const TaskList = () => {
         ))}
       </TaskSection>
       <FullButton onClick={() => setCreating(true)}>Create Task</FullButton>
-      <Walkthroughbackground style = {!skip ? {display: 'block'} : {display: 'none'}}>
-        <h2>Welcome to your Twain task list!</h2>
-        <p>This is where you can view, create, and schedule your tasks. Let's show you around!</p>
-        <FullButton secondary style={WalkthroughButtonStyle} onClick = {() => startWalkThrough()}>Start Walkthrough</FullButton>
-        <SkipButton onClick = {() => setSkip(true)}>Skip</SkipButton>
-      </Walkthroughbackground>
     </div>
   );
 };
