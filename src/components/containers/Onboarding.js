@@ -19,7 +19,7 @@ const Intro = ({ handleContinue }) => {
   return (
     <div>
       <img
-        src="logo.png" // point on 'i'
+        src="logo.png"
         style={{
           width: '150px',
           position: 'absolute',
@@ -336,9 +336,7 @@ const Times = ({ handleContinue }) => {
 };
 
 const WeekendSetting = ({ handleContinue }) => {
-  const yesOption = "Yes, I'd like Twain to help me with weekend tasks.";
-  const noOption = "No, I prefer not using Twain on weekends.";
-  const display = [yesOption, noOption];
+  const display = ["Yes", "No"];
   const [selected, setSelected] = useState(null);
   const [closed, setClosed] = useState(true);
 
@@ -353,7 +351,7 @@ const WeekendSetting = ({ handleContinue }) => {
   return (
     <div>
     <img
-      src="primary_calendar.png"
+      src="weekend.png"
       style={{
         width: '300px',
         marginLeft: 'calc(-1 * (10%))',
@@ -362,7 +360,7 @@ const WeekendSetting = ({ handleContinue }) => {
       }}
     />
     <h2 style={{ width: '90%', margin: '15px auto' }}>
-      Weekend Setting
+      Weekend Settings
     </h2>
     <p
       style={{
@@ -371,11 +369,11 @@ const WeekendSetting = ({ handleContinue }) => {
         margin: '15px auto'
       }}
     >
-      Woule you like Twain to help you schedule tasks on weekends?
+      Do you want to have Twain schedule your tasks over the weekend?
     </p>
     <Dropdown
       options={display}
-      selected={selected ? selected : yesOption}
+      selected={selected ? selected : "Yes"}
       onSelect={(option) => setSelected(option)}
       onClose={(bool) => setClosed(bool)}
     />
