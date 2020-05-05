@@ -377,25 +377,22 @@ const WeekendSetting = ({ handleContinue }) => {
       onSelect={(option) => setSelected(option)}
       onClose={(bool) => setClosed(bool)}
     />
-    {closed ? (
-      <Row
-        flexEnd
-        style={{
-          width: 'calc(90% + 20px)',
-          margin: '-10px auto'
-        }}
-      >
-        <Button
-          disabled={!selected}
-          secondary={selected}
-          onClick={handleContinue}
-          style={{ padding: '10px 30px' }}
-          image="arrow-forward.svg"
-        />
-      </Row>
-    ) : (
-      ''
-    )}
+
+    <Row
+      flexEnd
+      style={{
+        width: 'calc(90% + 20px)',
+        margin: '-10px auto'
+      }}
+    >
+      <Button
+        secondary
+        onClick={handleContinue}
+        style={{ padding: '10px 30px' }}
+        image="arrow-forward.svg"
+      />
+    </Row>
+
     </div>
   );
 };
