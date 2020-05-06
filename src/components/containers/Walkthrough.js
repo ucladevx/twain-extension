@@ -8,7 +8,7 @@ const CreateTaskList = ({handleContinue}) =>{
   return(
     <div>
       <img
-        src="personalizetask.gif"
+        src="createTasklist.gif"
         style={{
           width: '300px',
           marginLeft: 'calc(-1 * (10%))',
@@ -27,7 +27,7 @@ const CreateTaskList = ({handleContinue}) =>{
         textAlign: 'center'
       }}
       >Start by creating a to-do list of all your upcomming tasks.
-      Click <strong>"New Task"</strong> to begin creating
+      Click <strong>"New Task"</strong> to begin creating.
       </p>
 
       <NextButton
@@ -76,7 +76,7 @@ const ScheduleTask = ({handleContinue}) => {
   return(
     <div>
       <img
-        src="personalizetask.gif"
+        src="scheduleTask.gif"
         style={{
           width: '300px',
           marginLeft: 'calc(-1 * (10%))',
