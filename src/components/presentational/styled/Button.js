@@ -73,4 +73,28 @@ export const FullButton = styled(Button)`
   border-radius: 10px;
 `;
 
+export const SkipButton = styled.button`
+  text-decoration: underline;
+  background: none;
+  border: none;
+  color: white;
+  text-align: center;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const NextButton = styled(FullButton)`
+  background: #57afbe;
+  padding: '10px 30px';
+  color:#fff
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+    background: #57afbe;
+  }
+
+`;
+
 export default Button;

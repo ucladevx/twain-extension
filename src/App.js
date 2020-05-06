@@ -12,6 +12,7 @@ import TaskList from './components/containers/TaskList';
 import SchedulingList from './components/containers/Scheduling';
 import ChangeList from './components/containers/MakeChanges';
 import Success from './components/containers/Success';
+import Walkthrough from './components/containers/Walkthrough';
 
 const App = () => {
   const DefaultContainer = () => (
@@ -32,6 +33,7 @@ const App = () => {
         <Switch>
           <Route path="/settings" component={Settings} />
           <Route path="/help" component={Help} />
+          <Route path="/walkthrough" component={Walkthrough}/>
 
           <Route path="/tasklist" component={DefaultContainer} />
           <Route path="/scheduling" component={DefaultContainer} />

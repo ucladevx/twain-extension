@@ -26,6 +26,12 @@ export const Centered = styled.div`
   }
 `;
 
+export const WalkthroughCentered = styled(Centered)`
+  color: #666666;
+  fontFamily: roboto;
+  /* text-align: center; */
+`;
+
 export const Row = styled.div`
   display: flex;
   align-items: center;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import Button, { FullButton } from '../presentational/styled/Button';
+import Button, { FullButton, SkipButton} from '../presentational/styled/Button';
 import Dropdown, { Selection } from '../presentational/Dropdown';
 import { Row } from '../presentational/styled/Layout';
 import { Background, Centered } from '../presentational/styled/Layout';
@@ -172,7 +172,7 @@ const OptionSelection = ({ handleContinue }) => {
 
   useEffect(() => {
     UserService.getUserCalendars(function(res) {
-      
+
       let summaries = [];
       let summaryToId = {};
 
@@ -363,7 +363,7 @@ const WeekendSetting = ({ handleContinue }) => {
         margin: '15px auto'
       }}
     >
-      Do you want to have Twain schedule your tasks over the weekend?
+      Do you want to have twain schedule your tasks over the weekend?
     </p>
     <Dropdown
       options={display}
@@ -391,6 +391,29 @@ const WeekendSetting = ({ handleContinue }) => {
   );
 };
 
+const WalkThroughPrompt = ({handleContinue}) => {
+  const [skip,setSkip] = useState(false);
+  const history = useHistory();
+
+  return(
+    <div>
+      <h1 style={{ marginTop: '20vh' }}>Welcome to your twain task list!</h1>
+      <p
+      style={{
+        color: 'rgba(255,255,255,0.7)',
+        width: '90%',
+        margin: '15px auto'
+      }}>This is where you can view, create, and schedule your task. Lets show you around
+      </p>
+      <FullButton onClick = {()=> history.push('/walkthrough')}
+                  secondary
+                  style = {{color: '#5187ed'}}
+                  >Start WalkThrough</FullButton>
+      <SkipButton onClick = {handleContinue}>Skip</SkipButton>
+    </div>
+  );
+};
+
 const Content = [
   { component: Intro, customButton: true },
   { component: Welcome, customButton: true },
@@ -398,6 +421,7 @@ const Content = [
   { component: OptionSelection, customButton: true },
   { component: Times, customButton: true },
   { component: WeekendSetting, customButton: true},
+  { component: WalkThroughPrompt, customButton: true}
 ];
 
 const Onboarding = () => {
