@@ -114,9 +114,8 @@ const Navbar = () => {
               cursor: 'pointer'
             }}
             onClick={() => {
-              StorageService.setLoggedIn(false, (val) => {
-                console.log('set loggedIn to', val);
-                history.push('/');
+              StorageService.setLoggedIn(false, () => {
+                history.push('/onboard');
               });
             }}
           >

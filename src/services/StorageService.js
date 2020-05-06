@@ -1,8 +1,6 @@
 /*global chrome*/
 
-const logDefault = (val) => console.log('set loggedIn to', val);
-
-const setLoggedIn = (val, callback = logDefault) => {
+const setLoggedIn = (val, callback = () => {}) => {
   chrome.storage.local.set({ loggedIn: val }, () => {
     callback(val);
   });

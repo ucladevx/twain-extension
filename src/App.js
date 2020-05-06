@@ -20,10 +20,9 @@ const App = () => {
 
   useEffect(() => {
     StorageService.getLoggedIn((res) => {
-      console.log('logged in:', res);
       setLogged(res.loggedIn);
     });
-  }, []);
+  });
 
   const DefaultContainer = () => (
     <>
@@ -49,6 +48,7 @@ const App = () => {
           <Route path="/changelist" component={DefaultContainer} />
 
           <Route path="/success/:numsched" component={Success} />
+          <Route path="/onboard" component={Onboarding} />
 
           <Route component={logged ? DefaultContainer : Onboarding} />
         </Switch>
