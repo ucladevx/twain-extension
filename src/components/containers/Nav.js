@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Icon from '../presentational/styled/Icon';
+
+import StorageService from '../../services/StorageService';
 
 const Row = styled.div`
   display: flex;
@@ -67,6 +69,7 @@ const Dropdown = styled.div`
 
 const Navbar = () => {
   const [closed, setClosed] = useState(true);
+  const history = useHistory();
 
   return (
     <Nav>
@@ -107,7 +110,14 @@ const Navbar = () => {
               border: 'none',
               font: 'Roboto',
               fontSize: '17px',
-              padding: '10px'
+              padding: '10px',
+              cursor: 'pointer'
+            }}
+            onClick={() => {
+              StorageService.setLoggedIn(false, (val) => {
+                console.log('set loggedIn to', val);
+                history.push('/');
+              });
             }}
           >
             Log out
