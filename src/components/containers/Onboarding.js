@@ -8,6 +8,7 @@ import { Background, Centered } from '../presentational/styled/Layout';
 
 import AuthService from '../../services/AuthService';
 import UserService from '../../services/UserService';
+import StorageService from '../../services/StorageService';
 
 const Intro = ({ handleContinue }) => {
   const getUser = async () => {
@@ -428,8 +429,14 @@ const Onboarding = () => {
   const [page, setPage] = useState(0);
   const history = useHistory();
 
-  const handleContinue = () =>
-    page == Content.length - 1 ? history.push('/tasklist') : setPage(page + 1);
+  const handleContinue = () => {
+    if (page === Content.length - 1) {
+      StorageService.setLoggedIn(true);
+      history.push('/tasklist');
+    } else {
+      setPage(page + 1);
+    }
+  };
 
   const getCurrent = () => {
     const Component = Content[page].component;

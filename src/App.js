@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Navbar from './components/containers/Nav';
@@ -14,7 +14,17 @@ import ChangeList from './components/containers/MakeChanges';
 import Success from './components/containers/Success';
 import Walkthrough from './components/containers/Walkthrough';
 
+import StorageService from './services/StorageService';
+
 const App = () => {
+  const [logged, setLogged] = useState(false);
+
+  useEffect(() => {
+    StorageService.getLoggedIn((res) => {
+      setLogged(res.loggedIn);
+    });
+  });
+
   const DefaultContainer = () => (
     <>
       <Navbar />
@@ -40,8 +50,9 @@ const App = () => {
           <Route path="/changelist" component={DefaultContainer} />
 
           <Route path="/success/:numsched" component={Success} />
+          <Route path="/onboard" component={Onboarding} />
 
-          <Route component={Onboarding} />
+          <Route component={logged ? DefaultContainer : Onboarding} />
         </Switch>
       </Router>
     </Global>
