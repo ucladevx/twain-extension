@@ -26,7 +26,7 @@ const CreateTaskList = ({handleContinue}) =>{
         margin: '15px auto',
         textAlign: 'center'
       }}
-      >Start by creating a to-do list of all your upcomming tasks.
+      >Start by creating a to-do list of all your upcoming tasks.
       Click <strong>"New Task"</strong> to begin creating.
       </p>
 
@@ -94,10 +94,10 @@ const ScheduleTask = ({handleContinue}) => {
         margin: '15px auto',
         textAlign: 'center'
       }}
-      >Now that you have created your task, it will innitially appear under
+      >Now that you have created your task, it will initially appear under
       <strong>"Not yet scheduled."</strong><br />
       Once you're ready to have twain schedule your task, select the tasks you want
-      scheduled and click <strong>"Scheduled."</strong>
+      scheduled and click <strong>"Schedule"</strong>.
       </p>
 
       <NextButton

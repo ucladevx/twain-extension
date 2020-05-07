@@ -206,7 +206,7 @@ const OptionSelection = ({ handleContinue }) => {
           marginBottom: '-20%'
         }}
       />
-      <h2 style={{ width: '90%', margin: '15px auto' }}>Secondary Calendar</h2>
+      <h2 style={{ width: '90%', margin: '15px auto' }}>Other Relevant Calendars</h2>
       <p
         style={{
           color: 'rgba(255,255,255,0.7)',
@@ -214,7 +214,7 @@ const OptionSelection = ({ handleContinue }) => {
           margin: '15px auto'
         }}
       >
-        Which other calendars do you want Twain to take into account?
+        Which other calendars do you want Twain to take into account when scheduling?
       </p>
       <Selection
         options={calendarOptions}
@@ -398,13 +398,13 @@ const WalkThroughPrompt = ({handleContinue}) => {
 
   return(
     <div>
-      <h1 style={{ marginTop: '20vh' }}>Welcome to your twain task list!</h1>
+      <h1 style={{ marginTop: '20vh' }}>Welcome to twain!</h1>
       <p
       style={{
         color: 'rgba(255,255,255,0.7)',
         width: '90%',
         margin: '15px auto'
-      }}>This is where you can view, create, and schedule your task. Lets show you around
+      }}>Let us show you how you can view, create, and schedule tasks.
       </p>
       <FullButton onClick = {()=> history.push('/walkthrough')}
                   secondary
