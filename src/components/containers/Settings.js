@@ -117,10 +117,9 @@ const Settings = () => {
   const updateBackend = () => {
     let selectedIDs = selectedMult.map((summary) => { return userCalendarsMult[summary] });
     let commaSeparated = selectedIDs.join();
-    console.log(commaSeparated);
-    UserService.setRelevantCalendars(commaSeparated, function(res){console.log(res)});
-    UserService.setPrimaryCalendar(userCalendars[selected], function(res){console.log(res)});
-    UserService.setHours(start, end, function(res){console.log(res)});
+    UserService.setRelevantCalendars(commaSeparated, function(res){});
+    UserService.setPrimaryCalendar(userCalendars[selected], function(res){});
+    UserService.setHours(start, end, function(res){});
   }
   useEffect(() => {
     UserService.getUserCalendars(function(res){
@@ -261,19 +260,19 @@ const Settings = () => {
       </DropdownWrapper>
       <br></br>
       <div>
-      <button 
-        id="saveCur"  
+      <button
+        id="saveCur"
         style={{
           fontSize:'18px', border:"1px solid", borderRadius:'4px', fontFamily:'Roboto', padding:'4px 12px'
-        }} 
-        disabled={!changes} 
+        }}
+        disabled={!changes}
         onClick={updateBackend}>
-        <Link 
+        <Link
           style={{
-            color:'black', 
-            textDecoration:'none', 
+            color:'black',
+            textDecoration:'none',
             pointerEvents: changes ? 'auto' : 'none'
-            }} 
+            }}
           to="/tasklist">
         Save
         </Link>
