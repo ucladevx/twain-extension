@@ -84,10 +84,10 @@ const SelectionWrapper = styled.div`
   color: #666;
 
   .selected {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.9); /*this line to change color*/
   }
 
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(243, 243, 243, 0.75); /*this line to change color*/
   border: none;
   border-radius: 7px;
   transition: opacity 0.25s;
