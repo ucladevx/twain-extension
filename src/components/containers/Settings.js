@@ -116,7 +116,6 @@ const Settings = () => {
 
   const updateBackend = () => {
     let selectedIDs = selectedMult.map((summary) => { return userCalendarsMult[summary] });
-    console.log("Relevant cals selected");
     let commaSeparated = selectedIDs.join();
     console.log(commaSeparated);
     UserService.setRelevantCalendars(commaSeparated, function(res){console.log(res)});
@@ -160,7 +159,7 @@ const Settings = () => {
   return (
     <div>
       <Nav>
-        <StyledLink to="/login">
+        <StyledLink to="/tasklist">
           <img style={{ width: '20px', padding: '2px' }} src="arrow-left.svg" />
         </StyledLink>
         <HelpHeader>Settings</HelpHeader>
@@ -213,7 +212,7 @@ const Settings = () => {
       <DropdownWrapper hide={hidden2} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="calendar.svg"/>
-        Calendar Preferences
+        Primary Calendar
         <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
           setHidden2(!hidden2)}
         }
@@ -226,7 +225,6 @@ const Settings = () => {
             selected={selected ? selected : 'Default'}
             onSelect={(option) => {
                 if(closed == true){
-                  console.log("Primary calendar selected")
                   setSelected(option)
                 }
                 setChanges(true)
@@ -241,7 +239,7 @@ const Settings = () => {
       <DropdownWrapper hide={hidden3} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="categories.svg"/>
-        Categories
+        Relevant Calendars
         <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {setHidden3(!hidden3)}}/>
         </div>
         <div className="outside-content">
@@ -263,11 +261,23 @@ const Settings = () => {
       </DropdownWrapper>
       <br></br>
       <div>
-      <button id="saveCur"  style={{
-        fontSize:'18px', border:"1px solid", borderRadius:'4px', fontFamily:'Roboto', padding:'4px 12px'
-      }} disabled={!changes} onClick={updateBackend}><Link style={{
-        color:'black', textDecoration:'none', pointerEvents: changes ? 'auto' : 'none'
-      }} to="/login">Save</Link></button>
+      <button 
+        id="saveCur"  
+        style={{
+          fontSize:'18px', border:"1px solid", borderRadius:'4px', fontFamily:'Roboto', padding:'4px 12px'
+        }} 
+        disabled={!changes} 
+        onClick={updateBackend}>
+        <Link 
+          style={{
+            color:'black', 
+            textDecoration:'none', 
+            pointerEvents: changes ? 'auto' : 'none'
+            }} 
+          to="/tasklist">
+        Save
+        </Link>
+      </button>
       </div>
     </div>
   );
