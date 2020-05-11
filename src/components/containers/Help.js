@@ -40,7 +40,7 @@ const StyledLink = styled(Link)`
   font-size: 14px;
   font:'Roboto';
   color: #000;
-  
+
   & p {
     margin: 10px;
     margin-right: auto; //text and right arrow icon
@@ -63,18 +63,18 @@ const Dropdown = styled.div`
 `;
 
 const Help = ({ onAdd }) => {
-  
+
   return (
       <div>
-        <Nav> 
+        <Nav>
             <StyledLink to="/login" >
             <img style={{width:'20px', padding: '2px'}} src="arrow-left.svg"/>
             </StyledLink>  
-        <HelpHeader>Help</HelpHeader>  
-        
+        <HelpHeader>Help</HelpHeader>
+
         <img style={{width:'25px', padding: '2px'}} src="help.svg"/>
         </Nav>
-        
+
       </div>
   );
 };

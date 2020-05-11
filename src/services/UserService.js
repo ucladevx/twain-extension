@@ -58,7 +58,6 @@ async function setRelevantCalendars(relevant_calendars, setRelevantCalendarsHand
     let body = {
       relevant_calendars: relevant_calendars
     }
-
     let url = 'http://localhost:31337/api/users/calendars/relevant'
 
     let res = await axios.post(url, body, {
@@ -118,12 +117,33 @@ async function getUserCalendars(getUserCalendarsHandler) {
         console.log(err.response)
         return err
     });
-
     getUserCalendarsHandler(res)
   }
 
   AuthService.runWithAuthToken(getuserCalendarsCallback)
 }
 
+async function setWeekendOption(weekend_setting,setWeekendOptionHandler){
+  let setWeekendOptionCallback = async function(token){
+    let url = 'http://localhost:31337/api/users/weekend'
 
-export default {setHours, setPrimaryCalendar, setRelevantCalendars, getLoggedInUser, getUserCalendars}
+    let body = {
+      weekend_setting: weekend_setting
+    }
+    let res = await axios.post(url, body, {
+      headers: {
+        'Access-Control-Allow-Origin': 'chrome-extension://',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token,
+      },
+    }).then(res => res.data.data)
+      .catch(err => {
+        console.log(err.response)
+        return err
+    });
+    setWeekendOptionHandler(res)
+  }
+  AuthService.runWithAuthToken(setWeekendOptionCallback)
+}
+
+export default {setHours, setPrimaryCalendar, setRelevantCalendars, setWeekendOption, getLoggedInUser, getUserCalendars}
