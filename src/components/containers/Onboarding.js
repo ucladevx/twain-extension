@@ -336,12 +336,8 @@ const WeekendSetting = ({ handleContinue }) => {
   const [closed, setClosed] = useState(true);
 
   const updateBackendAndContinue = () => {
-    console.log('UserService needed to be updated');
+    UserService.setWeekendOption(selected === "Yes", handleContinue)
   };
-
-  useEffect(()=> {
-
-  });
 
   return (
     <div>
@@ -382,7 +378,7 @@ const WeekendSetting = ({ handleContinue }) => {
     >
       <Button
         secondary
-        onClick={handleContinue}
+        onClick={updateBackendAndContinue}
         style={{ padding: '10px 30px' }}
         image="arrow-forward.svg"
       />

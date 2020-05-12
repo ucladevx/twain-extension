@@ -78,4 +78,3 @@ const Help = ({ onAdd }) => {
 };
 
 export default Help;
-
