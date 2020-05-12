@@ -228,7 +228,7 @@ const Settings = () => {
   return (
     <div>
       <Nav>
-        <StyledLink to="/login">
+        <StyledLink to="/tasklist">
           <img style={{ width: '20px', padding: '2px' }} src="arrow-left.svg" />
         </StyledLink>
         <HelpHeader>Settings</HelpHeader>

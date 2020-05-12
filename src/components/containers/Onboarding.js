@@ -8,6 +8,7 @@ import { Background, Centered } from '../presentational/styled/Layout';
 
 import AuthService from '../../services/AuthService';
 import UserService from '../../services/UserService';
+import StorageService from '../../services/StorageService';
 
 const Intro = ({ handleContinue }) => {
   const getUser = async () => {
@@ -205,7 +206,7 @@ const OptionSelection = ({ handleContinue }) => {
           marginBottom: '-20%'
         }}
       />
-      <h2 style={{ width: '90%', margin: '15px auto' }}>Secondary Calendar</h2>
+      <h2 style={{ width: '90%', margin: '15px auto' }}>Other Relevant Calendars</h2>
       <p
         style={{
           color: 'rgba(255,255,255,0.7)',
@@ -213,7 +214,7 @@ const OptionSelection = ({ handleContinue }) => {
           margin: '15px auto'
         }}
       >
-        Which other calendars do you want Twain to take into account?
+        Which other calendars do you want Twain to take into account when scheduling?
       </p>
       <Selection
         options={calendarOptions}
@@ -393,13 +394,13 @@ const WalkThroughPrompt = ({handleContinue}) => {
 
   return(
     <div>
-      <h1 style={{ marginTop: '20vh' }}>Welcome to your twain task list!</h1>
+      <h1 style={{ marginTop: '20vh' }}>Welcome to twain!</h1>
       <p
       style={{
         color: 'rgba(255,255,255,0.7)',
         width: '90%',
         margin: '15px auto'
-      }}>This is where you can view, create, and schedule your task. Lets show you around
+      }}>Let us show you how you can view, create, and schedule tasks.
       </p>
       <FullButton onClick = {()=> history.push('/walkthrough')}
                   secondary
@@ -424,8 +425,14 @@ const Onboarding = () => {
   const [page, setPage] = useState(0);
   const history = useHistory();
 
-  const handleContinue = () =>
-    page == Content.length - 1 ? history.push('/tasklist') : setPage(page + 1);
+  const handleContinue = () => {
+    if (page === Content.length - 1) {
+      StorageService.setLoggedIn(true);
+      history.push('/tasklist');
+    } else {
+      setPage(page + 1);
+    }
+  };
 
   const getCurrent = () => {
     const Component = Content[page].component;

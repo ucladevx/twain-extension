@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Icon from '../presentational/styled/Icon';
@@ -28,17 +28,17 @@ const Header = styled.h1`
 const HelpHeader = styled.h2`
   margin-left: 15px;
   margin-right: auto;
-  font:'Roboto';
+  font: 'Roboto';
   font-size: 17px;
 `;
 
 const StyledLink = styled(Link)`
-    display: flex;    //left to right
-    align-items: center;
-    justify-content: flex-start;
+  display: flex; //left to right
+  align-items: center;
+  justify-content: flex-start;
   text-decoration: none;
   font-size: 14px;
-  font:'Roboto';
+  font: 'Roboto';
   color: #000;
 
   & p {
@@ -50,8 +50,8 @@ const StyledLink = styled(Link)`
 const Dropdown = styled.div`
   & .content {
     position: absolute;
-    visibility: ${props => props.closed ? 'hidden' : 'visible'};
-    opacity: ${props => props.closed ? 0 : 1}
+    visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
+    opacity: ${(props) => (props.closed ? 0 : 1)}
     margin-left: -34%;
     margin-top: 9px;
     background-color: #fff;
@@ -63,19 +63,17 @@ const Dropdown = styled.div`
 `;
 
 const Help = ({ onAdd }) => {
-
   return (
-      <div>
-        <Nav>
-            <StyledLink to="/login" >
-            <img style={{width:'20px', padding: '2px'}} src="arrow-left.svg"/>
-            </StyledLink>  
+    <div>
+      <Nav>
+        <StyledLink to="/tasklist">
+          <img style={{ width: '20px', padding: '2px' }} src="arrow-left.svg" />
+        </StyledLink>
         <HelpHeader>Help</HelpHeader>
 
-        <img style={{width:'25px', padding: '2px'}} src="help.svg"/>
-        </Nav>
-
-      </div>
+        <img style={{ width: '25px', padding: '2px' }} src="help.svg" />
+      </Nav>
+    </div>
   );
 };
 
