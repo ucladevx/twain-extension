@@ -21,9 +21,8 @@ const emptyTask = {
   name: '',
   duration: 30,
   description: '',
-  category: '',
-  created_date: '',
-  scheduled_date: '',
+  created_time: '',
+  scheduled_time: '',
   completed: false,
   scheduled: false,
   due_date: newDateNextDay()
@@ -202,7 +201,7 @@ const TaskList = () => {
   );
 
   return (
-    <div style={{ maxHeight: '90vh', overflowY: 'auto' }}>
+    <div style={{ height: '90vh', overflowY: 'auto' }}>
       {creating ? (
         <Task
           task={emptyTask}

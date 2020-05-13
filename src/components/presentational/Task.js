@@ -8,19 +8,19 @@ import { TextArea, Mini } from './styled/Input';
 import Icon, { Select } from './styled/Icon';
 
 import SpinButton from './Spin';
-import Dropdown, { DateTimePicker } from './Dropdown';
+import { DateTimePicker } from './Dropdown';
 
 const Card = styled.div`
   max-height: ${(props) => (props.expanded ? '500px' : '50px')};
   width: 85%;
   margin: 10px auto;
   padding: 8px;
-  background-color: #fff;
+  background-color: ${(props) => (props.selected ? '#edf3fb' : '#fff')};
   border: ${(props) =>
     props.selected ? '2px solid #5187ed' : '2px solid #ccc'};
   border-radius: 10px;
   overflow: ${(props) => (props.expanded ? 'visible' : 'hidden')};
-  transition: all 0.3s, max-height 0.3s;
+  transition: all 0.3s, max-height 0s;
 
   &:hover {
     box-shadow: ${(props) =>
@@ -75,10 +75,7 @@ const Task = ({
     completed_time,
     duration,
     scheduled,
-    scheduled_time,
-    scheduled_date,
-    start_time,
-    end_time
+    scheduled_time
   } = task;
 
   const initDuration = (duration) => {
@@ -95,17 +92,10 @@ const Task = ({
   const [time, setTime] = useState(initDuration(task.duration));
   const [due, setDue] = useState(task.due_date);
   const [sched, setSched] = useState(task.scheduled_time);
-  const [dueTime, setDueTime] = useState({ hours: 15, minutes: 30 });
-  const [category, setCategory] = useState(task.category);
   const [description, setDescription] = useState(task.description);
 
   const setHours = (val) => setTime({ hours: val, minutes: time.minutes });
   const setMinutes = (val) => setTime({ hours: time.hours, minutes: val });
-
-  const setDueHours = (val) =>
-    setDueTime({ hours: val, minutes: dueTime.minutes });
-  const setDueMinutes = (val) =>
-    setDueTime({ hours: dueTime.hours, minutes: val });
 
   const makeTaskObj = () => {
     const obj = {
@@ -194,16 +184,23 @@ const Task = ({
         <Text>
           {editing && created_time
             ? 'Created ' + new Date(created_time).toDateString()
+            : completed
+            ? 'Completed ' + new Date(completed_time).toDateString()
             : ''}
         </Text>
-        <TextButton
-          tabIndex="-1"
-          onClick={() =>
-            creating ? createTask(makeTaskObj()) : setEditing(!editing)
-          }
-        >
-          {creating ? 'Create' : editing ? 'Save' : 'Edit'}
-        </TextButton>
+        {!completed ? (
+          <TextButton
+            tabIndex="-1"
+            onClick={(e) => {
+              creating ? createTask(makeTaskObj()) : setEditing(!editing);
+              e.stopPropagation();
+            }}
+          >
+            {creating ? 'Create' : editing ? 'Save' : 'Edit'}
+          </TextButton>
+        ) : (
+          ''
+        )}
       </Row>
     </>
   );
@@ -251,7 +248,7 @@ const Task = ({
       expanded={expanded}
       select={!scheduled}
       onClick={
-        !scheduled && !expanded
+        !scheduled
           ? () => {
               toggleSelect(id);
             }
@@ -262,8 +259,8 @@ const Task = ({
       <Row style={{ height: '50px', marginBottom: '8px' }}>
         <Select
           image="/background.png"
-          style={{ flex: scheduled ? '0 0 25px' : '0 0 0' }}
-          hide={!scheduled}
+          style={{ flex: completed || !scheduled ? '0 0 0' : '0 0 25px' }}
+          hide={completed || !scheduled}
           onClick={() => {
             if (scheduled) {
               completeTask(id);
