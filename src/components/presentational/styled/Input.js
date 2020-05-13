@@ -57,7 +57,6 @@ export const Mini = styled.input`
   margin: 0;
   margin-bottom: -5px;
   padding: 3px;
-  // background-color: ${(props) => (props.myDisabled ? 'inherit' : '#fff')};
   background-color: inherit;
   border-bottom: ${(props) =>
     props.myDisabled ? '2px solid transparent' : '2px solid #ccc'};
