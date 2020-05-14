@@ -166,7 +166,7 @@ const Settings = () => {
         <img style={{ width: '25px', padding: '2px' }} src="settings.svg" />
       </Nav>
 
-      <DropdownWrapper hide={hidden1} onClose={() => {}} interior={false}>
+      <DropdownWrapperSettings hide={hidden1} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="time.svg"/>
         Hours of Operation
@@ -206,9 +206,9 @@ const Settings = () => {
             </div></div>
           <br></br>
         </div>
-      </DropdownWrapper>
+      </DropdownWrapperSettings>
       <br></br>
-      <DropdownWrapper hide={hidden2} onClose={() => {}} interior={false}>
+      <DropdownWrapperSettings hide={hidden2} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="calendar.svg"/>
         Primary Calendar
@@ -233,9 +233,9 @@ const Settings = () => {
           />
           <br></br>
         </div>
-      </DropdownWrapper>
+      </DropdownWrapperSettings>
       <br></br>
-      <DropdownWrapper hide={hidden3} onClose={() => {}} interior={false}>
+      <DropdownWrapperSettings hide={hidden3} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="categories.svg"/>
         Relevant Calendars
@@ -257,7 +257,7 @@ const Settings = () => {
           />
           <br></br>
         </div>
-      </DropdownWrapper>
+      </DropdownWrapperSettings>
       <br></br>
       <div>
       <button

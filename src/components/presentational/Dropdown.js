@@ -131,6 +131,126 @@ export const Selection = ({ selected, onSelect, options }) => {
   );
 };
 
+const DropdownWrapperSettings = styled.div`
+  ${Shared}
+
+  position: relative;
+  width: ${(props) => (props.mini ? '100%' : '90%')};
+  margin: 15px auto;
+  margin: ${(props) => (props.mini ? '15px 0' : '15px auto')};
+
+  font-size: ${(props) => (props.mini ? '12px' : '14px')};
+  padding: 0;
+  color: #666;
+  background-color: rgba(255, 255, 255, 1.0);
+  border-radius: ${(props) => (props.closed ? '7px' : '7px 7px 0 0')};
+
+  & .content {
+    position: absolute;
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    width: 100%;
+    max-height: ${(props) =>
+      !props.myDisabled && !props.closed ? '300px' : '0'};
+    overflow: auto;
+    margin-top: 2px;
+
+    background-color: rgba(240, 240, 240, 1.0);
+    border: none;
+    border-radius: 0 0 7px 7px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+    transition: opacity 0.25s;
+  }
+
+  & .content-outside {
+    position: absolute;
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    // width: 76%;
+    width: 100%;
+    max-height: ${(props) =>
+      !props.myDisabled && !props.closed ? '300px' : '0'};
+    overflow: auto;
+    margin-top: 2px;
+    margin-left: -8px;
+    // background-color: #fff;
+    background-color: rgba(240, 240, 240, 1.0);
+    border: none;
+    border-radius: 0 0 7px 7px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+    transition: opacity 0.25s;
+  }
+
+  & .content-outside {
+    position: absolute;
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    // width: 76%;
+    width: 100%;
+    max-height: ${(props) =>
+      !props.myDisabled && !props.closed ? '300px' : '0'};
+    overflow: auto;
+    margin-top: 2px;
+    margin-left: -8px;
+    // background-color: #fff;
+    background-color: rgba(240,240,240, 1.0);
+    border: none;
+    border-radius: 0 0 7px 7px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+    transition: opacity 0.25s;
+  }
+
+  .content::webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+
+  &:hover {
+    cursor: ${(props) => (props.myDisabled ? 'default' : 'pointer')};
+  }
+
+  & .content p {
+    margin: 0;
+    padding: ${(props) => (props.mini ? '5px 10px' : '10px 15px')};
+    border-top: 1px solid #909090;
+  }
+
+  & .content-outside p {
+    margin: 0;
+    padding: 10px 15px;
+    border-top: 1px solid #909090;
+  }
+
+  & .content-outside p {
+    margin: 0;
+    padding: 10px 15px;
+    border-top: 1px solid #909090;
+  }
+
+  // & .content p:first-of-type {
+  //   border-radius: 10px 10px 0 0;
+  // }
+
+  & .content p:last-of-type {
+    border-radius: 0 0 7px 7px;
+  }
+
+  & .content p:hover {
+    background-color: rgba(248, 248, 248, 1.0);
+    cursor: pointer;
+  }
+
+  .selected {
+    background-color: #fff;
+  }
+
+  .disabled {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  & p.disabled:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: default;
+  }
+`;
+
 const DropdownWrapper = styled.div`
   ${Shared}
 
