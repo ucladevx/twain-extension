@@ -84,10 +84,10 @@ const SelectionWrapper = styled.div`
   color: #666;
 
   .selected {
-    background-color: rgba(255, 255, 255, 0.9); /*this line to change color*/
+    background-color: rgba(255, 255, 255, 1.0); /*this line to change color*/
   }
 
-  background-color: rgba(243, 243, 243, 0.75); /*this line to change color*/
+  background-color: rgba(240, 240, 240, 1.0); /*this line to change color*/
   border: none;
   border-radius: 7px;
   transition: opacity 0.25s;
@@ -99,7 +99,7 @@ const SelectionWrapper = styled.div`
   }
 
   p:hover {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(248, 248, 248, 1.0);
     cursor: pointer;
   }
 
@@ -142,7 +142,7 @@ const DropdownWrapper = styled.div`
   font-size: ${(props) => (props.mini ? '12px' : '14px')};
   padding: 0;
   color: #666;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 1.0);
   border-radius: ${(props) => (props.closed ? '7px' : '7px 7px 0 0')};
 
   & .content {
@@ -154,7 +154,7 @@ const DropdownWrapper = styled.div`
     overflow: auto;
     margin-top: 2px;
 
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(240, 240, 240, 1.0);
     border: none;
     border-radius: 0 0 7px 7px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
@@ -172,7 +172,7 @@ const DropdownWrapper = styled.div`
     margin-top: 2px;
     margin-left: -8px;
     // background-color: #fff;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(240, 240, 240, 1.0);
     border: none;
     border-radius: 0 0 7px 7px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
@@ -190,7 +190,7 @@ const DropdownWrapper = styled.div`
     margin-top: 2px;
     margin-left: -8px;
     // background-color: #fff;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(240,240,240, 1.0);
     border: none;
     border-radius: 0 0 7px 7px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
@@ -233,7 +233,7 @@ const DropdownWrapper = styled.div`
   }
 
   & .content p:hover {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(248, 248, 248, 1.0);
     cursor: pointer;
   }
 
