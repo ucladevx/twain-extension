@@ -5,7 +5,7 @@ import { Row } from '../presentational/styled/Layout';
 import Input, { Shared } from '../presentational/styled/Input';
 import { Link } from 'react-router-dom';
 import { StaticIcon } from '../presentational/styled/Icon';
-import DropdownS, { SelectionS } from '../presentational/Dropdown';
+import { DropdownS, SelectionS } from '../presentational/Dropdown';
 
 
 import UserService from '../../services/UserService';
@@ -42,7 +42,7 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const DropdownWrapper = styled.div`
+const OptionWrapper = styled.div`
   width: 92%;
   justify-content: flex-start;
   padding: 15px;
@@ -166,7 +166,7 @@ const Settings = () => {
         <img style={{ width: '25px', padding: '2px' }} src="settings.svg" />
       </Nav>
 
-      <DropdownWrapper hide={hidden1} onClose={() => {}} interior={false}>
+      <OptionWrapper hide={hidden1} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="time.svg"/>
         Hours of Operation
@@ -206,9 +206,9 @@ const Settings = () => {
             </div></div>
           <br></br>
         </div>
-      </DropdownWrapper>
+      </OptionWrapper>
       <br></br>
-      <DropdownWrapper hide={hidden2} onClose={() => {}} interior={false}>
+      <OptionWrapper hide={hidden2} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="calendar.svg"/>
         Primary Calendar
@@ -233,9 +233,9 @@ const Settings = () => {
           />
           <br></br>
         </div>
-      </DropdownWrapper>
+      </OptionWrapper>
       <br></br>
-      <DropdownWrapper hide={hidden3} onClose={() => {}} interior={false}>
+      <OptionWrapper hide={hidden3} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="categories.svg"/>
         Relevant Calendars
@@ -257,7 +257,7 @@ const Settings = () => {
           />
           <br></br>
         </div>
-      </DropdownWrapper>
+      </OptionWrapper>
       <br></br>
       <div>
       <button

@@ -84,10 +84,10 @@ const SelectionWrapper = styled.div`
   color: #666;
 
   .selected {
-    background-color: rgba(255, 255, 255, 1.0); /*this line to change color*/
+    background-color: rgba(255, 255, 255, 0.9);
   }
 
-  background-color: rgba(240, 240, 240, 1.0); /*this line to change color*/
+  background-color: rgba(255, 255, 255, 0.7);
   border: none;
   border-radius: 7px;
   transition: opacity 0.25s;
@@ -99,7 +99,7 @@ const SelectionWrapper = styled.div`
   }
 
   p:hover {
-    background-color: rgba(248, 248, 248, 1.0);
+    background-color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
   }
 
@@ -142,10 +142,10 @@ const SelectionWrapperS = styled.div`
   color: #666;
 
   .selected {
-    background-color: rgba(255, 255, 255, 1.0); /*this line to change color*/
+    background-color: rgba(255, 255, 255, 1.0);
   }
 
-  background-color: rgba(240, 240, 240, 1.0); /*this line to change color*/
+  background-color: rgba(240, 240, 240, 1.0);
   border: none;
   border-radius: 7px;
   transition: opacity 0.25s;
@@ -229,8 +229,7 @@ const DropdownWrapperS = styled.div`
     overflow: auto;
     margin-top: 2px;
     margin-left: -8px;
-    // background-color: #fff;
-    background-color: rgba(240, 240, 240, 1.0);
+    background-color: #f0f0f0;
     border: none;
     border-radius: 0 0 7px 7px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
@@ -247,8 +246,7 @@ const DropdownWrapperS = styled.div`
     overflow: auto;
     margin-top: 2px;
     margin-left: -8px;
-    // background-color: #fff;
-    background-color: rgba(240,240,240, 1.0);
+    background-color: #f0f0f0;
     border: none;
     border-radius: 0 0 7px 7px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
@@ -291,7 +289,7 @@ const DropdownWrapperS = styled.div`
   }
 
   & .content p:hover {
-    background-color: rgba(248, 248, 248, 1.0);
+    background-color: #f8f8f8;
     cursor: pointer;
   }
 
@@ -308,6 +306,107 @@ const DropdownWrapperS = styled.div`
     cursor: default;
   }
 `;
+
+export const DropdownS = ({ selected, onSelect, options, disabled, onClose, mini, interior=true }) => {
+  /* parent element controls disabled property,
+     selecting an option changes the closed property */
+  const [closed, setClosed] = useState(true);
+  const node = useRef();
+  const selectedRef = useRef();
+
+  const scrollRef = (ref, offset) => {
+    const elem = ref.current;
+    if (elem) {
+      const parent = elem.parentNode;
+      parent.scrollTop = elem.offsetTop - parent.offsetTop - offset;
+    }
+  };
+
+  useEffect(() => {
+    scrollRef(selectedRef, 80);
+  }, [selected]);
+
+  const handleClick = (e) => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    setClosed(true);
+    onClose(true);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  return (
+    <DropdownWrapperS
+      myDisabled={disabled}
+      closed={closed}
+      ref={node}
+      mini={mini}
+    >
+      <Row
+        onClick={() => {
+          if (!disabled) {
+            setClosed(!closed);
+            onClose(!closed);
+          }
+        }}
+        style={{
+          padding: mini ? '5px 10px' : '10px 15px'
+        }}
+      >
+        {disabled ? (
+          <div
+            style={{
+              padding: '2px 12px',
+              height: '30px',
+              backgroundColor: '#f2bd3f'
+            }}
+          >
+            {selected}
+          </div>
+        ) : (
+          <div style={{ borderRadius: '0px' }}>{selected}</div>
+        )}
+        {disabled || mini ? (
+          ''
+        ) : (
+          <StaticIcon src={closed ? '/arrow-down.svg' : '/arrow-up.svg'} />
+        )}
+      </Row>
+      <div className={interior ? "content" : "content-outside"}>
+        {options.map((option) => (
+          <p
+            ref={
+              selected === option || (option.text && selected === option.text)
+                ? selectedRef
+                : null
+            }
+            className={
+              selected === option || (option.text && selected === option.text)
+                ? 'selected'
+                : option.disabled
+                ? 'disabled'
+                : ''
+            }
+            key={option.key ? option.key : option}
+            onClick={() => {
+              if (!option.disabled) {
+                onSelect(option);
+                setClosed(true);
+                onClose(true);
+              }
+            }}
+          >
+            {option.text ? option.text : option}
+          </p>
+        ))}
+      </div>
+    </DropdownWrapperS>
+  );
+};
 
 const DropdownWrapper = styled.div`
   ${Shared}
@@ -429,113 +528,10 @@ const DropdownWrapper = styled.div`
   }
 `;
 
-const DropdownS = ({ selected, onSelect, options, disabled, onClose, mini, interior=true }) => {
-  /* parent element controls disabled property,
-     selecting an option changes the closed property */
-  const [closed, setClosed] = useState(true);
-
-  const node = useRef();
-  const selectedRef = useRef();
-
-  const scrollRef = (ref, offset) => {
-    const elem = ref.current;
-    if (elem) {
-      const parent = elem.parentNode;
-      parent.scrollTop = elem.offsetTop - parent.offsetTop - offset;
-    }
-  };
-
-  useEffect(() => {
-    scrollRef(selectedRef, 80);
-  }, [selected]);
-
-  const handleClick = (e) => {
-    if (node.current.contains(e.target)) {
-      return;
-    }
-    setClosed(true);
-    onClose(true);
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
-
-  return (
-    <DropdownWrapperS
-      myDisabled={disabled}
-      closed={closed}
-      ref={node}
-      mini={mini}
-    >
-      <Row
-        onClick={() => {
-          if (!disabled) {
-            setClosed(!closed);
-            onClose(!closed);
-          }
-        }}
-        style={{
-          padding: mini ? '5px 10px' : '10px 15px'
-        }}
-      >
-        {disabled ? (
-          <div
-            style={{
-              padding: '2px 12px',
-              height: '30px',
-              backgroundColor: '#f2bd3f'
-            }}
-          >
-            {selected}
-          </div>
-        ) : (
-          <div style={{ borderRadius: '0px' }}>{selected}</div>
-        )}
-        {disabled || mini ? (
-          ''
-        ) : (
-          <StaticIcon src={closed ? '/arrow-down.svg' : '/arrow-up.svg'} />
-        )}
-      </Row>
-      <div className={interior ? "content" : "content-outside"}>
-        {options.map((option) => (
-          <p
-            ref={
-              selected === option || (option.text && selected === option.text)
-                ? selectedRef
-                : null
-            }
-            className={
-              selected === option || (option.text && selected === option.text)
-                ? 'selected'
-                : option.disabled
-                ? 'disabled'
-                : ''
-            }
-            key={option.key ? option.key : option}
-            onClick={() => {
-              if (!option.disabled) {
-                onSelect(option);
-                setClosed(true);
-                onClose(true);
-              }
-            }}
-          >
-            {option.text ? option.text : option}
-          </p>
-        ))}
-      </div>
-    </DropdownWrapperS>
-  );
-};
-
 const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini, interior=true }) => {
   /* parent element controls disabled property,
      selecting an option changes the closed property */
   const [closed, setClosed] = useState(true);
-
   const node = useRef();
   const selectedRef = useRef();
 
