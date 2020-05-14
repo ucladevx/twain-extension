@@ -5,7 +5,7 @@ import { Row } from '../presentational/styled/Layout';
 import Input, { Shared } from '../presentational/styled/Input';
 import { Link } from 'react-router-dom';
 import { StaticIcon } from '../presentational/styled/Icon';
-import Dropdown, { Selection } from '../presentational/Dropdown';
+import DropdownS, { SelectionS } from '../presentational/Dropdown';
 
 
 import UserService from '../../services/UserService';
@@ -166,7 +166,7 @@ const Settings = () => {
         <img style={{ width: '25px', padding: '2px' }} src="settings.svg" />
       </Nav>
 
-      <DropdownWrapperSettings hide={hidden1} onClose={() => {}} interior={false}>
+      <DropdownWrapper hide={hidden1} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="time.svg"/>
         Hours of Operation
@@ -180,7 +180,7 @@ const Settings = () => {
           <div style={{ display: 'flex' }}>
           <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>From</p>
           <div style={{ width: '33%' }}>
-              <Dropdown
+              <DropdownS
                 mini
                 options={hours}
                 selected={start}
@@ -193,7 +193,7 @@ const Settings = () => {
             </div>
             <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>to</p>
             <div style={{ width: '33%' }}>
-              <Dropdown
+              <DropdownS
                 mini
                 options={hours}
                 selected={end}
@@ -206,9 +206,9 @@ const Settings = () => {
             </div></div>
           <br></br>
         </div>
-      </DropdownWrapperSettings>
+      </DropdownWrapper>
       <br></br>
-      <DropdownWrapperSettings hide={hidden2} onClose={() => {}} interior={false}>
+      <DropdownWrapper hide={hidden2} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="calendar.svg"/>
         Primary Calendar
@@ -219,7 +219,7 @@ const Settings = () => {
         </div>
         <div className="outside-content">
           <br></br>
-          <Dropdown
+          <DropdownS
             options={options}
             selected={selected ? selected : 'Default'}
             onSelect={(option) => {
@@ -233,9 +233,9 @@ const Settings = () => {
           />
           <br></br>
         </div>
-      </DropdownWrapperSettings>
+      </DropdownWrapper>
       <br></br>
-      <DropdownWrapperSettings hide={hidden3} onClose={() => {}} interior={false}>
+      <DropdownWrapper hide={hidden3} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="categories.svg"/>
         Relevant Calendars
@@ -243,7 +243,7 @@ const Settings = () => {
         </div>
         <div className="outside-content">
           <br></br>
-          <Selection
+          <SelectionS
             options={optionsMult}
             selected={selectedMult}
             onSelect={(newOpt) => {
@@ -257,7 +257,7 @@ const Settings = () => {
           />
           <br></br>
         </div>
-      </DropdownWrapperSettings>
+      </DropdownWrapper>
       <br></br>
       <div>
       <button
