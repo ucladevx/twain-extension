@@ -96,8 +96,6 @@ const OptionDropdown = ({ handleContinue }) => {
         summaries.push(cal['summary']);
         summaryToId[cal['summary']] = cal['id'];
       }
-      console.log(summaries);
-      console.log(summaryToId);
 
       setCalendars(summaryToId);
       setCalendarOptions(summaries);

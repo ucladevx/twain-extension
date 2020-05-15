@@ -149,8 +149,25 @@ const Settings = () => {
         let sel = res.relevant_calendars.split(',')
         let selInit = sel.map((id) =>idToSummary[id])
         setSelectedMult(selInit);
-        setStart(res.hours_start)
-        setEnd(res.hours_end)
+
+        // Re-construct time strings
+        let startHr = parseInt(res.hours_start.substring(0,2))
+
+        let endHr = parseInt(res.hours_end.substring(0,2))
+
+        if (startHr > 12) {
+          startHr -= 12
+        }
+
+        if (endHr > 12) {
+          endHr -= 12
+        }
+
+        let startString = (startHr < 10 ? "0" : "") + startHr.toString() + ":" + res.hours_start.substring(3,5) + (startHr > 11 ? " pm" : " am")
+        let endString = (endHr < 10 ? "0" : "") + endHr.toString() + ":" + res.hours_end.substring(3,5) + (endHr > 11 ? " pm" : " am")
+
+        setStart(startString)
+        setEnd(endString)
       })
     })
 
