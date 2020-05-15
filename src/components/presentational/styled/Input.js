@@ -7,11 +7,11 @@ export const Shared = css`
 
   margin: ${(props) => (props.myDisabled ? '1px' : '5px')};
   padding: ${(props) => (props.myDisabled ? '2px' : '8px')};
-  background-color: ${(props) => (props.myDisabled ? '#fff' : '#ddd')};
+  background-color: ${(props) => (props.myDisabled ? 'inherit' : '#ddd')};
   border: none
   border-bottom: 2px solid transparent;
   border-radius: 5px;
-  transition: border-color 0.2s, border-radius 0.1s, all 0.25s;
+  transition: border-color 0.2s, border-radius 0.1s, all 0.25s, background-color 0s;
 
   &:focus {
     outline-style: none;
@@ -57,7 +57,7 @@ export const Mini = styled.input`
   margin: 0;
   margin-bottom: -5px;
   padding: 3px;
-  background-color: #fff;
+  background-color: inherit;
   border-bottom: ${(props) =>
     props.myDisabled ? '2px solid transparent' : '2px solid #ccc'};
   border-radius: 0px;

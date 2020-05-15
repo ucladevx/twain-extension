@@ -24,7 +24,7 @@ export const TaskSection = ({
   emptyPrompt,
   children,
   customHeight,
-  onToggle = (closed) => {},
+  onToggle = () => {},
   actionButton = ''
 }) => {
   const [closed, setClosed] = useState(true);
@@ -528,7 +528,15 @@ const DropdownWrapper = styled.div`
   }
 `;
 
-const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini, interior=true }) => {
+const Dropdown = ({
+  selected,
+  onSelect,
+  options,
+  disabled,
+  onClose,
+  mini,
+  interior = true
+}) => {
   /* parent element controls disabled property,
      selecting an option changes the closed property */
   const [closed, setClosed] = useState(true);
@@ -597,7 +605,7 @@ const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini, interi
           <StaticIcon src={closed ? '/arrow-down.svg' : '/arrow-up.svg'} />
         )}
       </Row>
-      <div className={interior ? "content" : "content-outside"}>
+      <div className={interior ? 'content' : 'content-outside'}>
         {options.map((option) => (
           <p
             ref={

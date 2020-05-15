@@ -148,6 +148,7 @@ const SchedulingList = (props) => {
             ? 'No'
             : selected.length + selectedForce.length}{' '}
           {selected.length + selectedForce.length > 1 ||
+          selected.length + selectedForce.length === 0 ||
           selected.length + selectedForce.length === scheduling.length
             ? 'Tasks'
             : 'Task'}

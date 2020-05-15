@@ -104,7 +104,9 @@ const ChangeList = (props) => {
             : selected.length
             ? selected.length
             : 'No'}{' '}
-          {selected.length > 1 || selected.length === changing.length
+          {selected.length > 1 ||
+          selected.length === changing.length ||
+          selected.length === 0
             ? 'Tasks'
             : 'Task'}
         </FullButton>

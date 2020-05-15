@@ -9,6 +9,7 @@ import Settings from './components/containers/Settings';
 import Help from './components/containers/Help';
 
 import TaskList from './components/containers/TaskList';
+import CompletedList from './components/containers/CompletedList';
 import SchedulingList from './components/containers/Scheduling';
 import ChangeList from './components/containers/MakeChanges';
 import Success from './components/containers/Success';
@@ -30,6 +31,7 @@ const App = () => {
       <Navbar />
       <Switch>
         <Route path="/tasklist" component={TaskList} />
+        <Route path="/completed" component={CompletedList} />
         <Route path="/scheduling/:ids" component={SchedulingList} />
         <Route path="/changelist/:ids" component={ChangeList} />
         <Route component={TaskList} />
@@ -43,9 +45,10 @@ const App = () => {
         <Switch>
           <Route path="/settings" component={Settings} />
           <Route path="/help" component={Help} />
-          <Route path="/walkthrough" component={Walkthrough}/>
+          <Route path="/walkthrough" component={Walkthrough} />
 
           <Route path="/tasklist" component={DefaultContainer} />
+          <Route path="/completed" component={DefaultContainer} />
           <Route path="/scheduling" component={DefaultContainer} />
           <Route path="/changelist" component={DefaultContainer} />
 
