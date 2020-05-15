@@ -131,6 +131,283 @@ export const Selection = ({ selected, onSelect, options }) => {
   );
 };
 
+const SelectionWrapperS = styled.div`
+  ${Shared}
+
+  width: 90%;
+  max-height: 250px;
+  overflow-y: auto;
+  margin: 15px auto;
+  padding: 0;
+  color: #666;
+
+  .selected {
+    background-color: rgba(255, 255, 255, 1.0);
+  }
+
+  background-color: rgba(240, 240, 240, 1.0);
+  border: none;
+  border-radius: 7px;
+  transition: opacity 0.25s;
+
+  p {
+    margin: 0;
+    padding: 10px 15px;
+    border-top: 1px solid #909090;
+  }
+
+  p:hover {
+    background-color: rgba(248, 248, 248, 1.0);
+    cursor: pointer;
+  }
+
+  p:first-of-type {
+    border-radius: 7px 7px 0 0;
+    border-top: none;
+  }
+
+  p:last-of-type {
+    border-radius: 0 0 7px 7px;
+  }
+`;
+
+export const SelectionS = ({ selected, onSelect, options }) => {
+  return (
+    <SelectionWrapperS>
+      {options.map((option) => (
+        <p
+          className={selected.includes(option) ? 'selected' : ''}
+          key={option}
+          onClick={() => {
+            onSelect(option);
+          }}
+        >
+          {option}
+        </p>
+      ))}
+    </SelectionWrapperS>
+  );
+};
+
+const DropdownWrapperS = styled.div`
+  ${Shared}
+
+  position: relative;
+  width: ${(props) => (props.mini ? '100%' : '90%')};
+  margin: 15px auto;
+  margin: ${(props) => (props.mini ? '15px 0' : '15px auto')};
+
+  font-size: ${(props) => (props.mini ? '12px' : '14px')};
+  padding: 0;
+  color: #666;
+  background-color: rgba(255, 255, 255, 1.0);
+  border-radius: ${(props) => (props.closed ? '7px' : '7px 7px 0 0')};
+
+  & .content {
+    position: absolute;
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    width: 100%;
+    max-height: ${(props) =>
+      !props.myDisabled && !props.closed ? '300px' : '0'};
+    overflow: auto;
+    margin-top: 2px;
+
+    background-color: rgba(240, 240, 240, 1.0);
+    border: none;
+    border-radius: 0 0 7px 7px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+    transition: opacity 0.25s;
+  }
+
+  & .content-outside {
+    position: absolute;
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    // width: 76%;
+    width: 100%;
+    max-height: ${(props) =>
+      !props.myDisabled && !props.closed ? '300px' : '0'};
+    overflow: auto;
+    margin-top: 2px;
+    margin-left: -8px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 0 0 7px 7px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+    transition: opacity 0.25s;
+  }
+
+  & .content-outside {
+    position: absolute;
+    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
+    // width: 76%;
+    width: 100%;
+    max-height: ${(props) =>
+      !props.myDisabled && !props.closed ? '300px' : '0'};
+    overflow: auto;
+    margin-top: 2px;
+    margin-left: -8px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 0 0 7px 7px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+    transition: opacity 0.25s;
+  }
+
+  .content::webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+
+  &:hover {
+    cursor: ${(props) => (props.myDisabled ? 'default' : 'pointer')};
+  }
+
+  & .content p {
+    margin: 0;
+    padding: ${(props) => (props.mini ? '5px 10px' : '10px 15px')};
+    border-top: 1px solid #909090;
+  }
+
+  & .content-outside p {
+    margin: 0;
+    padding: 10px 15px;
+    border-top: 1px solid #909090;
+  }
+
+  & .content-outside p {
+    margin: 0;
+    padding: 10px 15px;
+    border-top: 1px solid #909090;
+  }
+
+  // & .content p:first-of-type {
+  //   border-radius: 10px 10px 0 0;
+  // }
+
+  & .content p:last-of-type {
+    border-radius: 0 0 7px 7px;
+  }
+
+  & .content p:hover {
+    background-color: #f8f8f8;
+    cursor: pointer;
+  }
+
+  .selected {
+    background-color: #fff;
+  }
+
+  .disabled {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  & p.disabled:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: default;
+  }
+`;
+
+export const DropdownS = ({ selected, onSelect, options, disabled, onClose, mini, interior=true }) => {
+  /* parent element controls disabled property,
+     selecting an option changes the closed property */
+  const [closed, setClosed] = useState(true);
+  const node = useRef();
+  const selectedRef = useRef();
+
+  const scrollRef = (ref, offset) => {
+    const elem = ref.current;
+    if (elem) {
+      const parent = elem.parentNode;
+      parent.scrollTop = elem.offsetTop - parent.offsetTop - offset;
+    }
+  };
+
+  useEffect(() => {
+    scrollRef(selectedRef, 80);
+  }, [selected]);
+
+  const handleClick = (e) => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    setClosed(true);
+    onClose(true);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  return (
+    <DropdownWrapperS
+      myDisabled={disabled}
+      closed={closed}
+      ref={node}
+      mini={mini}
+    >
+      <Row
+        onClick={() => {
+          if (!disabled) {
+            setClosed(!closed);
+            onClose(!closed);
+          }
+        }}
+        style={{
+          padding: mini ? '5px 10px' : '10px 15px'
+        }}
+      >
+        {disabled ? (
+          <div
+            style={{
+              padding: '2px 12px',
+              height: '30px',
+              backgroundColor: '#f2bd3f'
+            }}
+          >
+            {selected}
+          </div>
+        ) : (
+          <div style={{ borderRadius: '0px' }}>{selected}</div>
+        )}
+        {disabled || mini ? (
+          ''
+        ) : (
+          <StaticIcon src={closed ? '/arrow-down.svg' : '/arrow-up.svg'} />
+        )}
+      </Row>
+      <div className={interior ? "content" : "content-outside"}>
+        {options.map((option) => (
+          <p
+            ref={
+              selected === option || (option.text && selected === option.text)
+                ? selectedRef
+                : null
+            }
+            className={
+              selected === option || (option.text && selected === option.text)
+                ? 'selected'
+                : option.disabled
+                ? 'disabled'
+                : ''
+            }
+            key={option.key ? option.key : option}
+            onClick={() => {
+              if (!option.disabled) {
+                onSelect(option);
+                setClosed(true);
+                onClose(true);
+              }
+            }}
+          >
+            {option.text ? option.text : option}
+          </p>
+        ))}
+      </div>
+    </DropdownWrapperS>
+  );
+};
+
 const DropdownWrapper = styled.div`
   ${Shared}
 
@@ -255,7 +532,6 @@ const Dropdown = ({ selected, onSelect, options, disabled, onClose, mini, interi
   /* parent element controls disabled property,
      selecting an option changes the closed property */
   const [closed, setClosed] = useState(true);
-
   const node = useRef();
   const selectedRef = useRef();
 
