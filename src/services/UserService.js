@@ -3,11 +3,27 @@ import axios from 'axios';
 
 import AuthService from './AuthService'
 
+// Time format is "08:30 am" or "10:00 pm"
 async function setHours(start_time, end_time, setHoursHandler) {
+
+  startHr = start_time.substring(0,2)
+  endHr = end_time.substring(0,2)
+
+  if (start_time.substring(6,8) == "pm") {
+    startHr += 12
+  }
+
+  if (end_time.substring(6,8) == "pm") {
+    endHr += 12
+  }
+
+  startString = (startHr < 10 ? "0" : "") + ":" + start_time.substring(3,5)
+  endString = (endHr < 10 ? "0" : "") + ":" + end_time.substring(3,5)
+  
   let setHoursCallback = async function(token){
     let body = {
-      start: start_time,
-      end: end_time
+      start: startString,
+      end: endString
     }
     let url = 'http://localhost:31337/api/users/hours'
 
