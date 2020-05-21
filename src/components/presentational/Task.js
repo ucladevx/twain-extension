@@ -88,7 +88,6 @@ const Task = ({
   /* default to a collapsed, uneditable task */
   const [expanded, setExpanded] = useState(creating);
   const [editing, setEditing] = useState(creating);
-  const [edited, setEdited] = useState(creating);
 
   const [name, setName] = useState(task.name);
   const [description, setDescription] = useState(task.description);
@@ -154,7 +153,6 @@ const Task = ({
             units="hr"
             val={time.hours}
             setVal={setHours}
-            setEdited={setEdited}
             min={0}
             max={23}
             hidden={!editing}
@@ -163,7 +161,6 @@ const Task = ({
             units="min"
             val={time.minutes}
             setVal={setMinutes}
-            setEdited={setEdited}
             min={0}
             max={59}
             hidden={!editing}
@@ -176,10 +173,7 @@ const Task = ({
       <DateTimePicker
         placeholder="Due Date"
         value={new Date(due).toISOString()}
-        onChange={(e) => {
-          setDue(e.target.value);
-          setEdited(true);
-        }}
+        onChange={(e) => setDue(e.target.value)}
         disabled={!editing}
       />
       {!description.length && !editing ? (
@@ -190,10 +184,7 @@ const Task = ({
           <TextArea
             placeholder="Add Description."
             value={description}
-            onChange={(e) => {
-              setDescription(e.target.value);
-              setEdited(true);
-            }}
+            onChange={(e) => setDescription(e.target.value)}
             myDisabled={!editing}
             disabled={!editing}
           />
@@ -212,7 +203,7 @@ const Task = ({
             tabIndex="-1"
             onClick={(e) => {
               creating ? createTask(makeTaskObj()) : setEditing(!editing);
-              if (edited) editTask(id, makeEditedTaskObj());
+              if (Object.keys(makeEditedTaskObj()).length !== 0) editTask(id, makeEditedTaskObj());
               e.stopPropagation();
             }}
           >
@@ -297,10 +288,7 @@ const Task = ({
           <Mini
             placeholder="Title"
             value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              setEdited(true);
-            }}
+            onChange={(e) => setName(e.target.value)}
             myDisabled={!editing}
             disabled={!editing}
             pointer={!editing && !expanded && !failed && !scheduled}

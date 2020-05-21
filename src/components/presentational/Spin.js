@@ -21,7 +21,7 @@ const Spinner = styled.div`
   }
 `;
 
-const SpinButton = ({ units, val, setVal, min, max, hidden, setEdited }) => {
+const SpinButton = ({ units, val, setVal, min, max, hidden }) => {
   const constrain = (k) => {
     if (isNaN(k)) return 0;
     else return k < min ? min : k > max ? max : k;
@@ -39,27 +39,18 @@ const SpinButton = ({ units, val, setVal, min, max, hidden, setEdited }) => {
         <img
           src="/arrow-up.svg"
           alt="Arrow-up"
-          onClick={() => { 
-            setVal(constrain(val + 1));
-            setEdited(true);
-          }}
+          onClick={() => setVal(constrain(val + 1))}
         />
         <img
           src="/arrow-down.svg"
           alt="Arrow-down"
-          onClick={() => { 
-            setVal(constrain(val - 1));
-            setEdited(true);
-          }}
+          onClick={() => setVal(constrain(val - 1))}
         />
       </Spinner>
       <NumpadInput
         type="number"
         value={format(val)}
-        onChange={(e) => { 
-          setVal(constrain(parseInt(e.target.value)));
-          setEdited(true);
-        }}
+        onChange={(e) => setVal(constrain(parseInt(e.target.value)))}
         onFocus={(e) => e.target.select()}
         disabled={hidden}
       />
