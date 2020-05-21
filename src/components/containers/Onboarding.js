@@ -21,8 +21,6 @@ const Intro = ({ handleContinue }) => {
       if (!user) {
         StorageService.setLoggedIn(true);
         history.push('/tasklist');
-      } else {
-        console.log('Signed-in user:', user);
       }
     });
   };
