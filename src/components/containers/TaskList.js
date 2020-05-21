@@ -215,6 +215,7 @@ const TaskList = () => {
       <TaskSection
         title="Not yet scheduled"
         emptyPrompt="No created tasks"
+        emptyOpen={true}
         actionButton={scheduleButton}
         onToggle={(closed) => {
           if (closed) {

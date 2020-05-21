@@ -53,6 +53,31 @@ const getAllTasks = (taskHandler) => {
   AuthService.runWithAuthToken(getAllTasksCallback);
 };
 
+const getAllCompleted = (taskHandler) => {
+  let getAllTasksCallback = async function(token) {
+    let url = 'http://localhost:31337/api/tasks/completedTasks';
+
+    let res = await axios
+      .get(url, {
+        headers: {
+          'Access-Control-Allow-Origin': 'chrome-extension://',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        withCredentials: true
+      })
+      .then((res) => res.data)
+      .catch((err) => {
+        console.log(err.response);
+        return err;
+      });
+
+    taskHandler(res);
+  };
+
+  AuthService.runWithAuthToken(getAllTasksCallback);
+};
+
 const postTask = async (
   name,
   description,
@@ -160,6 +185,7 @@ const confirmTasks = async (ids, forceTasks, timezone, taskConfirmHandler) => {
 export default {
   getTask,
   getAllTasks,
+  getAllCompleted,
   postTask,
   taskComplete,
   scheduleTasks,
