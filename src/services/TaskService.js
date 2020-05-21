@@ -157,11 +157,34 @@ const confirmTasks = async (ids, forceTasks, timezone, taskConfirmHandler) => {
   AuthService.runWithAuthToken(taskConfirmCallback);
 };
 
+const editTask = async (id, editedTask, editTaskHandler) => {
+  let editTaskCallback = async function(token) {
+    let url = 'http://localhost:31337/api/tasks/' + id.toString();
+    let res = await axios
+      .patch(url, editedTask, {
+        headers: {
+          'Access-Control-Allow-Origin': 'chrome-extension://',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        withCredentials: true 
+      })
+      .then((res) => res.data)
+      .catch((err) => {
+        console.log(err.response);
+        return err;
+      });
+    editTaskHandler(res);
+  };
+  AuthService.runWithAuthToken(editTaskCallback);
+};
+
 export default {
   getTask,
   getAllTasks,
   postTask,
   taskComplete,
   scheduleTasks,
-  confirmTasks
+  confirmTasks,
+  editTask
 };

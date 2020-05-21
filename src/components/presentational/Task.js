@@ -61,6 +61,7 @@ const Task = ({
   completeTask,
   deleteTask,
   createTask,
+  editTask,
   toggleSelect,
   selected,
   updateTask = () => {},
@@ -87,13 +88,14 @@ const Task = ({
   /* default to a collapsed, uneditable task */
   const [expanded, setExpanded] = useState(creating);
   const [editing, setEditing] = useState(creating);
+  const [edited, setEdited] = useState(creating);
 
   const [name, setName] = useState(task.name);
+  const [description, setDescription] = useState(task.description);
   const [time, setTime] = useState(initDuration(task.duration));
   const [due, setDue] = useState(task.due_date);
   const [sched, setSched] = useState(task.scheduled_time);
-  const [description, setDescription] = useState(task.description);
-
+  
   const setHours = (val) => setTime({ hours: val, minutes: time.minutes });
   const setMinutes = (val) => setTime({ hours: time.hours, minutes: val });
 
@@ -103,6 +105,17 @@ const Task = ({
       description,
       duration: parseInt(time.hours) * 60 + parseInt(time.minutes),
       due_date: new Date(due).toISOString()
+    };
+    return obj;
+  };
+
+  const makeEditedTaskObj = () => {
+    const newDuration = parseInt(time.hours) * 60 + parseInt(time.minutes);
+    const obj = {
+      ...(task.name !== name && {name}),
+      ...(task.description !== description && {description}),
+      ...(task.duration !== newDuration && {duration: newDuration}),
+      ...(task.due_date !== due && {due_date: new Date(due).toISOString()})
     };
     return obj;
   };
@@ -141,6 +154,7 @@ const Task = ({
             units="hr"
             val={time.hours}
             setVal={setHours}
+            setEdited={setEdited}
             min={0}
             max={23}
             hidden={!editing}
@@ -149,6 +163,7 @@ const Task = ({
             units="min"
             val={time.minutes}
             setVal={setMinutes}
+            setEdited={setEdited}
             min={0}
             max={59}
             hidden={!editing}
@@ -163,6 +178,7 @@ const Task = ({
         value={new Date(due).toISOString()}
         onChange={(e) => {
           setDue(e.target.value);
+          setEdited(true);
         }}
         disabled={!editing}
       />
@@ -174,7 +190,10 @@ const Task = ({
           <TextArea
             placeholder="Add Description."
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              setDescription(e.target.value);
+              setEdited(true);
+            }}
             myDisabled={!editing}
             disabled={!editing}
           />
@@ -193,6 +212,7 @@ const Task = ({
             tabIndex="-1"
             onClick={(e) => {
               creating ? createTask(makeTaskObj()) : setEditing(!editing);
+              if (edited) editTask(id, makeEditedTaskObj());
               e.stopPropagation();
             }}
           >
@@ -277,7 +297,10 @@ const Task = ({
           <Mini
             placeholder="Title"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              setEdited(true);
+            }}
             myDisabled={!editing}
             disabled={!editing}
             pointer={!editing && !expanded && !failed && !scheduled}
