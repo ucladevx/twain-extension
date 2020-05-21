@@ -196,7 +196,7 @@ const Settings = () => {
           <br></br>
           <div style={{ display: 'flex' }}>
           <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>From</p>
-          <div style={{ width: '33%' }}>
+          <div style={{ width: '33%', zIndex: '1'}}>
               <DropdownS
                 mini
                 options={hours}
@@ -209,7 +209,7 @@ const Settings = () => {
               />
             </div>
             <p style={{ verticalAlign: 'middle', padding: '0px 10px'}}>to</p>
-            <div style={{ width: '33%' }}>
+            <div style={{ width: '33%', zIndex: '1' }}>
               <DropdownS
                 mini
                 options={hours}
