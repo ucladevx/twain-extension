@@ -55,7 +55,7 @@ const Help = () => {
     <div>
       <Nav>
         <StyledLink to="/tasklist">
-          <img style={{ width: '20px', padding: '2px' }} src="arrow-left.svg" />
+          <img style={{ width: '20px', padding: '2px'}} src="white-arrow-left.svg"/>
         </StyledLink>
         <HelpHeader>Help</HelpHeader>
       </Nav>
