@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import Button, { FullButton, SkipButton} from '../presentational/styled/Button';
+import Button, {
+  FullButton,
+  SkipButton
+} from '../presentational/styled/Button';
 import Dropdown, { Selection } from '../presentational/Dropdown';
 import { Row } from '../presentational/styled/Layout';
 import { Background, Centered } from '../presentational/styled/Layout';
@@ -11,9 +14,14 @@ import UserService from '../../services/UserService';
 import StorageService from '../../services/StorageService';
 
 const Intro = ({ handleContinue }) => {
+  const history = useHistory();
+
   const getUser = async () => {
     AuthService.signIn(function(user) {
-      console.log('Signed-in user:', user);
+      if (!user) {
+        StorageService.setLoggedIn(true);
+        history.push('/tasklist');
+      }
     });
   };
 
@@ -87,7 +95,6 @@ const OptionDropdown = ({ handleContinue }) => {
 
   useEffect(() => {
     UserService.getUserCalendars(function(res) {
-
       let summaries = [];
       let summaryToId = {};
 
@@ -171,7 +178,6 @@ const OptionSelection = ({ handleContinue }) => {
 
   useEffect(() => {
     UserService.getUserCalendars(function(res) {
-
       let summaries = [];
       let summaryToId = {};
 
@@ -204,7 +210,9 @@ const OptionSelection = ({ handleContinue }) => {
           marginBottom: '-20%'
         }}
       />
-      <h2 style={{ width: '90%', margin: '15px auto' }}>Other Relevant Calendars</h2>
+      <h2 style={{ width: '90%', margin: '15px auto' }}>
+        Other Relevant Calendars
+      </h2>
       <p
         style={{
           color: 'rgba(255,255,255,0.7)',
@@ -212,7 +220,8 @@ const OptionSelection = ({ handleContinue }) => {
           margin: '15px auto'
         }}
       >
-        Which other calendars do you want Twain to take into account when scheduling?
+        Which other calendars do you want Twain to take into account when
+        scheduling?
       </p>
       <Selection
         options={calendarOptions}
@@ -263,7 +272,7 @@ const Times = ({ handleContinue }) => {
 
   const updateBackendAndContinue = () => {
     UserService.setHours(start.text, end.text, handleContinue);
-  }
+  };
 
   return (
     <div>
@@ -329,82 +338,84 @@ const Times = ({ handleContinue }) => {
 };
 
 const WeekendSetting = ({ handleContinue }) => {
-  const display = ["Yes", "No"];
+  const display = ['Yes', 'No'];
   const [selected, setSelected] = useState(null);
   const [closed, setClosed] = useState(true);
 
   const updateBackendAndContinue = () => {
-    UserService.setWeekendOption(selected === "Yes", handleContinue)
+    UserService.setWeekendOption(selected === 'Yes', handleContinue);
   };
 
   return (
     <div>
-    <img
-      src="weekend.png"
-      style={{
-        width: '300px',
-        marginLeft: 'calc(-1 * (10%))',
-        marginTop: '-65%',
-        marginBottom: '-20%'
-      }}
-    />
-    <h2 style={{ width: '90%', margin: '15px auto' }}>
-      Weekend Settings
-    </h2>
-    <p
-      style={{
-        color: 'rgba(255,255,255,0.7)',
-        width: '90%',
-        margin: '15px auto'
-      }}
-    >
-      Do you want to have twain schedule your tasks over the weekend?
-    </p>
-    <Dropdown
-      options={display}
-      selected={selected ? selected : "Yes"}
-      onSelect={(option) => setSelected(option)}
-      onClose={(bool) => setClosed(bool)}
-    />
-
-    <Row
-      flexEnd
-      style={{
-        width: 'calc(90% + 20px)',
-        margin: '-10px auto'
-      }}
-    >
-      <Button
-        secondary
-        onClick={updateBackendAndContinue}
-        style={{ padding: '10px 30px' }}
-        image="arrow-forward.svg"
+      <img
+        src="weekend.png"
+        style={{
+          width: '300px',
+          marginLeft: 'calc(-1 * (10%))',
+          marginTop: '-65%',
+          marginBottom: '-20%'
+        }}
       />
-    </Row>
+      <h2 style={{ width: '90%', margin: '15px auto' }}>Weekend Settings</h2>
+      <p
+        style={{
+          color: 'rgba(255,255,255,0.7)',
+          width: '90%',
+          margin: '15px auto'
+        }}
+      >
+        Do you want to have twain schedule your tasks over the weekend?
+      </p>
+      <Dropdown
+        options={display}
+        selected={selected ? selected : 'Yes'}
+        onSelect={(option) => setSelected(option)}
+        onClose={(bool) => setClosed(bool)}
+      />
 
+      <Row
+        flexEnd
+        style={{
+          width: 'calc(90% + 20px)',
+          margin: '-10px auto'
+        }}
+      >
+        <Button
+          secondary
+          onClick={updateBackendAndContinue}
+          style={{ padding: '10px 30px' }}
+          image="arrow-forward.svg"
+        />
+      </Row>
     </div>
   );
 };
 
-const WalkThroughPrompt = ({handleContinue}) => {
-  const [skip,setSkip] = useState(false);
+const WalkThroughPrompt = ({ handleContinue }) => {
+  const [skip, setSkip] = useState(false);
   const history = useHistory();
 
-  return(
+  return (
     <div>
       <h1 style={{ marginTop: '20vh' }}>Welcome to twain!</h1>
       <p
-      style={{
-        color: 'rgba(255,255,255,0.7)',
-        width: '90%',
-        margin: '15px auto'
-      }}>Let us show you how you can view, create, and schedule tasks.
+        style={{
+          color: 'rgba(255,255,255,0.7)',
+          width: '90%',
+          margin: '15px auto'
+        }}
+      >
+        Let us show you how you can view, create, and schedule tasks.
       </p>
-      <FullButton onClick = {()=> history.push('/walkthrough')}
-                  secondary
-                  style = {{color: '#5187ed'}}
-                  >Start WalkThrough</FullButton>
-      <SkipButton onClick = {handleContinue}>Skip</SkipButton>
+      <FullButton
+        onClick={() => history.push('/walkthrough')}
+        secondary
+        style={{ color: '#5187ed' }}
+      >
+        Start WalkThrough
+      </FullButton>
+      <SkipButton onClick={handleContinue}>Skip</SkipButton>
     </div>
   );
 };
@@ -415,8 +426,8 @@ const Content = [
   { component: OptionDropdown, customButton: true },
   { component: OptionSelection, customButton: true },
   { component: Times, customButton: true },
-  { component: WeekendSetting, customButton: true},
-  { component: WalkThroughPrompt, customButton: true}
+  { component: WeekendSetting, customButton: true },
+  { component: WalkThroughPrompt, customButton: true }
 ];
 
 const Onboarding = () => {

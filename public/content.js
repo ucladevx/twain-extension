@@ -1,12 +1,22 @@
 const handleRequest = (req, sender, sendRes) => {
   if (req.callFunction === 'toggleSidebar') {
     toggleSidebar();
+  } else if (req.callFunction === 'enableSidebar') {
+    enableSidebar();
   }
 };
 
 chrome.runtime.onMessage.addListener(handleRequest);
 
 let sidebarOpen = false;
+
+const enableSidebar = () => {
+  if (sidebarOpen) {
+    return;
+  } else {
+    toggleSidebar();
+  }
+};
 
 const toggleSidebar = () => {
   if (sidebarOpen) {

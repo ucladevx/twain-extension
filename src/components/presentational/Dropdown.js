@@ -25,7 +25,8 @@ export const TaskSection = ({
   children,
   customHeight,
   onToggle = () => {},
-  actionButton = ''
+  actionButton = '',
+  emptyOpen = false
 }) => {
   const [closed, setClosed] = useState(true);
   const [scroll, setScroll] = useState(false);
@@ -41,7 +42,11 @@ export const TaskSection = ({
   }, [closed]);
 
   useEffect(() => {
-    setClosed(!children.length);
+    if (!emptyOpen) {
+      setClosed(!children.length);
+    } else {
+      setClosed(false);
+    }
   }, [children.length]);
 
   const content = children.length ? (
@@ -142,10 +147,10 @@ const SelectionWrapperS = styled.div`
   color: #666;
 
   .selected {
-    background-color: rgba(255, 255, 255, 1.0);
+    background-color: rgba(255, 255, 255, 1);
   }
 
-  background-color: rgba(240, 240, 240, 1.0);
+  background-color: rgba(240, 240, 240, 1);
   border: none;
   border-radius: 7px;
   transition: opacity 0.25s;
@@ -157,7 +162,7 @@ const SelectionWrapperS = styled.div`
   }
 
   p:hover {
-    background-color: rgba(248, 248, 248, 1.0);
+    background-color: rgba(248, 248, 248, 1);
     cursor: pointer;
   }
 
@@ -200,7 +205,7 @@ const DropdownWrapperS = styled.div`
   font-size: ${(props) => (props.mini ? '12px' : '14px')};
   padding: 0;
   color: #666;
-  background-color: rgba(255, 255, 255, 1.0);
+  background-color: rgba(255, 255, 255, 1);
   border-radius: ${(props) => (props.closed ? '7px' : '7px 7px 0 0')};
 
   & .content {
@@ -212,7 +217,7 @@ const DropdownWrapperS = styled.div`
     overflow: auto;
     margin-top: 2px;
 
-    background-color: rgba(240, 240, 240, 1.0);
+    background-color: rgba(240, 240, 240, 1);
     border: none;
     border-radius: 0 0 7px 7px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
@@ -307,7 +312,15 @@ const DropdownWrapperS = styled.div`
   }
 `;
 
-export const DropdownS = ({ selected, onSelect, options, disabled, onClose, mini, interior=true }) => {
+export const DropdownS = ({
+  selected,
+  onSelect,
+  options,
+  disabled,
+  onClose,
+  mini,
+  interior = true
+}) => {
   /* parent element controls disabled property,
      selecting an option changes the closed property */
   const [closed, setClosed] = useState(true);
@@ -376,7 +389,7 @@ export const DropdownS = ({ selected, onSelect, options, disabled, onClose, mini
           <StaticIcon src={closed ? '/arrow-down.svg' : '/arrow-up.svg'} />
         )}
       </Row>
-      <div className={interior ? "content" : "content-outside"}>
+      <div className={interior ? 'content' : 'content-outside'}>
         {options.map((option) => (
           <p
             ref={
