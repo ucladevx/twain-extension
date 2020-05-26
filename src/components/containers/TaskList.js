@@ -116,6 +116,15 @@ const TaskList = () => {
 
   const deleteTask = (id) => setTasks(tasks.filter((task) => task.id !== id));
 
+  const editTask = (id, editedTask) => {
+    TaskService.editTask(id, editedTask, (res) => {
+      const task = res.task;
+      const index = tasks.findIndex(x => x.id === id);
+      tasks[index] = task;
+      setTasks(tasks);
+    });
+  };
+
   const completeTask = (id) =>
     TaskService.taskComplete([id], (completedTasks) =>
       completedTasks.data.forEach((completedTask) => {
@@ -231,6 +240,7 @@ const TaskList = () => {
             key={task.id}
             task={task}
             deleteTask={deleteTask}
+            editTask={editTask}
             toggleSelect={selectTask}
             selected={selected.indexOf(task.id) !== -1}
           />
