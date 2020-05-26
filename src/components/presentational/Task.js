@@ -202,8 +202,14 @@ const Task = ({
           <TextButton
             tabIndex="-1"
             onClick={(e) => {
-              creating ? createTask(makeTaskObj()) : setEditing(!editing);
-              if (Object.keys(makeEditedTaskObj()).length !== 0) editTask(id, makeEditedTaskObj());
+              if (creating) {
+                createTask(makeTaskObj());
+              } else {
+                setEditing(!editing);
+                let editedTask = makeEditedTaskObj();
+                if (Object.keys(editedTask).length !== 0) 
+                  editTask(id, editedTask);
+              }
               e.stopPropagation();
             }}
           >
