@@ -329,7 +329,7 @@ const Settings = () => {
       <OptionWrapper hide={hidden4} onClose={() => {}} interior={false}>
         <div style={{display:'flex' }}>
         <img style={{width:'20px', padding: '5px'}} src="calendar.svg"/>
-        Schedule on Weekends?
+        Schedule on Weekends
         <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
           setHidden4(!hidden4)}
         }
