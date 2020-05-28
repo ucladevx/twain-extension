@@ -101,6 +101,7 @@ const Settings = () => {
     return `${hour < 10 ? '0' + hour : hour}:${minute} ${ampm}`;
   });
   const [hidden1, setHidden1] = useState(true);
+  const display = ['Yes', 'No'];
   const [changes, setChanges] = useState(false);
   const [start, setStart] = useState('08:00 am');
   const [end, setEnd] = useState('06:00 pm');
@@ -113,6 +114,9 @@ const Settings = () => {
   const [selectedMult, setSelectedMult] = useState([]);
   const [userCalendarsMult, setCalendarsMult] = useState({});
   const [optionsMult, setOptionsMult] = useState([]);
+  const [hidden4, setHidden4] = useState(true);
+  const [selectedW, setSelectedW] = useState(true);
+  const [closedW, setClosedW] = useState(true);
 
   const updateBackend = () => {
     let selectedIDs = selectedMult.map((summary) => { return userCalendarsMult[summary] });
@@ -120,6 +124,7 @@ const Settings = () => {
     UserService.setRelevantCalendars(commaSeparated, function(res){});
     UserService.setPrimaryCalendar(userCalendars[selected], function(res){});
     UserService.setHours(start, end, function(res){});
+    UserService.setWeekendOption(selectedW === 'Yes', function(res){});
   }
   useEffect(() => {
     UserService.getUserCalendars(function(res){
@@ -149,22 +154,23 @@ const Settings = () => {
         let sel = res.relevant_calendars.split(',')
         let selInit = sel.map((id) =>idToSummary[id])
         setSelectedMult(selInit);
-
+        setSelectedW(res.weekend_setting ? "Yes" : "No")
         // Re-construct time strings
         let startHr = parseInt(res.hours_start.substring(0,2))
-
         let endHr = parseInt(res.hours_end.substring(0,2))
+        let startHr12 = startHr;
+        let endHr12 = endHr;
 
         if (startHr > 12) {
-          startHr -= 12
+          startHr12 -= 12
         }
 
         if (endHr > 12) {
-          endHr -= 12
+          endHr12 -= 12
         }
 
-        let startString = (startHr < 10 ? "0" : "") + startHr.toString() + ":" + res.hours_start.substring(3,5) + (startHr > 11 ? " pm" : " am")
-        let endString = (endHr < 10 ? "0" : "") + endHr.toString() + ":" + res.hours_end.substring(3,5) + (endHr > 11 ? " pm" : " am")
+        let startString = (startHr12 < 10 ? "0" : "") + startHr12.toString() + ":" + res.hours_start.substring(3,5) + (startHr > 11 ? " pm" : " am")
+        let endString = (endHr12 < 10 ? "0" : "") + endHr12.toString() + ":" + res.hours_end.substring(3,5) + (endHr > 11 ? " pm" : " am")
 
         setStart(startString)
         setEnd(endString)
@@ -203,7 +209,7 @@ const Settings = () => {
                 selected={start}
                 onSelect={(opt) => {
                   setStart(opt)
-                  document.getElementById("saveCur").disabled = false;
+                  setChanges(true)
                 }}
                 onClose={() => {}}
               />
@@ -271,6 +277,30 @@ const Settings = () => {
               }
               setChanges(true)
             }}
+          />
+          <br></br>
+        </div>
+      </OptionWrapper>
+      <br></br>
+      <OptionWrapper hide={hidden4} onClose={() => {}} interior={false}>
+        <div style={{display:'flex' }}>
+        <img style={{width:'20px', padding: '5px'}} src="calendar.svg"/>
+        Schedule on Weekends?
+        <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
+          setHidden4(!hidden4)}
+        }
+        />
+        </div>
+        <div className="outside-content">
+          <br></br>
+          <DropdownS
+            options={display}
+            selected={selectedW ? selectedW : 'Yes'}
+            onSelect={(option) => {
+                setSelectedW(option);
+                setChanges(true);
+            }}
+            onClose={(bool) => setClosedW(bool)}
           />
           <br></br>
         </div>
