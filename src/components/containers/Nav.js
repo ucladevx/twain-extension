@@ -134,7 +134,7 @@ const Navbar = () => {
             />
           </StyledLink>
 
-          <StyledLink to="/walkthrough">
+          <StyledLink to="/help">
             <img style={{ width: '20px', padding: '10px' }} src="/help.svg" />
             <p>Help</p>
             <img

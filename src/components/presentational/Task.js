@@ -61,6 +61,7 @@ const Task = ({
   completeTask,
   deleteTask,
   createTask,
+  editTask,
   toggleSelect,
   selected,
   updateTask = () => {},
@@ -89,11 +90,11 @@ const Task = ({
   const [editing, setEditing] = useState(creating);
 
   const [name, setName] = useState(task.name);
+  const [description, setDescription] = useState(task.description);
   const [time, setTime] = useState(initDuration(task.duration));
   const [due, setDue] = useState(task.due_date);
   const [sched, setSched] = useState(task.scheduled_time);
-  const [description, setDescription] = useState(task.description);
-
+  
   const setHours = (val) => setTime({ hours: val, minutes: time.minutes });
   const setMinutes = (val) => setTime({ hours: time.hours, minutes: val });
 
@@ -103,6 +104,17 @@ const Task = ({
       description,
       duration: parseInt(time.hours) * 60 + parseInt(time.minutes),
       due_date: new Date(due).toISOString()
+    };
+    return obj;
+  };
+
+  const makeEditedTaskObj = () => {
+    const newDuration = parseInt(time.hours) * 60 + parseInt(time.minutes);
+    const obj = {
+      ...(task.name !== name && {name}),
+      ...(task.description !== description && {description}),
+      ...(task.duration !== newDuration && {duration: newDuration}),
+      ...(task.due_date !== due && {due_date: new Date(due).toISOString()})
     };
     return obj;
   };
@@ -161,10 +173,7 @@ const Task = ({
       <DateTimePicker
         placeholder="Due Date"
         value={new Date(due).toISOString()}
-        onChange={(e) => {
-          console.log(e.target.value, e.target.value.toISOString());
-          setDue(e.target.value);
-        }}
+        onChange={(e) => setDue(e.target.value)}
         disabled={!editing}
       />
       {!description.length && !editing ? (
@@ -193,7 +202,14 @@ const Task = ({
           <TextButton
             tabIndex="-1"
             onClick={(e) => {
-              creating ? createTask(makeTaskObj()) : setEditing(!editing);
+              if (creating) {
+                createTask(makeTaskObj());
+              } else {
+                setEditing(!editing);
+                let editedTask = makeEditedTaskObj();
+                if (Object.keys(editedTask).length !== 0) 
+                  editTask(id, editedTask);
+              }
               e.stopPropagation();
             }}
           >

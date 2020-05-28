@@ -1,78 +1,72 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Row } from '../presentational/styled/Layout';
 import Icon from '../presentational/styled/Icon';
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: ${(props) =>
-    props.spaceBetween ? 'space-between' : 'flex-start'};
-`;
+import { TaskSection } from '../presentational/Dropdown';
+import { FullButton } from '../presentational/styled/Button';
+import { Shared } from '../presentational/styled/Input';
 
 const Nav = styled.nav`
-  height: 63px;
+  background-image: url('navbar.png');
+  background-repeat: no-repeat;
+
+  height: 67px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: -6px;
-  margin-bottom: 20px;
+
+  margin: -10px -8px 12px -8px;
   border-bottom: 1px solid #ddd;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
 `;
-
-const Header = styled.h1`
-  margin-left: 15px;
+const Header = styled.p`
+  display:flex;
+  justify-content: flex-start;
+  margin-left: 0px;
+  margin-bottom: 5px;
+  font-size: 16px;
+`
+const HelpHeader = styled.p`
+  font-size: 18px;
+  color: #fff;
+  margin-left: 5%;
+  justify-content: flex-start;
   margin-right: auto;
-`;
-
-const HelpHeader = styled.h2`
-  margin-left: 15px;
-  margin-right: auto;
-  font: 'Roboto';
-  font-size: 17px;
 `;
 
 const StyledLink = styled(Link)`
-  display: flex; //left to right
-  align-items: center;
-  justify-content: flex-start;
   text-decoration: none;
+  text-align: center;
   font-size: 14px;
   font: 'Roboto';
-  color: #000;
+  color: #6b6b6b;
+`;
 
-  & p {
-    margin: 10px;
-    margin-right: auto; //text and right arrow icon
+const FeedbackButton = styled(FullButton)`
+  &:hover{
+    cursor:pointer;
   }
 `;
 
-const Dropdown = styled.div`
-  & .content {
-    position: absolute;
-    visibility: ${(props) => (props.closed ? 'hidden' : 'visible')};
-    opacity: ${(props) => (props.closed ? 0 : 1)}
-    margin-left: -34%;
-    margin-top: 9px;
-    background-color: #fff;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-    color: #000;
-    transition: opacity 1s ease;
-  }
-`;
-
-const Help = ({ onAdd }) => {
+const Help = () => {
+  const url = "https://ucladevx.com/";
   return (
     <div>
       <Nav>
         <StyledLink to="/tasklist">
-          <img style={{ width: '20px', padding: '2px' }} src="arrow-left.svg" />
+          <img style={{ width: '20px', padding: '2px'}} src="white-arrow-left.svg"/>
         </StyledLink>
         <HelpHeader>Help</HelpHeader>
-
-        <img style={{ width: '25px', padding: '2px' }} src="help.svg" />
       </Nav>
+      <Header>How to use Twain</Header>
+      <FullButton info>
+        <StyledLink to="/walkthrough">Twain Walkthrough</StyledLink>
+      </FullButton>
+      <Header>Report an issue</Header>
+      <FeedbackButton info
+        onClick = {()=>{window.open(url, "_blank")}}>Send Feedback
+      </FeedbackButton>
     </div>
   );
 };
