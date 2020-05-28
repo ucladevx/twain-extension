@@ -8,6 +8,14 @@ async function setHours(start_time, end_time, setHoursHandler) {
   let startHr = parseInt(start_time.substring(0,2))
   let endHr = parseInt(end_time.substring(0,2))
 
+  if (start_time.substring(6,8) == "am" && startHr == 12) {
+    startHr = 0;
+  }
+
+  if (end_time.substring(6,8) == "am" && endHr == 12) {
+    endHr = 0;
+  }
+
   if (start_time.substring(6,8) == "pm" && startHr != 12) {
     startHr += 12
   }

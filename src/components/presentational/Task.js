@@ -265,7 +265,7 @@ const Task = ({
       expanded={expanded}
       select={!scheduled}
       onClick={
-        !scheduled
+        !scheduled && !editing
           ? () => {
               toggleSelect(id);
             }
