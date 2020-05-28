@@ -110,6 +110,7 @@ const Settings = () => {
     return { key: n, text: `${hour < 10 ? '0' + hour : hour}:${min} ${ampm}` };
   });
   const [hidden1, setHidden1] = useState(true);
+  const display = ['Yes', 'No'];
   const [changes, setChanges] = useState(false);
   const [start, setStart] = useState('08:00 am');
   const [end, setEnd] = useState('06:00 pm');
@@ -122,16 +123,22 @@ const Settings = () => {
   const [selectedMult, setSelectedMult] = useState([]);
   const [userCalendarsMult, setCalendarsMult] = useState({});
   const [optionsMult, setOptionsMult] = useState([]);
+  const [hidden4, setHidden4] = useState(true);
+  const [selectedW, setSelectedW] = useState(true);
+  const [closedW, setClosedW] = useState(true);
 
   const updateBackend = () => {
     let selectedIDs = selectedMult.map((summary) => {
       return userCalendarsMult[summary];
     });
     let commaSeparated = selectedIDs.join();
+    
     UserService.setRelevantCalendars(commaSeparated, function(res) {});
     UserService.setPrimaryCalendar(userCalendars[selected], function(res) {});
     UserService.setHours(start.text, end.text, function(res) {});
+    UserService.setWeekendOption(selectedW === 'Yes', function(res){});
   };
+  
   useEffect(() => {
     UserService.getUserCalendars(function(res) {
       let summaries = [];
@@ -160,8 +167,9 @@ const Settings = () => {
         let sel = res.relevant_calendars.split(',');
         let selInit = sel.map((id) => idToSummary[id]);
         setSelectedMult(selInit);
-
+        setSelectedW(res.weekend_setting ? "Yes" : "No")
         // Re-construct time strings
+
         let startHr = parseInt(res.hours_start.substring(0, 2));
         let origStart = startHr;
 
@@ -233,9 +241,8 @@ const Settings = () => {
                 options={hours}
                 selected={start.text}
                 onSelect={(opt) => {
-                  setStart(opt);
-                  document.getElementById('saveCur').disabled = false;
-                  setChanges(true);
+                  setStart(opt)
+                  setChanges(true)
                 }}
                 onClose={() => {}}
               />
@@ -314,6 +321,30 @@ const Settings = () => {
               }
               setChanges(true);
             }}
+          />
+          <br></br>
+        </div>
+      </OptionWrapper>
+      <br></br>
+      <OptionWrapper hide={hidden4} onClose={() => {}} interior={false}>
+        <div style={{display:'flex' }}>
+        <img style={{width:'20px', padding: '5px'}} src="calendar.svg"/>
+        Schedule on Weekends
+        <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
+          setHidden4(!hidden4)}
+        }
+        />
+        </div>
+        <div className="outside-content">
+          <br></br>
+          <DropdownS
+            options={display}
+            selected={selectedW ? selectedW : 'Yes'}
+            onSelect={(option) => {
+                setSelectedW(option);
+                setChanges(true);
+            }}
+            onClose={(bool) => setClosedW(bool)}
           />
           <br></br>
         </div>
