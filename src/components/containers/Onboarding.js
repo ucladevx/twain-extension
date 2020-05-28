@@ -254,21 +254,26 @@ const OptionSelection = ({ handleContinue }) => {
 };
 
 const Times = ({ handleContinue }) => {
-  const hours = [...Array(24).keys()].map((e) => {
+  const hours = [...Array(48).keys()].map((n) => {
+    let e = Math.floor(n / 2);
     let ampm = e > 12 ? 'pm' : 'am';
     let hour = ampm === 'am' ? e : e - 12;
+    let min = '30';
     if (e === 0) {
       hour = 12;
     }
     if (e === 12) {
       ampm = 'pm';
     }
-    return { key: e, text: `${hour < 10 ? '0' + hour : hour}:00 ${ampm}` };
+    if ((n / 2) % 1 === 0) {
+      min = '00';
+    }
+    return { key: n, text: `${hour < 10 ? '0' + hour : hour}:${min} ${ampm}` };
   });
 
   const [closed, setClosed] = useState(true);
-  const [start, setStart] = useState({ key: 8, text: '08:00 am' });
-  const [end, setEnd] = useState({ key: 18, text: '06:00 pm' });
+  const [start, setStart] = useState({ key: 16, text: '08:00 am' });
+  const [end, setEnd] = useState({ key: 36, text: '06:00 pm' });
 
   const updateBackendAndContinue = () => {
     UserService.setHours(start.text, end.text, handleContinue);
@@ -296,22 +301,26 @@ const Times = ({ handleContinue }) => {
         From which times do you want to schedule your tasks?
       </p>
       <Row spaceBetween style={{ width: 'calc(90%)', margin: '-10px auto' }}>
-        <p style={{ marginRight: '10px' }}>From</p>
+        <p style={{ marginRight: '5px' }}>From</p>
         <Dropdown
           mini
           options={hours}
           selected={start.text}
-          onSelect={(opt) => setStart(opt)}
+          onSelect={(opt) => {
+            setStart(opt);
+          }}
           onClose={() => {}}
         />
-        <p style={{ margin: '14px 10px' }}>to</p>
+        <p style={{ margin: '14px 5px' }}>to</p>
         <Dropdown
           mini
           options={hours.map((hr) =>
             hr.key <= start.key ? { ...hr, disabled: true } : hr
           )}
           selected={end.text}
-          onSelect={(opt) => setEnd(opt)}
+          onSelect={(opt) => {
+            setEnd(opt);
+          }}
           onClose={(bool) => setClosed(bool)}
         />
       </Row>

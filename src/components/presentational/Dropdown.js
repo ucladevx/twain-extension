@@ -498,7 +498,7 @@ const DropdownWrapper = styled.div`
 
   & .content p {
     margin: 0;
-    padding: ${(props) => (props.mini ? '5px 10px' : '10px 15px')};
+    padding: ${(props) => (props.mini ? '5px 7px' : '10px 15px')};
     border-top: 1px solid #909090;
   }
 
@@ -596,7 +596,7 @@ const Dropdown = ({
           }
         }}
         style={{
-          padding: mini ? '5px 10px' : '10px 15px'
+          padding: mini ? '5px 7px' : '10px 15px'
         }}
       >
         {disabled ? (
@@ -964,7 +964,7 @@ const DropdownTimeGrid = styled.div`
     overflow-x: hidden;
   }
 
-  & .content div::-webkit-scrollbar {
+  & .content .hide-scroll::-webkit-scrollbar {
     width: 0;
   }
 
@@ -1086,10 +1086,13 @@ export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
 
           const newDate = new Date(date);
           if (getAmpm() == 'AM') {
-            newDate.setHours(hours);
+            if (hours === 12) newDate.setHours(0);
+            else newDate.setHours(hours);
           } else {
-            newDate.setHours(hours + 12);
+            if (hours === 12) newDate.setHours(12);
+            else newDate.setHours(hours + 12);
           }
+
           newDate.setMinutes(minutes);
 
           try {
@@ -1142,8 +1145,13 @@ export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
               className={getHours() === e + 1 ? 'highlighted' : ''}
               onClick={() => {
                 const newDate = new Date(date);
-                if (getAmpm() === 'AM') newDate.setHours(e + 1);
-                else newDate.setHours(e + 13);
+                if (getAmpm() === 'AM') {
+                  if (e + 1 === 12) newDate.setHours(0);
+                  else newDate.setHours(e + 1);
+                } else {
+                  if (e + 13 === 24) newDate.setHours(12);
+                  else newDate.setHours(e + 13);
+                }
                 setDate(newDate);
                 onChange({
                   target: { value: newDate }
@@ -1172,7 +1180,7 @@ export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
             </p>
           ))}
         </div>
-        <div>
+        <div className="hide-scroll">
           {['AM', 'PM'].map((e) => (
             <p
               className={getAmpm() === e ? 'highlighted' : ''}
@@ -1357,6 +1365,7 @@ export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
     const newDate = new Date(date);
     newDate.setHours(time.getHours());
     newDate.setMinutes(time.getMinutes());
+    newDate.setSeconds(0, 0);
 
     onChange({
       target: { value: newDate }

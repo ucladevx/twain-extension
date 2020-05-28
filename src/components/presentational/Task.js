@@ -162,6 +162,7 @@ const Task = ({
         placeholder="Due Date"
         value={new Date(due).toISOString()}
         onChange={(e) => {
+          console.log(e.target.value, e.target.value.toISOString());
           setDue(e.target.value);
         }}
         disabled={!editing}
@@ -248,7 +249,7 @@ const Task = ({
       expanded={expanded}
       select={!scheduled}
       onClick={
-        !scheduled
+        !scheduled && !editing
           ? () => {
               toggleSelect(id);
             }

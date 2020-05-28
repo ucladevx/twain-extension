@@ -13,6 +13,7 @@ const newDateNextDay = () => {
   const initDate = new Date();
   initDate.setTime(initDate.getTime() + 24 * 60 * 60 * 1000);
   initDate.setMinutes(0);
+  initDate.setSeconds(0, 0);
   return initDate.toISOString();
 };
 
@@ -188,6 +189,7 @@ const TaskList = () => {
             } else {
               selectedstr = unscheduled.map((elem) => elem.id).join(',');
             }
+            schedulingStart.setSeconds(0, 0);
             history.push(
               `/scheduling/${selectedstr}?start=${schedulingStart.toISOString()}`
             );
