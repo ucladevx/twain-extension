@@ -98,7 +98,7 @@ const ScheduleTask = ({ handleContinue }) => {
         Now that you have created your task, it will initially appear under
         <strong>"Not yet scheduled."</strong>
         <br />
-        Once you're ready to have twain schedule your task, select the tasks you
+        Once you're ready to have Twain schedule your task, select the tasks you
         want scheduled and click <strong>"Schedule"</strong>.
       </p>
 
