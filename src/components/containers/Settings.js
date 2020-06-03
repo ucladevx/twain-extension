@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../containers/Nav';
-import styled, { css } from 'styled-components';
-import { Row } from '../presentational/styled/Layout';
-import Input, { Shared } from '../presentational/styled/Input';
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { StaticIcon } from '../presentational/styled/Icon';
 import { DropdownS, SelectionS } from '../presentational/Dropdown';
 
 import UserService from '../../services/UserService';
@@ -132,13 +128,13 @@ const Settings = () => {
       return userCalendarsMult[summary];
     });
     let commaSeparated = selectedIDs.join();
-    
+
     UserService.setRelevantCalendars(commaSeparated, function(res) {});
     UserService.setPrimaryCalendar(userCalendars[selected], function(res) {});
     UserService.setHours(start.text, end.text, function(res) {});
-    UserService.setWeekendOption(selectedW === 'Yes', function(res){});
+    UserService.setWeekendOption(selectedW === 'Yes', function(res) {});
   };
-  
+
   useEffect(() => {
     UserService.getUserCalendars(function(res) {
       let summaries = [];
@@ -167,7 +163,7 @@ const Settings = () => {
         let sel = res.relevant_calendars.split(',');
         let selInit = sel.map((id) => idToSummary[id]);
         setSelectedMult(selInit);
-        setSelectedW(res.weekend_setting ? "Yes" : "No")
+        setSelectedW(res.weekend_setting ? 'Yes' : 'No');
         // Re-construct time strings
 
         let startHr = parseInt(res.hours_start.substring(0, 2));
@@ -212,20 +208,33 @@ const Settings = () => {
     <div>
       <Nav>
         <StyledLink to="/tasklist">
-          <img style={{ width: '20px', padding: '2px' }} src="arrow-left.svg" />
+          <img
+            style={{ width: '20px', padding: '2px' }}
+            src="arrow-left.svg"
+            alt="arrow-left"
+          />
         </StyledLink>
         <HelpHeader>Settings</HelpHeader>
 
-        <img style={{ width: '25px', padding: '2px' }} src="settings.svg" />
+        <img
+          style={{ width: '25px', padding: '2px' }}
+          src="settings.svg"
+          alt="settings"
+        />
       </Nav>
 
       <OptionWrapper hide={hidden1} onClose={() => {}} interior={false}>
         <div style={{ display: 'flex' }}>
-          <img style={{ width: '20px', padding: '5px' }} src="time.svg" />
+          <img
+            style={{ width: '20px', padding: '5px' }}
+            src="time.svg"
+            alt="time"
+          />
           Hours of Operation
           <img
             style={{ width: '20px', padding: '2px', marginLeft: 'auto' }}
             src="arrow-down.svg"
+            alt="arrow-down"
             onClick={() => {
               setHidden1(!hidden1);
             }}
@@ -241,8 +250,8 @@ const Settings = () => {
                 options={hours}
                 selected={start.text}
                 onSelect={(opt) => {
-                  setStart(opt)
-                  setChanges(true)
+                  setStart(opt);
+                  setChanges(true);
                 }}
                 onClose={() => {}}
               />
@@ -269,11 +278,16 @@ const Settings = () => {
       <br></br>
       <OptionWrapper hide={hidden2} onClose={() => {}} interior={false}>
         <div style={{ display: 'flex' }}>
-          <img style={{ width: '20px', padding: '5px' }} src="calendar.svg" />
+          <img
+            style={{ width: '20px', padding: '5px' }}
+            src="calendar.svg"
+            alt="calendar"
+          />
           Primary Calendar
           <img
             style={{ width: '20px', padding: '2px', marginLeft: 'auto' }}
             src="arrow-down.svg"
+            alt="arrow-down"
             onClick={() => {
               setHidden2(!hidden2);
             }}
@@ -285,7 +299,7 @@ const Settings = () => {
             options={options}
             selected={selected ? selected : 'Default'}
             onSelect={(option) => {
-              if (closed == true) {
+              if (closed === true) {
                 setSelected(option);
               }
               setChanges(true);
@@ -298,11 +312,16 @@ const Settings = () => {
       <br></br>
       <OptionWrapper hide={hidden3} onClose={() => {}} interior={false}>
         <div style={{ display: 'flex' }}>
-          <img style={{ width: '20px', padding: '5px' }} src="categories.svg" />
+          <img
+            style={{ width: '20px', padding: '5px' }}
+            src="categories.svg"
+            alt="categories"
+          />
           Relevant Calendars
           <img
             style={{ width: '20px', padding: '2px', marginLeft: 'auto' }}
             src="arrow-down.svg"
+            alt="arrow-down"
             onClick={() => {
               setHidden3(!hidden3);
             }}
@@ -327,13 +346,21 @@ const Settings = () => {
       </OptionWrapper>
       <br></br>
       <OptionWrapper hide={hidden4} onClose={() => {}} interior={false}>
-        <div style={{display:'flex' }}>
-        <img style={{width:'20px', padding: '5px'}} src="calendar.svg"/>
-        Schedule on Weekends
-        <img style={{width:'20px', padding: '2px', marginLeft: 'auto'}} src="arrow-down.svg" onClick={()=> {
-          setHidden4(!hidden4)}
-        }
-        />
+        <div style={{ display: 'flex' }}>
+          <img
+            style={{ width: '20px', padding: '5px' }}
+            src="calendar.svg"
+            alt="calendar"
+          />
+          Schedule on Weekends
+          <img
+            style={{ width: '20px', padding: '2px', marginLeft: 'auto' }}
+            src="arrow-down.svg"
+            alt="arrow-down"
+            onClick={() => {
+              setHidden4(!hidden4);
+            }}
+          />
         </div>
         <div className="outside-content">
           <br></br>
@@ -341,8 +368,8 @@ const Settings = () => {
             options={display}
             selected={selectedW ? selectedW : 'Yes'}
             onSelect={(option) => {
-                setSelectedW(option);
-                setChanges(true);
+              setSelectedW(option);
+              setChanges(true);
             }}
             onClose={(bool) => setClosedW(bool)}
           />

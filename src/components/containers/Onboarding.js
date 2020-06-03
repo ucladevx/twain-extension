@@ -29,6 +29,7 @@ const Intro = ({ handleContinue }) => {
     <div>
       <img
         src="logo.png"
+        alt="logo"
         style={{
           width: '150px',
           position: 'absolute',
@@ -52,7 +53,11 @@ const Intro = ({ handleContinue }) => {
         style={{ color: '#5187ED' }}
       >
         <Row spaceEvenly style={{ marginTop: '-4px' }}>
-          <img src="google.svg" style={{ width: '20px', height: '20px' }} />
+          <img
+            src="google.svg"
+            alt="google"
+            style={{ width: '20px', height: '20px' }}
+          />
           <p>Continue with Google</p>
         </Row>
       </FullButton>
@@ -64,6 +69,7 @@ const Welcome = ({ handleContinue }) => (
   <div>
     <img
       src="welcome_to_twain.png"
+      alt="welcome-to-twain"
       style={{ position: 'absolute', top: '0px' }}
     />
     <h1>
@@ -113,6 +119,7 @@ const OptionDropdown = ({ handleContinue }) => {
     <div>
       <img
         src="primary_calendar.png"
+        alt="primary-calendar"
         style={{
           width: '300px',
           marginLeft: 'calc(-1 * (10%))',
@@ -203,6 +210,7 @@ const OptionSelection = ({ handleContinue }) => {
     <div>
       <img
         src="secondary_calendar.png"
+        alt="secondary-calendar"
         style={{
           width: '300px',
           marginLeft: 'calc(-1 * (10%))',
@@ -283,6 +291,7 @@ const Times = ({ handleContinue }) => {
     <div>
       <img
         src="hours_of_op.png"
+        alt="hours-of-op"
         style={{
           width: '300px',
           marginLeft: 'calc(-1 * (10%))',
@@ -349,7 +358,6 @@ const Times = ({ handleContinue }) => {
 const WeekendSetting = ({ handleContinue }) => {
   const display = ['Yes', 'No'];
   const [selected, setSelected] = useState(null);
-  const [closed, setClosed] = useState(true);
 
   const updateBackendAndContinue = () => {
     UserService.setWeekendOption(selected === 'Yes', handleContinue);
@@ -359,6 +367,7 @@ const WeekendSetting = ({ handleContinue }) => {
     <div>
       <img
         src="weekend.png"
+        alt="weekend"
         style={{
           width: '300px',
           marginLeft: 'calc(-1 * (10%))',
@@ -380,7 +389,6 @@ const WeekendSetting = ({ handleContinue }) => {
         options={display}
         selected={selected ? selected : 'Yes'}
         onSelect={(option) => setSelected(option)}
-        onClose={(bool) => setClosed(bool)}
       />
 
       <Row
@@ -402,12 +410,11 @@ const WeekendSetting = ({ handleContinue }) => {
 };
 
 const WalkThroughPrompt = ({ handleContinue }) => {
-  const [skip, setSkip] = useState(false);
   const history = useHistory();
 
   return (
     <div>
-      <h1 style={{ marginTop: '20vh' }}>Welcome to twain!</h1>
+      <h1 style={{ marginTop: '20vh' }}>Welcome to Twain!</h1>
       <p
         style={{
           color: 'rgba(255,255,255,0.7)',
@@ -415,7 +422,7 @@ const WalkThroughPrompt = ({ handleContinue }) => {
           margin: '15px auto'
         }}
       >
-        Let us show you how you can view, create, and schedule tasks.
+        Let's show you how you can view, create, and schedule tasks.
       </p>
       <FullButton
         onClick={() => history.push('/walkthrough')}

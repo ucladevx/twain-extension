@@ -1,5 +1,4 @@
 /*global chrome*/
-import React from 'react';
 import axios from 'axios';
 
 async function runWithAuthToken(callback) {

@@ -1,4 +1,3 @@
-import React from 'react';
 import axios from 'axios';
 
 import AuthService from './AuthService';
@@ -192,7 +191,7 @@ const editTask = async (id, editedTask, editTaskHandler) => {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
         },
-        withCredentials: true 
+        withCredentials: true
       })
       .then((res) => res.data)
       .catch((err) => {

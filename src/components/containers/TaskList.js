@@ -120,7 +120,7 @@ const TaskList = () => {
   const editTask = (id, editedTask) => {
     TaskService.editTask(id, editedTask, (res) => {
       const task = res.task;
-      const index = tasks.findIndex(x => x.id === id);
+      const index = tasks.findIndex((x) => x.id === id);
       tasks[index] = task;
       setTasks(tasks);
     });

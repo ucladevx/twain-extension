@@ -846,104 +846,6 @@ const months = [
   { name: 'DEC', days: 31 }
 ];
 
-const TimeWrapper = styled.div`
-  ${Shared}
-  text-align: left;
-
-  & .content {
-    position: absolute;
-    opacity: ${(props) => (!props.myDisabled && !props.closed ? '1' : '0')};
-    max-height: ${(props) =>
-      !props.myDisabled && !props.closed ? '200px' : '0'};
-    overflow: auto;
-    margin-top: 6px;
-    margin-left: -40px;
-    background-color: #fff;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
-    transition: opacity 0.25s;
-  }
-
-  &:hover {
-    cursor: ${(props) => (props.myDisabled ? 'default' : 'pointer')};
-  }
-
-  & .content p {
-    margin: 0;
-    padding: 5px 10px;
-  }
-
-  & .content p:first-of-type {
-    border-radius: 10px 10px 0 0;
-  }
-
-  & .content p:last-of-type {
-    border-radius: 0 0 10px 10px;
-  }
-
-  & .content p:hover {
-    background-color: #e5e5e5;
-  }
-`;
-
-const NumberScroller = ({ disabled, min, max, selected, onSelect }) => {
-  const [closed, setClosed] = useState(true);
-
-  const options = [...Array(max - min + 1).keys()].map((e) => e + min);
-
-  const node = useRef();
-
-  const handleClick = (e) => {
-    if (node.current.contains(e.target)) {
-      return;
-    }
-    setClosed(true);
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
-
-  return (
-    <TimeWrapper myDisabled={disabled} closed={closed} ref={node}>
-      <Row
-        onClick={() => {
-          if (!disabled) setClosed(!closed);
-        }}
-      >
-        {disabled ? (
-          <div
-            style={{
-              padding: '2px 12px',
-              borderRadius: '10px',
-              backgroundColor: '#f2bd3f'
-            }}
-          >
-            {selected}
-          </div>
-        ) : (
-          <div>{selected}</div>
-        )}
-      </Row>
-      <div className="content">
-        {options.map((option) => (
-          <p
-            key={option}
-            onClick={() => {
-              onSelect(option);
-              setClosed(true);
-            }}
-          >
-            {option}
-          </p>
-        ))}
-      </div>
-    </TimeWrapper>
-  );
-};
-
 const DropdownTimeGrid = styled.div`
   ${DropdownGrid}
   width: calc(30%);
@@ -1007,7 +909,6 @@ const DropdownTimeGrid = styled.div`
 export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
   const [closed, setClosed] = useState(true);
   const [date, setDate] = useState(new Date(value));
-  const [inputField, setInputField] = useState(0);
   const [cursorPos, setCursorPos] = useState([0, 0]);
 
   const node = useRef();
@@ -1085,7 +986,7 @@ export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
           minutes = minutes < 0 ? 0 : minutes > 59 ? 59 : minutes;
 
           const newDate = new Date(date);
-          if (getAmpm() == 'AM') {
+          if (getAmpm() === 'AM') {
             if (hours === 12) newDate.setHours(0);
             else newDate.setHours(hours);
           } else {
@@ -1111,7 +1012,7 @@ export const TimePicker = ({ disabled, placeholder, value, onChange }) => {
             target: { value: newDate }
           });
           if (e.target.selectionStart <= 3) {
-            if (hours != 1) {
+            if (hours !== 1) {
               setCursorPos([3, 5]);
             } else {
               setCursorPos([2, 2]);
@@ -1230,9 +1131,9 @@ export const DatePicker = (props) => {
   /* find weekdays offset from Sunday before first of month */
   const getOffset = (month, year) => {
     const date = new Date();
+    date.setDate(1);
     date.setMonth(month);
     date.setFullYear(year);
-    date.setDate(1);
     return date.getDay();
   };
 
@@ -1370,17 +1271,6 @@ export const DateTimePicker = ({ disabled, placeholder, value, onChange }) => {
     onChange({
       target: { value: newDate }
     });
-  };
-
-  const formatTime = (date) => {
-    let hours = date.getHours();
-    hours = hours < 10 ? `0${hours}` : hours;
-    let minutes = date.getMinutes();
-    minutes = minutes < 10 ? `0${minutes}` : minutes;
-    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
-
-    const str = `${hours}:${minutes} ${ampm}`;
-    return str;
   };
 
   return (
