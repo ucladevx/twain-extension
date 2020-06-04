@@ -41,6 +41,15 @@ const ChangeList = (props) => {
 
   const deleteTask = (id) => {};
 
+  const editTask = (id, editedTask) => {
+    TaskService.editTask(id, editedTask, (res) => {
+      const task = res.task;
+      const index = changing.findIndex((x) => x.id === id);
+      changing[index] = task;
+      setChanging(changing);
+    });
+  };
+
   const selectTask = (id) => {
     const thisSelected = selected;
     const thisSetSelected = setSelected;
@@ -69,6 +78,7 @@ const ChangeList = (props) => {
           key={task.id}
           task={task}
           deleteTask={deleteTask}
+          editTask={editTask}
           toggleSelect={selectTask}
           selected={selected.indexOf(task.id) !== -1}
         />
