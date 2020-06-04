@@ -20,6 +20,7 @@ const Success = (props) => {
       >
         <img
           src="/primary_calendar.png"
+          alt="primary-calendar"
           style={{
             width: '250px',
             marginTop: '-100px',

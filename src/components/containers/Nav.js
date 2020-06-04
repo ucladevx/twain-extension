@@ -96,19 +96,26 @@ const Navbar = () => {
             <img
               style={{ width: '20px', padding: '10px' }}
               src="/tasklist-grey.svg"
+              alt="tasklist"
             />
             <p>Tasklist</p>
             <img
               style={{ width: '20px', padding: '10px', marginLeft: '10px' }}
               src="/arrow-right.svg"
+              alt="arrow-right"
             />
           </StyledLink>
           <StyledLink to="/completed" style={{ borderBottom: '0' }}>
-            <img style={{ width: '20px', padding: '10px' }} src="/check.svg" />
+            <img
+              style={{ width: '20px', padding: '10px' }}
+              src="/check.svg"
+              alt="check"
+            />
             <p>Completed</p>
             <img
               style={{ width: '20px', padding: '10px', marginLeft: '10px' }}
               src="/arrow-right.svg"
+              alt="arrow-right"
             />
           </StyledLink>
         </div>
@@ -126,20 +133,27 @@ const Navbar = () => {
             <img
               style={{ width: '20px', padding: '10px' }}
               src="/settings-grey.svg"
+              alt="settings"
             />
             <p>Settings</p>
             <img
               style={{ width: '20px', padding: '10px', marginLeft: '10px' }}
               src="/arrow-right.svg"
+              alt="arrow-right"
             />
           </StyledLink>
 
           <StyledLink to="/help">
-            <img style={{ width: '20px', padding: '10px' }} src="/help.svg" />
+            <img
+              style={{ width: '20px', padding: '10px' }}
+              src="/help.svg"
+              alt="help"
+            />
             <p>Help</p>
             <img
               style={{ width: '20px', padding: '10px', marginLeft: '10px' }}
               src="/arrow-right.svg"
+              alt="arrow-right"
             />
           </StyledLink>
 

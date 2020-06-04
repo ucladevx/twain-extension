@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Row } from '../presentational/styled/Layout';
-import Icon from '../presentational/styled/Icon';
-import { TaskSection } from '../presentational/Dropdown';
 import { FullButton } from '../presentational/styled/Button';
-import { Shared } from '../presentational/styled/Input';
 
 const Nav = styled.nav`
   background-image: url('navbar.png');
@@ -21,12 +17,12 @@ const Nav = styled.nav`
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
 `;
 const Header = styled.p`
-  display:flex;
+  display: flex;
   justify-content: flex-start;
   margin-left: 0px;
   margin-bottom: 5px;
   font-size: 16px;
-`
+`;
 const HelpHeader = styled.p`
   font-size: 18px;
   color: #fff;
@@ -44,18 +40,22 @@ const StyledLink = styled(Link)`
 `;
 
 const FeedbackButton = styled(FullButton)`
-  &:hover{
-    cursor:pointer;
+  &:hover {
+    cursor: pointer;
   }
 `;
 
 const Help = () => {
-  const url = "https://ucladevx.com/";
+  const url = 'https://ucladevx.com/';
   return (
     <div>
       <Nav>
         <StyledLink to="/tasklist">
-          <img style={{ width: '20px', padding: '2px'}} src="white-arrow-left.svg"/>
+          <img
+            style={{ width: '20px', padding: '2px' }}
+            src="white-arrow-left.svg"
+            alt="arrow-left"
+          />
         </StyledLink>
         <HelpHeader>Help</HelpHeader>
       </Nav>
@@ -64,8 +64,13 @@ const Help = () => {
         <StyledLink to="/walkthrough">Twain Walkthrough</StyledLink>
       </FullButton>
       <Header>Report an issue</Header>
-      <FeedbackButton info
-        onClick = {()=>{window.open(url, "_blank")}}>Send Feedback
+      <FeedbackButton
+        info
+        onClick={() => {
+          window.open(url, '_blank');
+        }}
+      >
+        Send Feedback
       </FeedbackButton>
     </div>
   );
