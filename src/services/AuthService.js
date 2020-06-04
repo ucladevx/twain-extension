@@ -1,6 +1,8 @@
 /*global chrome*/
 import axios from 'axios';
 
+const backend_url = 'https://twaintasks.com/api'
+
 async function runWithAuthToken(callback) {
   chrome.identity.getAuthToken({ interactive: true }, callback);
 }
@@ -12,7 +14,7 @@ async function signIn(handler) {
     };
 
     let res = await axios
-      .post('http://localhost:31337/api/users/signup', body)
+      .post(backend_url + '/users/signup', body)
       .then((res) => res.data.data)
       .catch((err) => {
         console.log(err.response);

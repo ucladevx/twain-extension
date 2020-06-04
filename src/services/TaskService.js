@@ -2,18 +2,17 @@ import axios from 'axios';
 
 import AuthService from './AuthService';
 
+const backend_url = 'https://twaintasks.com/api'
+
 async function getTask(id, taskHandler) {
   let getTaskCallback = async function(token) {
-    let url = 'http://localhost:31337/api/tasks/' + id.toString();
+    let url = backend_url + '/tasks/' + id.toString();
 
     let res = await axios
       .get(url, {
         headers: {
-          'Access-Control-Allow-Origin': 'chrome-extension://',
-          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
-        },
-        withCredentials: true
+        }
       })
       .then((res) => res.data)
       .catch((err) => {
@@ -29,16 +28,13 @@ async function getTask(id, taskHandler) {
 
 const getAllTasks = (taskHandler) => {
   let getAllTasksCallback = async function(token) {
-    let url = 'http://localhost:31337/api/tasks/me';
+    let url = backend_url + '/tasks/me';
 
     let res = await axios
       .get(url, {
         headers: {
-          'Access-Control-Allow-Origin': 'chrome-extension://',
-          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
-        },
-        withCredentials: true
+        }
       })
       .then((res) => res.data)
       .catch((err) => {
@@ -54,16 +50,13 @@ const getAllTasks = (taskHandler) => {
 
 const getAllCompleted = (taskHandler) => {
   let getAllTasksCallback = async function(token) {
-    let url = 'http://localhost:31337/api/tasks/completedTasks';
+    let url = backend_url + '/tasks/completedTasks';
 
     let res = await axios
       .get(url, {
         headers: {
-          'Access-Control-Allow-Origin': 'chrome-extension://',
-          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
-        },
-        withCredentials: true
+        }
       })
       .then((res) => res.data)
       .catch((err) => {
@@ -91,7 +84,7 @@ const postTask = async (name, description, duration, due_date, postTaskHandler) 
     };
 
     let res = await axios
-      .post('http://localhost:31337/api/tasks', body, {
+      .post(backend_url + '/tasks', body, {
         headers: header
       })
       .then((res) => res.data)
@@ -114,7 +107,7 @@ const taskComplete = async (taskIds, taskCompleteHandler) => {
       Authorization: 'Bearer ' + token
     };
     let res = await axios
-      .post('http://localhost:31337/api/tasks/complete', body, {
+      .post(backend_url + '/tasks/complete', body, {
         headers: header
       })
       .then((res) => res.data)
@@ -138,7 +131,7 @@ const scheduleTasks = async (ids, minTime, timezone, taskScheduleHandler) => {
       Authorization: 'Bearer ' + token
     };
     let res = await axios
-      .post('http://localhost:31337/api/schedule/', body, {
+      .post(backend_url + '/schedule/', body, {
         headers: header
       })
       .then((res) => res.data)
@@ -162,7 +155,7 @@ const confirmTasks = async (ids, forceTasks, timezone, taskConfirmHandler) => {
       Authorization: 'Bearer ' + token
     };
     let res = await axios
-      .post('http://localhost:31337/api/schedule/confirm', body, {
+      .post(backend_url + '/schedule/confirm', body, {
         headers: header
       })
       .then((res) => res.data)
@@ -177,15 +170,12 @@ const confirmTasks = async (ids, forceTasks, timezone, taskConfirmHandler) => {
 
 const editTask = async (id, editedTask, editTaskHandler) => {
   let editTaskCallback = async function(token) {
-    let url = 'http://localhost:31337/api/tasks/' + id.toString();
+    let url = backend_url + '/tasks/' + id.toString();
     let res = await axios
       .patch(url, editedTask, {
         headers: {
-          'Access-Control-Allow-Origin': 'chrome-extension://',
-          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
-        },
-        withCredentials: true
+        }
       })
       .then((res) => res.data)
       .catch((err) => {

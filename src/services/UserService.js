@@ -2,6 +2,8 @@ import axios from 'axios';
 
 import AuthService from './AuthService';
 
+const backend_url = 'https://twaintasks.com/api'
+
 // Time format is "08:30 am" or "10:00 pm"
 async function setHours(start_time, end_time, setHoursHandler) {
   let startHr = parseInt(start_time.substring(0, 2));
@@ -36,13 +38,11 @@ async function setHours(start_time, end_time, setHoursHandler) {
       start: startString,
       end: endString
     };
-    let url = 'http://localhost:31337/api/users/hours';
+    let url = backend_url + '/users/hours';
 
     let res = await axios
       .post(url, body, {
         headers: {
-          'Access-Control-Allow-Origin': 'chrome-extension://',
-          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
         }
       })
@@ -63,13 +63,11 @@ async function setPrimaryCalendar(primary_calendar, setPrimaryCalendarHandler) {
       primary_calendar: primary_calendar
     };
 
-    let url = 'http://localhost:31337/api/users/calendars/primary';
+    let url = backend_url + '/users/calendars/primary';
 
     let res = await axios
       .post(url, body, {
         headers: {
-          'Access-Control-Allow-Origin': 'chrome-extension://',
-          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
         }
       })
@@ -92,13 +90,11 @@ async function setRelevantCalendars(
     let body = {
       relevant_calendars: relevant_calendars
     };
-    let url = 'http://localhost:31337/api/users/calendars/relevant';
+    let url = backend_url + '/users/calendars/relevant';
 
     let res = await axios
       .post(url, body, {
         headers: {
-          'Access-Control-Allow-Origin': 'chrome-extension://',
-          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
         }
       })
@@ -115,16 +111,13 @@ async function setRelevantCalendars(
 
 async function getLoggedInUser(getLoggedInUserHandler) {
   let getLoggedInUserCallback = async function(token) {
-    let url = 'http://localhost:31337/api/users/me';
+    let url = backend_url + '/users/me';
 
     let res = await axios
       .get(url, {
         headers: {
-          'Access-Control-Allow-Origin': 'chrome-extension://',
-          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
         },
-        withCredentials: true
       })
       .then((res) => res.data.data)
       .catch((err) => {
@@ -139,16 +132,13 @@ async function getLoggedInUser(getLoggedInUserHandler) {
 
 async function getUserCalendars(getUserCalendarsHandler) {
   let getuserCalendarsCallback = async function(token) {
-    let url = 'http://localhost:31337/api/users/calendars/';
+    let url = backend_url + '/users/calendars/';
 
     let res = await axios
       .get(url, {
         headers: {
-          'Access-Control-Allow-Origin': 'chrome-extension://',
-          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
         },
-        withCredentials: true
       })
       .then((res) => res.data.data)
       .catch((err) => {
@@ -163,7 +153,7 @@ async function getUserCalendars(getUserCalendarsHandler) {
 
 async function setWeekendOption(weekend_setting, setWeekendOptionHandler) {
   let setWeekendOptionCallback = async function(token) {
-    let url = 'http://localhost:31337/api/users/weekend';
+    let url = backend_url + '/users/weekend';
 
     let body = {
       weekend_setting: weekend_setting
@@ -171,8 +161,6 @@ async function setWeekendOption(weekend_setting, setWeekendOptionHandler) {
     let res = await axios
       .post(url, body, {
         headers: {
-          'Access-Control-Allow-Origin': 'chrome-extension://',
-          'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
         }
       })
