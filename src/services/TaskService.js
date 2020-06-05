@@ -77,13 +77,7 @@ const getAllCompleted = (taskHandler) => {
   AuthService.runWithAuthToken(getAllTasksCallback);
 };
 
-const postTask = async (
-  name,
-  description,
-  duration,
-  due_date,
-  postTaskHandler
-) => {
+const postTask = async (name, description, duration, due_date, postTaskHandler) => {
   let postTaskCallback = async function(token) {
     let body = {
       name: name,
@@ -203,6 +197,28 @@ const editTask = async (id, editedTask, editTaskHandler) => {
   AuthService.runWithAuthToken(editTaskCallback);
 };
 
+const taskDelete = async (taskIds, deleteTaskHandler) => {
+  let deleteTaskCallback = async function(token) {
+    let body = {
+      ids: taskIds
+    };
+    let header = {
+      Authorization: 'Bearer ' + token
+    };
+    let res = await axios
+      .post('http://localhost:31337/api/tasks/delete', body, {
+        headers: header
+      })
+      .then((res) => res.data)
+      .catch((err) => {
+        console.log(err.response);
+        return err;
+      });
+    deleteTaskHandler(res);
+  };
+  AuthService.runWithAuthToken(deleteTaskCallback);
+};
+
 export default {
   getTask,
   getAllTasks,
@@ -211,5 +227,6 @@ export default {
   taskComplete,
   scheduleTasks,
   confirmTasks,
-  editTask
+  editTask,
+  taskDelete
 };

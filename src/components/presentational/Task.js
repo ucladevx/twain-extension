@@ -88,6 +88,7 @@ const Task = ({
   /* default to a collapsed, uneditable task */
   const [expanded, setExpanded] = useState(creating);
   const [editing, setEditing] = useState(creating);
+  const [deleting, setDeleting] = useState(false);
 
   const [name, setName] = useState(task.name);
   const [description, setDescription] = useState(task.description);
@@ -269,7 +270,7 @@ const Task = ({
           ? () => {
               toggleSelect(id);
             }
-          : () => {}
+          : () => {deleting && setDeleting(false)}
       }
       selected={selected}
     >
@@ -311,10 +312,12 @@ const Task = ({
           )}
         </div>
         {!scheduling && !failed ? (
-          <Icon
+          <Icon delete = {deleting}
             src={
-              editing
+              editing && !deleting
                 ? '/close.svg'
+                : deleting
+                ? '/redclose.svg'
                 : expanded
                 ? '/arrow-up.svg'
                 : failed
@@ -324,8 +327,8 @@ const Task = ({
             alt={editing ? 'Close' : expanded ? 'Up' : 'Down'}
             onClick={(e) => {
               if (editing) {
-                if (!creating) {
-                  if (window.confirm('Delete task?')) deleteTask(id);
+                if (!creating && !deleting) {
+                  setDeleting(true);
                 } else {
                   deleteTask(id);
                 }

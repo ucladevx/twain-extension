@@ -12,14 +12,14 @@ import Loading from '../presentational/styled/Loading';
 import TaskService from '../../services/TaskService';
 
 const ChangeList = (props) => {
-  const [changing, setChanging] = useState([]);
-  const [selected, setSelected] = useState([]);
-  const [num, setNum] = useState(0);
+  const [ changing, setChanging ] = useState([]);
+  const [ selected, setSelected ] = useState([]);
+  const [ num, setNum ] = useState(0);
 
   const initDate = new Date();
   initDate.setTime(initDate.getTime() + 60 * 60 * 1000);
   initDate.setMinutes(0);
-  const [schedulingStart, setSchedulingStart] = useState(initDate);
+  const [ schedulingStart, setSchedulingStart ] = useState(initDate);
 
   const history = useHistory();
 
@@ -39,7 +39,14 @@ const ChangeList = (props) => {
     });
   }, []);
 
-  const deleteTask = (id) => {};
+  const deleteTask = (id) =>
+    TaskService.taskDelete([ id ], (res) => {
+      setChanging(changing.filter((el) => el.id !== id));
+      setNum(num - 1);
+      if (changing.length == 1) {
+        history.push('/tasklist');
+      }
+    });
 
   const editTask = (id, editedTask) => {
     TaskService.editTask(id, editedTask, (res) => {
@@ -54,7 +61,7 @@ const ChangeList = (props) => {
     const thisSelected = selected;
     const thisSetSelected = setSelected;
     if (thisSelected.indexOf(id) === -1) {
-      thisSetSelected(thisSelected.concat([id]));
+      thisSetSelected(thisSelected.concat([ id ]));
     } else {
       thisSetSelected(thisSelected.filter((num) => num !== id));
     }
@@ -86,10 +93,7 @@ const ChangeList = (props) => {
       <Text primary style={{ textAlign: 'center' }}>
         When do you want to start scheduling?
       </Text>
-      <DateTimePicker
-        value={schedulingStart}
-        onChange={(e) => setSchedulingStart(e.target.value)}
-      />
+      <DateTimePicker value={schedulingStart} onChange={(e) => setSchedulingStart(e.target.value)} />
       <Row>
         <FullButton
           onClick={() => {
@@ -103,22 +107,21 @@ const ChangeList = (props) => {
           disabled={!selected.length}
           onClick={() => {
             let selectedstr = selected.join(',');
-            history.push(
-              `/scheduling/${selectedstr}?start=${schedulingStart.toISOString()}`
-            );
+            history.push(`/scheduling/${selectedstr}?start=${schedulingStart.toISOString()}`);
           }}
         >
-          Schedule{' '}
-          {selected.length === changing.length
-            ? 'All'
-            : selected.length
-            ? selected.length
-            : 'No'}{' '}
-          {selected.length > 1 ||
-          selected.length === changing.length ||
-          selected.length === 0
-            ? 'Tasks'
-            : 'Task'}
+          Schedule {selected.length === changing.length ? (
+            'All'
+          ) : selected.length ? (
+            selected.length
+          ) : (
+            'No'
+          )}{' '}
+          {selected.length > 1 || selected.length === changing.length || selected.length === 0 ? (
+            'Tasks'
+          ) : (
+            'Task'
+          )}
         </FullButton>
       </Row>
     </div>

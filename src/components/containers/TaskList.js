@@ -46,20 +46,20 @@ const TaskList = () => {
   //   });
   // });
 
-  const [tasks, setTasks] = useState([]);
-  const [unscheduled, setUnscheduled] = useState([]);
-  const [scheduled, setScheduled] = useState([]);
-  const [listsOpen, setListsOpen] = useState(2);
+  const [ tasks, setTasks ] = useState([]);
+  const [ unscheduled, setUnscheduled ] = useState([]);
+  const [ scheduled, setScheduled ] = useState([]);
+  const [ listsOpen, setListsOpen ] = useState(2);
 
   const initDate = new Date();
   initDate.setTime(initDate.getTime() + 60 * 60 * 1000);
   initDate.setMinutes(0);
 
-  const [schedulingStart, setSchedulingStart] = useState(initDate);
-  const [showSchedulingStart, setShowScheduling] = useState(false);
+  const [ schedulingStart, setSchedulingStart ] = useState(initDate);
+  const [ showSchedulingStart, setShowScheduling ] = useState(false);
 
-  const [creating, setCreating] = useState(false);
-  const [selected, setSelected] = useState([]);
+  const [ creating, setCreating ] = useState(false);
+  const [ selected, setSelected ] = useState([]);
 
   const history = useHistory();
 
@@ -81,22 +81,28 @@ const TaskList = () => {
 
   useEffect(() => {
     TaskService.getAllTasks((res) => {
-      setTasks([...res.data.not_scheduled, ...res.data.scheduled]);
+      setTasks([ ...res.data.not_scheduled, ...res.data.scheduled ]);
     });
   }, []);
 
-  useEffect(() => {
-    /* split into scheduled and unscheduled every time tasks updates */
-    splitTasks();
-  }, [tasks]);
+  useEffect(
+    () => {
+      /* split into scheduled and unscheduled every time tasks updates */
+      splitTasks();
+    },
+    [ tasks ]
+  );
 
-  useEffect(() => {
-    if (selected.length > 0) {
-      setShowScheduling(true);
-    } else {
-      setShowScheduling(false);
-    }
-  }, [selected]);
+  useEffect(
+    () => {
+      if (selected.length > 0) {
+        setShowScheduling(true);
+      } else {
+        setShowScheduling(false);
+      }
+    },
+    [ selected ]
+  );
 
   const createTask = (task) => {
     const { name, description, duration, due_date } = task;
@@ -109,13 +115,13 @@ const TaskList = () => {
 
   const selectTask = (id) => {
     if (selected.indexOf(id) === -1) {
-      setSelected(selected.concat([id]));
+      setSelected(selected.concat([ id ]));
     } else {
       setSelected(selected.filter((num) => num !== id));
     }
   };
 
-  const deleteTask = (id) => setTasks(tasks.filter((task) => task.id !== id));
+  const deleteTask = (id) => TaskService.taskDelete([ id ], (res) => setTasks(tasks.filter((t) => t.id !== id)));
 
   const editTask = (id, editedTask) => {
     TaskService.editTask(id, editedTask, (res) => {
@@ -127,13 +133,9 @@ const TaskList = () => {
   };
 
   const completeTask = (id) =>
-    TaskService.taskComplete([id], (completedTasks) =>
+    TaskService.taskComplete([ id ], (completedTasks) =>
       completedTasks.data.forEach((completedTask) => {
-        setTasks(
-          tasks.map((task) =>
-            task.id === completedTask.id ? completedTask : task
-          )
-        );
+        setTasks(tasks.map((task) => (task.id === completedTask.id ? completedTask : task)));
       })
     );
 
@@ -180,10 +182,7 @@ const TaskList = () => {
             }}
           />
         </Row>
-        <DateTimePicker
-          value={schedulingStart}
-          onChange={(e) => setSchedulingStart(e.target.value)}
-        />
+        <DateTimePicker value={schedulingStart} onChange={(e) => setSchedulingStart(e.target.value)} />
       </div>
       <FullButton
         primary={unscheduled.length}
@@ -199,14 +198,11 @@ const TaskList = () => {
               selectedstr = unscheduled.map((elem) => elem.id).join(',');
             }
             schedulingStart.setSeconds(0, 0);
-            history.push(
-              `/scheduling/${selectedstr}?start=${schedulingStart.toISOString()}`
-            );
+            history.push(`/scheduling/${selectedstr}?start=${schedulingStart.toISOString()}`);
           }
         }}
       >
-        Schedule {selected.length ? selected.length : 'All'}{' '}
-        {selected.length === 1 ? 'Task' : 'Tasks'}
+        Schedule {selected.length ? selected.length : 'All'} {selected.length === 1 ? 'Task' : 'Tasks'}
       </FullButton>
     </div>
   );
@@ -214,12 +210,7 @@ const TaskList = () => {
   return (
     <div style={{ height: '90vh', overflowY: 'auto' }}>
       {creating ? (
-        <Task
-          task={emptyTask}
-          deleteTask={() => setCreating(false)}
-          createTask={createTask}
-          creating
-        />
+        <Task task={emptyTask} deleteTask={() => setCreating(false)} createTask={createTask} creating />
       ) : (
         ''
       )}
@@ -261,12 +252,7 @@ const TaskList = () => {
         customHeight={getCustomHeight(unscheduled)}
       >
         {scheduled.map((task) => (
-          <Task
-            key={task.id}
-            task={task}
-            completeTask={completeTask}
-            deleteTask={deleteTask}
-          />
+          <Task key={task.id} task={task} completeTask={completeTask} deleteTask={deleteTask} />
         ))}
       </TaskSection>
       <FullButton
