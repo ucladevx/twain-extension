@@ -121,8 +121,7 @@ const TaskList = () => {
 		}
 	};
 
-	const deleteTask = (id) =>
-		TaskService.taskDelete([ id ], (tasks) => setTasks(tasks.filter((task) => task.id !== id)));
+	const deleteTask = (id) => TaskService.taskDelete([ id ], (res) => setTasks(tasks.filter((t) => t.id !== id)));
 
 	const editTask = (id, editedTask) => {
 		TaskService.editTask(id, editedTask, (res) => {
