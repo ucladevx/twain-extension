@@ -46,7 +46,7 @@ const FeedbackButton = styled(FullButton)`
 `;
 
 const Help = () => {
-  const url = 'https://ucladevx.com/';
+  const url = 'https://docs.google.com/forms/d/e/1FAIpQLSfUxbL9QPukU8KK-H5RKyU4X3INSJXfsAnZAnjV3k0_qUyL6Q/viewform';
   return (
     <div>
       <Nav>
