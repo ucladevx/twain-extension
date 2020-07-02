@@ -196,7 +196,7 @@ const taskDelete = async (taskIds, deleteTaskHandler) => {
       Authorization: 'Bearer ' + token
     };
     let res = await axios
-      .post('http://localhost:31337/api/tasks/delete', body, {
+      .post(backend_url + '/tasks/delete', body, {
         headers: header
       })
       .then((res) => res.data)
