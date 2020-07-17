@@ -44,23 +44,18 @@ const Intro = ({ handleContinue }) => {
         We optimize your free time, allowing you to be your most productive
         self.
       </p>
-      <FullButton
-        secondary
-        onClick={() => {
+      <img
+        src="google.png"
+        alt="google"
+        style={{ width: '90%'}}
+        onMouseOver={e => (e.currentTarget.src = "google-hover.png")}
+        onMouseOut={e => (e.currentTarget.src = "google.png")}
+        onClick={(e) => {
+          e.currentTarget.src = "google-pressed.png";
           getUser();
           handleContinue();
         }}
-        style={{ color: '#5187ED' }}
-      >
-        <Row spaceEvenly style={{ marginTop: '-4px' }}>
-          <img
-            src="google.svg"
-            alt="google"
-            style={{ width: '20px', height: '20px' }}
-          />
-          <p>Continue with Google</p>
-        </Row>
-      </FullButton>
+      />
     </div>
   );
 };
