@@ -21,6 +21,8 @@ const Intro = ({ handleContinue }) => {
       if (!user) {
         StorageService.setLoggedIn(true);
         history.push('/tasklist');
+      } else {
+        handleContinue();
       }
     });
   };
@@ -53,7 +55,7 @@ const Intro = ({ handleContinue }) => {
         onClick={(e) => {
           e.currentTarget.src = "google-pressed.png";
           getUser();
-          handleContinue();
+          // Moved handle continue to getUser so we don't move until google auth handled
         }}
       />
     </div>
